@@ -25,47 +25,11 @@ import networkx as nx
 from random import randint
 from queue import Queue
 
-from heft.utils import read_matrix
-
-"""
-Task class for the HEFT algorithm
-"""
-class Task(object):
-
-    def __init__(self, tid, comp_cost=[]):
-        self.tid = int(tid)# task id - this is unique
-        self.rank = -1 # This is updated during the 'Task Prioritisation' phase 
-        self.processor = -1
-        self.ast = 0 
-        self.aft = 0 
-
-    def __repr__(self):
-        return str(self.tid)
-    """
-    To utilise the NetworkX graph library, we need to make the node structure hashable  
-    Implementation adapted from: http://stackoverflow.com/a/12076539        
-    """
-
-    def __hash__(self):
-        return hash(self.tid)
-
-    def __eq__(self, task):
-        if isinstance(task, self.__class__):
-            return self.tid == task.tid
-        return NotImplemented
-
-    
-    def __lt__(self,task): 
-        if isinstance(task,self.__class__):
-            return self.tid < task.tid
-
-    def __le__(self,task):
-        if isinstance(task,self.__class__):
-            return self.tid <= task.tid
+from algorithms.utils import read_matrix
 
 class Heft(object):
     def __init__(self, comp, comm, graphml):
-        self.graph = nx.read_graphml(graphml)#,Task)
+        self.graph = nx.read_graphml(graphml,int)#,Task)
         self.comp_matrix = read_matrix(comp)
         self.comm_matrix = read_matrix(comm)
         self.num_processors = len(self.comp_matrix[0])
@@ -98,7 +62,7 @@ class Heft(object):
             for node in list(self.graph.nodes()):
                 ave = 0
                 for (n, p) in self.oct_rank_matrix:
-                    if n is node.tid:
+                    if n is node:
                         ave += self.oct_rank_matrix[(n,p)]
 
                 self.graph.nodes[node]['rank'] = ave/len(self.processors)
@@ -152,10 +116,10 @@ class Heft(object):
 #            if successor.rank is -1:
                 self.rank_up(successor)
 
-            longest_rank = max(longest_rank, self.ave_comm_cost(node.tid,successor.tid)+\
+            longest_rank = max(longest_rank, self.ave_comm_cost(node,successor)+\
                                self.graph.nodes[successor]['rank'])
 
-        ave_comp = self.ave_comp_cost(node.tid)
+        ave_comp = self.ave_comp_cost(node)
         #node.rank = ave_comp + longest_rank
         # Use node because networkx dictionary is expecting {Task(n): val} relationship 
         self.graph.nodes[node]['rank'] = ave_comp + longest_rank
@@ -172,16 +136,16 @@ class Heft(object):
 #            if successor.rank is -1:
                 self.rank_up(successor)
             
-            longest_rank = max(longest_rank, self.ave_comm_cost(node.tid,successor.tid)+\
+            longest_rank = max(longest_rank, self.ave_comm_cost(node,successor)+\
                     self.graph.nodes[successor]['rank'])
 
         entropy = randint(0,1000)%3
         if entropy is 0:
-            ave_comp = self.ave_comp_cost(node.tid)
+            ave_comp = self.ave_comp_cost(node)
         elif entropy is 1:
-            ave_comp = self.max_comp_cost(node.tid)
+            ave_comp = self.max_comp_cost(node)
         elif entropy is 2: 
-            ave_comp = self.max_comp_cost(node.tid)
+            ave_comp = self.max_comp_cost(node)
 
         # node.rank = ave_comp + longest_rank
         self.graph.nodes[node]['rank'] = ave_comp + longest_rank
@@ -199,18 +163,18 @@ class Heft(object):
             min_processor=1000
             for processor in range(0,len(self.processors)):
                 oct_val = 0
-                if (successor.tid, processor) not in self.oct_rank_matrix.keys():
+                if (successor, processor) not in self.oct_rank_matrix.keys():
                     self.rank_oct(successor, processor) 
                 comm_cost = 0
-                comp_cost = self.comp_matrix[successor.tid][processor] 
+                comp_cost = self.comp_matrix[successor][processor] 
                 if processor is not pk:
-                    comm_cost = self.ave_comm_cost(node.tid, successor.tid)
-                oct_val = self.oct_rank_matrix[(successor.tid,processor)] +\
+                    comm_cost = self.ave_comm_cost(node, successor)
+                oct_val = self.oct_rank_matrix[(successor,processor)] +\
                         comp_cost+ comm_cost
                 min_processor = min(min_processor,oct_val)
             max_successor = max(max_successor, min_processor)
         
-        self.oct_rank_matrix[(node.tid,pk)] = max_successor
+        self.oct_rank_matrix[(node,pk)] = max_successor
 
     
     def rank_sort_tasks(self):
@@ -249,8 +213,8 @@ class Heft(object):
         for u in top_sort:
             for v in list(self.graph.edges(u)):
                 tmp_v = v[1]
-                if dist[v[1].tid] < dist[u.tid] + min(self.comp_matrix[v[1].tid])+ self.comm_matrix[v[1].tid][u.tid]:
-                    dist[v[1].tid] = dist[u.tid] + min(self.comp_matrix[v[1].tid]) + self.comm_matrix[v[1].tid][u.tid]
+                if dist[v[1]] < dist[u] + min(self.comp_matrix[v[1]])+ self.comm_matrix[v[1]][u]:
+                    dist[v[1]] = dist[u] + min(self.comp_matrix[v[1]]) + self.comm_matrix[v[1]][u]
                     tmp_v = v[1]
 
         
@@ -264,13 +228,13 @@ class Heft(object):
             u = q.get()
             tmp_max = 0
             for v in list(self.graph.predecessors(Task(u))):
-                if dist[v.tid] > tmp_max:
-                    tmp_max = dist[v.tid]
-                    tmp_v=v.tid
+                if dist[v] > tmp_max:
+                    tmp_max = dist[v]
+                    tmp_v=v
                     if tmp_v not in critical_path:
                         critical_path.append(tmp_v)
                     q.put(tmp_v)
-                elif dist[v.tid] is 0:
+                elif dist[v] is 0:
                     tmp_v = 0 # this is the first node in the graph
                     if tmp_v not in critical_path:
                         critical_path.append(tmp_v  )
@@ -287,7 +251,7 @@ class Heft(object):
         for p in range(len(self.processors)):
             comp = 0 
             for task in list(self.graph.nodes()):
-                comp = comp + self.comp_matrix[task.tid][p]
+                comp = comp + self.comp_matrix[task][p]
             if(seq is -1) or (comp < seq):
                 seq = comp
 
@@ -301,15 +265,18 @@ class Heft(object):
         est = 0 # If the node does not have predecessors
         predecessors = self.graph.predecessors(node)
         for pretask in predecessors:
-            if pretask.processor != processor_num: # If task isn't on the same processor
-                comm_cost = self.comm_matrix[pretask.tid][node.tid]
+            if not 'processor' in self.graph.nodes[pretask]:
+                self.graph.nodes[pretask]['processor'] = 0 # Default to 0
+            # If task isn't on the same processor
+            if self.graph.nodes[pretask]['processor'] != processor_num: 
+                comm_cost = self.comm_matrix[pretask][node]
             else:
                 comm_cost = 0 # task is on the same processor, communication cost is 0
 
             # self.graph.predecessors is not being updated in insertion_policy;
             # need to use the tasks that are being updated to get the right results
             index = task_list.index(pretask)
-            aft = task_list[index].aft
+            aft = self.graph.nodes[task_list[index]]['aft']
             tmp = aft  + comm_cost
             if tmp >= est:
                 est = tmp
@@ -333,14 +300,14 @@ class Heft(object):
             
             # Add a very large number to the final time slot available, so we have a gap after 
             available_slots.append((processor[len(processor)-1][1],-1))
-            if node.tid==1 and processor_num==2:
+            if node==1 and processor_num==2:
                 print(available_slots)
 
         for slot in available_slots:
-            if est < slot[0] and slot[0] + self.comp_matrix[node.tid][processor_num] <= slot[1]:
+            if est < slot[0] and slot[0] + self.comp_matrix[node][processor_num] <= slot[1]:
                 return slot[0]
             if (est >= slot[0]) and (est + \
-                    self.comp_matrix[node.tid][processor_num]<=slot[1]): 
+                    self.comp_matrix[node][processor_num]<=slot[1]): 
                return est 
             # At the 'end' of available slots
             if (est >= slot[0]) and (slot[1]<0):
@@ -364,12 +331,14 @@ class Heft(object):
         makespan = 0
         for task in self.rank_sort:
             if task == self.rank_sort[0]: 
-                w = min(self.comp_matrix[task.tid])
-                p = self.comp_matrix[task.tid].index(w)
-                task.processor = p
-                task.ast = 0
-                task.aft = w
-                self.processors[p].append((task.ast,task.aft,str(task.tid)))
+                w = min(self.comp_matrix[task])
+                p = self.comp_matrix[task].index(w)
+                self.graph.nodes[task]['processor'] = p
+                self.graph.nodes[task]['ast'] = 0
+                self.graph.nodes[task]['aft'] = w
+                self.processors[p].append((self.graph.nodes[task]['ast'],\
+                                           self.graph.nodes[task]['ast'],\
+                                           str(task)))
             else:
                 aft = -1 # Finish time for the current task
                 p = 0 
@@ -377,19 +346,21 @@ class Heft(object):
                     # tasks in self.rank_sort are being updated, not self.graph;
                     est = self.calc_est(task, processor,self.rank_sort)
                     if aft == -1: # assign initial value of aft for this task
-                        aft = est + self.comp_matrix[task.tid][processor]
+                        aft = est + self.comp_matrix[task][processor]
                         p = processor
                     # see if the next processor gives us an earlier finish time
-                    elif est + self.comp_matrix[task.tid][processor] < aft:
-                        aft = est + self.comp_matrix[task.tid][processor]
+                    elif est + self.comp_matrix[task][processor] < aft:
+                        aft = est + self.comp_matrix[task][processor]
                         p = processor
     
-                task.processor = p
-                task.ast = aft - self.comp_matrix[task.tid][p]
-                task.aft = aft
-                if task.aft >= makespan:
-                   makespan = task.aft
-                self.processors[p].append((task.ast, task.aft,str(task.tid)))
+                self.graph.nodes[task]['processor'] = p
+                self.graph.nodes[task]['ast'] = aft - self.comp_matrix[task][p]
+                self.graph.nodes[task]['aft'] = aft
+                if self.graph.nodes[task]['aft'] >= makespan:
+                   makespan  = self.graph.nodes[task]['aft']
+                self.processors[p].append((self.graph.nodes[task]['ast'],\
+                                           self.graph.nodes[task]['aft'],\
+                                           str(task)))
                 self.processors[p].sort(key=lambda x: x[0])
             #print(self.processors)
 
@@ -410,18 +381,22 @@ class Heft(object):
         p=0
         for task in self.rank_sort:
             if task == self.rank_sort[0]:
-                task.ast = 0
+                self.graph.nodes[task]['ast'] = 0
                 min_oeft = -1
                 for processor in range(self.num_processors):
-                    eft_matrix[(task.tid,processor)] = self.comp_matrix[task.tid][processor]
-                    oeft_matrix[(task.tid,processor)]  =  eft_matrix[(task.tid,processor)] + self.oct_rank_matrix[(task.tid,processor)]
+                    eft_matrix[(task,processor)] = self.comp_matrix[task][processor]
+                    oeft_matrix[(task,processor)] = eft_matrix[(task,processor)]\
+                                                    + self.oct_rank_matrix[(task,processor)]
                     if (min_oeft == -1) or \
-                            (oeft_matrix[(task.tid,processor)]  < min_oeft): 
-                        min_oeft = oeft_matrix[(task.tid,processor)]
+                            (oeft_matrix[(task,processor)]  < min_oeft): 
+                        min_oeft = oeft_matrix[(task,processor)]
                         p = processor
-                task.aft = self.comp_matrix[task.tid][p]
-                task.processor = p
-                self.processors[p].append((task.ast,task.aft,str(task.tid)))
+                        
+                self.graph.nodes[task]['aft'] = self.comp_matrix[task][p]
+                self.graph.nodes[task]['processor'] = p
+                self.processors[p].append((self.graph.nodes[task]['ast'],\
+                                           self.graph.nodes[task]['aft'],\
+                                           str(task)))
 
             else:
                 min_oeft = -1
@@ -430,25 +405,28 @@ class Heft(object):
                         est = self.calc_est(task,processor,self.rank_sort)
                     else:
                         est=0
-                    eft = est + self.comp_matrix[task.tid][processor]
-                    eft_matrix[(task.tid,processor)] = eft
-                    oeft_matrix[(task.tid,processor)] = eft_matrix[(task.tid,processor)]\
-                        + self.oct_rank_matrix[(task.tid,processor)]
+                    eft = est + self.comp_matrix[task][processor]
+                    eft_matrix[(task,processor)] = eft
+                    oeft_matrix[(task,processor)] = eft_matrix[(task,processor)]\
+                        + self.oct_rank_matrix[(task,processor)]
                     if (min_oeft ==-1) or \
-                            (oeft_matrix[(task.tid,processor)]  < min_oeft): 
-                        min_oeft = oeft_matrix[(task.tid,processor)]
+                            (oeft_matrix[(task,processor)]  < min_oeft): 
+                        min_oeft = oeft_matrix[(task,processor)]
                         p = processor
 
-                task.aft =  eft_matrix[(task.tid,p)]  
-                task.ast = task.aft - self.comp_matrix[task.tid][processor]
-                task.processor = p
+                self.graph.nodes[task]['aft'] =  eft_matrix[(task,p)]  
+                self.graph.nodes[task]['ast'] = self.graph.nodes[task]['aft']\
+                                                - self.comp_matrix[task][processor]
+                self.graph.nodes[task]['processor'] = p
 
-                if task.aft >= makespan:
-                    makespan = task.aft
+                if self.graph.nodes[task]['aft'] >= makespan:
+                    makespan = self.graph.nodes[task]['aft']
                     
-                self.processors[p].append((task.ast, task.aft,str(task.tid)))
+                self.processors[p].append((self.graph.nodes[task]['ast'],\
+                                           self.graph.nodes[task]['aft'],\
+                                           str(task)))
                 self.processors[p].sort(key=lambda x: x[0]) 
-        print(self.processors)
+
         return makespan
 
     def schedule(self, schedule='insertion'):
