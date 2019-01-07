@@ -1,4 +1,8 @@
-# Copyright (C) 2018 RW Bunney
+
+#!/usr/bin/env
+# Sunittest runner for the heft.py code 
+
+# Copyright (C) 2017,2018  RW Bunney
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,15 +17,43 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.  
 
-########################################################################
+
 import unittest
+import networkx as nx
+from csv import reader
 
-# Tests for /algorithms/heuristic.py
+import sys
+# sys.path.append('../')
+
+from heft.heft import Heft, Task
+from heft.utils import read_matrix
 
 
-# Testing heft algorithms in heuristics.py 
 
-class TestHeftMethods(unittest.TestCase):
+class TestTaskMethods(unittest.TestCase):
+
+    def test_task_equality(self):
+        a = Task(1) 
+        b = Task(1)
+        self.assertTrue(a == b)
+
+    def test_task_inequality(self):
+        a = Task(2)
+        b = Task(4)
+        self.assertFalse(a == b)
+
+    def test_task_greater(self):
+        a = Task(2)
+        b = Task(2)
+        self.assertTrue(b <= a)
+    
+    def test_task_hash(self):
+        a = Task(57) 
+        hashval = hash(57)
+        self.assertTrue(hashval == a.__hash__())
+
+
+class TestHeftMethodsTopcuoglu(unittest.TestCase):
     """
     This class tests HEFT on the same example graph presented by 
     Topcuoglu et al
@@ -43,14 +75,22 @@ class TestHeftMethods(unittest.TestCase):
         sorted_nodes = self.heft.rank_sort
         for count,node in enumerate(sorted_nodes):
             # self.assertTrue(int(node.rank) == rank_values[node.tid])
-            print(int(self.heft.graph.nodes[node]['rank']),rank_values[node])
-            self.assertTrue(int(self.heft.graph.nodes[node]['rank'])==rank_values[node])
+            print(int(self.heft.graph.nodes[node]['rank']),rank_values[node.tid])
+            self.assertTrue(int(self.heft.graph.nodes[node]['rank'])==rank_values[node.tid])
     
     def test_schedule(self):
         self.heft.rank('up')
         retval = self.heft.schedule('insertion')
         print("Makespan is: ", retval)
         self.assertTrue(retval == 80)
+
+#@unittest.skip( 'Smaller test case')                
+class TestHeftMethodsOCT(unittest.TestCase):
+
+    """
+    This class tests HEFT on the same example graph presented by Arabnejad 
+    and Barbos
+    """
     def setUp(self):
         self.heft= Heft('tests/data/oct_comp.txt',\
             'tests/data/oct_comm.txt',\
@@ -65,17 +105,15 @@ class TestHeftMethods(unittest.TestCase):
         self.heft.rank('up')
         sorted_nodes = self.heft.rank_sort
         for count, node in enumerate(sorted_nodes):
-            print(self.heft.graph.nodes[node]['rank'],\
-                  self.up_rank_values[node])
-            self.assertTrue(int(self.heft.graph.nodes[node]['rank']) ==\
-                            self.up_rank_values[node])  
+            self.assertTrue(self.heft.graph.nodes[node]['rank'] ==\
+                            self.up_rank_values[node.tid])  
 
     def test_oct_rank(self):
         self.heft.rank('oct')
         sorted_nodes = self.heft.rank_sort
         for count, node in enumerate(sorted_nodes):
-            self.assertTrue(int(self.heft.graph.nodes[node]['rank']) ==\
-                            self.oct_rank_values[node])  
+            self.assertTrue(self.heft.graph.nodes[node]['rank'] ==\
+                            self.oct_rank_values[node.tid])  
     
     @unittest.skip('Unnecessary')
     def test_oct_matrix(self):
@@ -94,7 +132,6 @@ class TestHeftMethods(unittest.TestCase):
         print('this is oct: ',retval)
         self.assertTrue(retval == 122)
 
-        
        
 
 

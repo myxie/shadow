@@ -21,5 +21,5 @@
 
 
 # TODO; initial setup required for a genetic algorithm
-# TODO; initial setup required for an evolutionary algorithm 
+# TODO; initial setup required for an evolutionary algorithm 6
 

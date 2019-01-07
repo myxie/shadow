@@ -26,6 +26,21 @@ from random import randint
 from queue import Queue
 
 from algorithms.utils import read_matrix
+from algorithms.workflow import Workflow
+
+
+# graph = nx.read_graphml(graphml,int)#,Task)
+# comp_matrix = read_matrix(comp)
+# comm_matrix = read_matrix(comm)
+# num_processors = len(self.comp_matrix[0])
+# processors = [[] for x in range(0,self.num_processors)]
+# # TODO have this matrix generated only when we are
+# # ranking/scheduling for this particular type of thing
+# oct_rank_matrix = dict()
+#
+# rank_sort = []
+# top_sort = []
+
 
 class Heft(object):
     def __init__(self, comp, comm, graphml):
@@ -227,7 +242,7 @@ class Heft(object):
         while not q.empty():
             u = q.get()
             tmp_max = 0
-            for v in list(self.graph.predecessors(Task(u))):
+            for v in list(self.graph.predecessors(u)):
                 if dist[v] > tmp_max:
                     tmp_max = dist[v]
                     tmp_v=v

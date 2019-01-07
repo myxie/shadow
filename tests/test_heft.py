@@ -19,38 +19,14 @@
 
 
 import unittest
-import networkx as nx
-from csv import reader
+# import networkx as nx
+# from csv import reader
 
-import sys
+# import sys
 # sys.path.append('../')
 
 from algorithms.heft import Heft
-from algorithms.utils import read_matrix
-
-
-@unittest.skip('Unnecessary')
-class TestTaskMethods(unittest.TestCase):
-
-    def test_task_equality(self):
-        a = Task(1) 
-        b = Task(1)
-        self.assertTrue(a == b)
-
-    def test_task_inequality(self):
-        a = Task(2)
-        b = Task(4)
-        self.assertFalse(a == b)
-
-    def test_task_greater(self):
-        a = Task(2)
-        b = Task(2)
-        self.assertTrue(b <= a)
-    
-    def test_task_hash(self):
-        a = Task(57) 
-        hashval = hash(57)
-        self.assertTrue(hashval == a.__hash__())
+# from algorithms.utils import read_matrix
 
 
 class TestHeftMethodsTopcuoglu(unittest.TestCase):
