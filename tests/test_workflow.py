@@ -12,3 +12,18 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.  
+
+# Test workflow class and functions
+
+import unittest
+
+from algorithms.workflow import Workflow
+
+class TestHeftMethodsTopcuoglu(unittest.TestCase):
+
+	def test_read_matrix(self):
+		wf = Workflow('tests/data/topcuoglu_comp.txt',\
+            'tests/data/topcuoglu_comm.txt',\
+            'tests/data/topcuoglu.graphml')
+		self.assertTrue(wf)
+

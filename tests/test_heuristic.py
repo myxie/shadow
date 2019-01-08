@@ -16,6 +16,10 @@
 ########################################################################
 import unittest
 
+from algorithms.heuristic import upward_rank, upward_oct_rank, \
+                            sort_tasks, heft, pheft
+from algorithms.workflow import Workflow
+
 # Tests for /algorithms/heuristic.py
 
 
@@ -28,7 +32,7 @@ class TestHeftMethods(unittest.TestCase):
     """ 
      
     def setUp(self):
-        self.heft = Heft('tests/data/topcuoglu_comp.txt',\
+        self.wf = Workflow('tests/data/topcuoglu_comp.txt',\
             'tests/data/topcuoglu_comm.txt',\
             'tests/data/topcuoglu.graphml')
 
@@ -38,63 +42,65 @@ class TestHeftMethods(unittest.TestCase):
     
     def test_rank(self):
         rank_values = [108,77,79,80,69,63,42,35,44,14]
-         
-        self.heft.rank('up')
-        sorted_nodes = self.heft.rank_sort
-        for count,node in enumerate(sorted_nodes):
-            # self.assertTrue(int(node.rank) == rank_values[node.tid])
-            print(int(self.heft.graph.nodes[node]['rank']),rank_values[node])
-            self.assertTrue(int(self.heft.graph.nodes[node]['rank'])==rank_values[node])
+        upward_rank(self.wf) 
+        sorted_tasks = sort_tasks(self.wf,'rank')
+        for node in sorted_tasks:
+            self.assertTrue(int(self.wf.graph.nodes[node]['rank']) ==\
+                                rank_values[node])
     
     def test_schedule(self):
-        self.heft.rank('up')
-        retval = self.heft.schedule('insertion')
-        print("Makespan is: ", retval)
+        # upward_rank(self.wf) 
+        retval = heft(self.wf)
         self.assertTrue(retval == 80)
+
+    # def test_heft(self):
+    #     self.assertTrue(heft(self.wf) == 80)
+
+# @unittest.skip('Unnecessary')
+class TestPHeftMethods(unittest.TestCase):
+
     def setUp(self):
-        self.heft= Heft('tests/data/oct_comp.txt',\
+        self.wf= Workflow('tests/data/oct_comp.txt',\
             'tests/data/oct_comm.txt',\
             'tests/data/oct.graphml')
-        self.oct_rank_values = [72,41,37,43,31,41,17,20,16,0]
+        self.up_oct_rank_values = [72,41,37,43,31,41,17,20,16,0]
         self.up_rank_values = [169,114,102,110,129,119,52,92,42,20]
 
     def tearDown(self):
         return -1
 
     def test_up_rank(self):
-        self.heft.rank('up')
-        sorted_nodes = self.heft.rank_sort
-        for count, node in enumerate(sorted_nodes):
-            print(self.heft.graph.nodes[node]['rank'],\
-                  self.up_rank_values[node])
-            self.assertTrue(int(self.heft.graph.nodes[node]['rank']) ==\
+        # oct_rank_matrix = 
+        upward_rank(self.wf)
+        sorted_tasks = sort_tasks(self.wf,'rank')
+        for node in sorted_tasks:
+            self.assertTrue(int(self.wf.graph.node[node]['rank']) ==\
                             self.up_rank_values[node])  
 
     def test_oct_rank(self):
-        self.heft.rank('oct')
-        sorted_nodes = self.heft.rank_sort
-        for count, node in enumerate(sorted_nodes):
-            self.assertTrue(int(self.heft.graph.nodes[node]['rank']) ==\
-                            self.oct_rank_values[node])  
+        # self.wf.rank('oct')
+        oct_rank_matrix = dict()
+        upward_oct_rank(self.wf, oct_rank_matrix)
+        sorted_tasks = sort_tasks(self.wf,'rank')
+        for node in sorted_tasks:
+            self.assertTrue(int(self.wf.graph.node[node]['rank']) ==\
+                            self.up_oct_rank_values[node])  
     
-    @unittest.skip('Unnecessary')
-    def test_oct_matrix(self):
-        self.heft.rank('oct')
-        for key in self.heft.oct_rank_matrix:
-            print(key, self.heft.oct_rank_matrix[key])
+    # @unittest.skip('Unnecessary')
+    # def test_oct_matrix(self):
+    #     self.heft.rank('oct')
+    #     for key in self.heft.oct_rank_matrix:
+    #         print(key, self.heft.oct_rank_matrix[key])
         
     def test_heft_schedule(self):
-        self.heft.rank('up')
-        retval = self.heft.schedule('insertion')
+        # upward_rank(self.wf) 
+        retval = heft(self.wf)
         self.assertTrue(retval == 133)
 
-    def test_oct_schedule(self):
-        self.heft.rank('oct')
-        retval = self.heft.schedule('oct_schedule')
-        print('this is oct: ',retval)
+    def test_pheft_schedule(self):
+        # upward_rank(self.wf) 
+        retval = pheft(self.wf)
         self.assertTrue(retval == 122)
 
-        
-       
-
-
+    # def test_pheft(self):
+    #     self.assertTrue(pheft(self.wf) == 122)
