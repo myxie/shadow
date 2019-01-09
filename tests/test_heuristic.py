@@ -54,10 +54,6 @@ class TestHeftMethods(unittest.TestCase):
         retval = heft(self.wf)
         self.assertTrue(retval == 80)
 
-    # def test_heft(self):
-    #     self.assertTrue(heft(self.wf) == 80)
-
-# @unittest.skip('Unnecessary')
 class TestPHeftMethods(unittest.TestCase):
 
     def setUp(self):
