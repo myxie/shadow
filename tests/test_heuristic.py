@@ -16,6 +16,7 @@
 ########################################################################
 import unittest
 
+import config as cfg
 from algorithms.heuristic import upward_rank, upward_oct_rank, \
                             sort_tasks, heft, pheft
 from algorithms.workflow import Workflow
@@ -32,9 +33,9 @@ class TestHeftMethods(unittest.TestCase):
     """ 
      
     def setUp(self):
-        self.wf = Workflow('tests/data/topcuoglu_comp.txt',\
-            'tests/data/topcuoglu_comm.txt',\
-            'tests/data/topcuoglu.graphml')
+        self.wf = Workflow(cfg.test_data['heft_wcost'],
+                            cfg.test_data['heft_ccost'],
+                            cfg.test_data['heft_graph'])
 
 
     def tearDown(self):
@@ -60,9 +61,10 @@ class TestHeftMethods(unittest.TestCase):
 class TestPHeftMethods(unittest.TestCase):
 
     def setUp(self):
-        self.wf= Workflow('tests/data/oct_comp.txt',\
-            'tests/data/oct_comm.txt',\
-            'tests/data/oct.graphml')
+        self.wf = Workflow(cfg.test_data['pheft_wcost'],
+                            cfg.test_data['pheft_ccost'],
+                            cfg.test_data['pheft_graph'])
+
         self.up_oct_rank_values = [72,41,37,43,31,41,17,20,16,0]
         self.up_rank_values = [169,114,102,110,129,119,52,92,42,20]
 
@@ -86,11 +88,11 @@ class TestPHeftMethods(unittest.TestCase):
             self.assertTrue(int(self.wf.graph.node[node]['rank']) ==\
                             self.up_oct_rank_values[node])  
     
-    # @unittest.skip('Unnecessary')
-    # def test_oct_matrix(self):
-    #     self.heft.rank('oct')
-    #     for key in self.heft.oct_rank_matrix:
-    #         print(key, self.heft.oct_rank_matrix[key])
+    @unittest.skip('Todo')
+    def test_oct_matrix(self):
+        self.heft.rank('oct')
+        for key in self.heft.oct_rank_matrix:
+            print(key, self.heft.oct_rank_matrix[key])
         
     def test_heft_schedule(self):
         # upward_rank(self.wf) 
@@ -102,5 +104,3 @@ class TestPHeftMethods(unittest.TestCase):
         retval = pheft(self.wf)
         self.assertTrue(retval == 122)
 
-    # def test_pheft(self):
-    #     self.assertTrue(pheft(self.wf) == 122)

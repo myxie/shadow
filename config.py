@@ -1,3 +1,5 @@
+#!/usr/bin/env python 
+
 # Copyright (C) 2018 RW Bunney
 
 # This program is free software: you can redistribute it and/or modify
@@ -13,17 +15,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.  
 
-# Test workflow class and functions
 
-import unittest
+# Configuration settings for this project
 
-from algorithms.workflow import Workflow
+# Files and directorys for test data used in tests/
+import tests.test_heuristic,tests.test_graph_generator, tests.test_workflow 
 
-class TestWorkflowClass(unittest.TestCase):
+tests = { 'workflow': tests.test_workflow,
+        'graph_generator': tests.test_graph_generator,
+        'heuristic': tests.test_heuristic}
 
-	def test_read_matrix(self):
-		wf = Workflow('tests/data/topcuoglu_comp.txt',\
-            'tests/data/topcuoglu_comm.txt',\
-            'tests/data/topcuoglu.graphml')
-		self.assertTrue(wf)
 
+test_data = {'heft_graph': 'tests/data/topcuoglu.graphml',
+			'heft_wcost': 'tests/data/topcuoglu_comp.txt',
+			'heft_ccost':'tests/data/topcuoglu_comm.txt',
+
+			'pheft_graph': 'tests/data/oct.graphml',
+			'pheft_wcost': 'tests/data/oct_comp.txt',
+			'pheft_ccost':'tests/data/oct_comm.txt',}

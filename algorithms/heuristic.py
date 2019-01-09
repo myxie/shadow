@@ -23,13 +23,9 @@
 from random import randint
 import networkx as nx
 
-from algorithms.workflow import Workflow
-
-
 """
 HEFT ranking and allocation functionality
 """
-
 
 def heft(wf): 
     """

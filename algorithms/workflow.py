@@ -44,7 +44,7 @@ class Workflow(object):
         self.wcost = self._read_matrix(wcost)
         self.ccost = self._read_matrix(ccost)
 
-        num_processors = len(self.wcost[0])
+        num_processors  =len(self.wcost[0])
         self.processors = [[] for x in range(0,num_processors)]
 
         
