@@ -33,9 +33,9 @@ class TestHeftMethods(unittest.TestCase):
     """ 
      
     def setUp(self):
-        self.wf = Workflow(cfg.test_data['heft_wcost'],
-                            cfg.test_data['heft_ccost'],
-                            cfg.test_data['heft_graph'])
+        self.wf = Workflow(cfg.test_heuristic_data['heft_wcost'],
+                            cfg.test_heuristic_data['heft_ccost'],
+                            cfg.test_heuristic_data['heft_graph'])
 
 
     def tearDown(self):
@@ -57,9 +57,9 @@ class TestHeftMethods(unittest.TestCase):
 class TestPHeftMethods(unittest.TestCase):
 
     def setUp(self):
-        self.wf = Workflow(cfg.test_data['pheft_wcost'],
-                            cfg.test_data['pheft_ccost'],
-                            cfg.test_data['pheft_graph'])
+        self.wf = Workflow(cfg.test_heuristic_data['pheft_wcost'],
+                            cfg.test_heuristic_data['pheft_ccost'],
+                            cfg.test_heuristic_data['pheft_graph'])
 
         self.up_oct_rank_values = [72,41,37,43,31,41,17,20,16,0]
         self.up_rank_values = [169,114,102,110,129,119,52,92,42,20]

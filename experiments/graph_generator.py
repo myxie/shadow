@@ -18,50 +18,63 @@
 import random
 import csv
 
-def random_wcost_matrix(_min, _max, processors,tasks,seed):
-	random.seed(seed)
-	with open('{0}_wcost.csv'.format(tasks), 'w',newline='') as csvfile:
-		writer = csv.writer(csvfile,delimiter=',')
-		writer.writerow('P1,P2,...,Pn')
-		for t in range(0,tasks):
-			task_wcost = []
-			for p in range(0,processors):
-				# Create line of a matrix with uniformly distributed values
-				task_wcost.append(int(random.uniform(_min,_max)))
-			# Write line to csv file
-			writer.writerow(task_wcost)
+def random_wcost_matrix(_min, _max, processors,tasks,seed,directory):
+    random.seed(seed)
+    with open('{0}/{1}_wcost_{2}-{3}.csv'.format(directory,tasks,_min,_max),
+                         'w',newline='') as csvfile:
+
+        writer = csv.writer(csvfile)
+        writer.writerow(['P1', 'P2', '...', 'Pn'])
+        writer = csv.writer(csvfile,delimiter=',')
+        for t in range(0,tasks):
+            task_wcost = []
+            for p in range(0,processors):
+                # Create line of a matrix with uniformly distributed values
+                task_wcost.append(int(random.uniform(_min,_max)))
+            # Write line to csv file
+            writer.writerow(task_wcost)
+
+def random_ccost_matrix(_min, _max, tasks,seed,directory):
+    random.seed(seed) 
+    matrix = [[0 for x in range(tasks)] for x in range(tasks)]
+    for x in range(tasks-1):
+        for y in range(x+1,tasks):
+            matrix[x][y]=int(random.uniform(_min,_max))
+            matrix[y][x]=matrix[x][y]
+
+    csvfile = open('{0}/{1}_ccost_{1}-{2}.csv'.format(directory,tasks,int(_min),int(_max)),
+                                                            'w',newline='') 
+    writer = csv.writer(csvfile,delimiter=',')
+    writer.writerow("['T1', 'T2', '...', 'Tn']")
+    for row in matrix:
+        writer.writerow(row) 
 
 
-def random_ccost_matrix(min, max, processors, tasks):
-	communication_matrix = [[0 for x in range(tasks)] for x in range(tasks)]
-	communication_matrix = communication_matrix*2
 
 
+def generate_cost_matrices(seed,ccr,mean,uniform_range,
+                            processors,tasks,directory):
+    
+    """
+    Given a Communication/Computation cost ratio, produce a communication and computation cost matrix-pair of that ratio. 
 
-def generate_cost_matrices(comp_cost_min,comp_cost_max,\
-							comm_cost_min,comm_cost_max):
-	
-	"""
-	Given a Communication/Computation cost ratio, produce a communication and computation cost matrix-pair of that ratio. 
+    Values are picked from a uniform distribution from max/minimum values. 
+    This means the mean value will be the mid point, which allows us to more easily represent ccr;
 
-	Values are picked from a uniform distribution from max/minimum values. 
-	This means the mean value will be the mid point, which allows us to more easily represent ccr;
+    IF we want a ccr of 0.1, then we can choose ccost range of 50-100, wcost range of 500-1000. This guaruntees a wcost average of 75 and 750 for ccost and wcost respectively, giving ccr of 0.1
+    # """ 
+    # random.seed(seed)
+    # comp_mean = random.randint(_min,_max)
+    comp_min = mean-uniform_range
+    comp_max = mean+uniform_range
 
-	IF we want a ccr of 0.1, then we can choose wcost range of 50-100, ccost range of 500-1000. This guaruntees a wcost average of 75 and 750 for wcost and ccost respectively, giving ccr of 0.1
-	"""	
+    random_wcost_matrix(comp_min,comp_max,processors,tasks,seed,directory)
 
-	return None
-    # for val in os.listdir(location):
-    #     graphs.append(location+val)
+    comm_mean = int(mean*ccr)
+    comm_min = comm_mean - (uniform_range*ccr)
+    comm_max = comm_mean + (uniform_range*ccr)
+    random_ccost_matrix(comm_min,comm_max,tasks,seed,directory)
 
-    # for path in graphs:
-    #     print path
-    #     graph = nx.read_graphml(path,Task)
-    #     num_nodes= len(graph.nodes())
 
-    #     if num_nodes > 5000:
-    #         continue
-    #     print path
-    #     for x in range(3,9):
-    #         random_comp_matrix(x,num_nodes,comp_cost_min,comp_cost_max)
-    #         # random_comm_matrix(num_nodes,comm_cost_min,comm_cost_max) 
+    return comm_mean,comm_min
+

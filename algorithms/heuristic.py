@@ -59,8 +59,6 @@ def upward_rank(wf):
     # if method == 'up':  
     for task in sorted(list(wf.graph.nodes)):
         rank_up(wf,task)
-       
-
         
     # if method == 'random':
     #     for node in sorted(list(wf.nodes())):
@@ -73,7 +71,7 @@ def upward_oct_rank(wf,oct_rank_matrix):
     
     for val in range(len(wf.processors)):
         for node in sorted(list(wf.graph.nodes()),reverse=True): 
-            rank_oct(wf,oct_rank_matrix,node,val)
+            rank_oct(wf,oct_rank_matrix,node,val)   
 
     for node in list(wf.graph.nodes()):
         ave = 0

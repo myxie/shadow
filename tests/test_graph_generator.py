@@ -18,7 +18,11 @@
 import unittest, random
 from csv import reader
 
-from experiments.graph_generator import random_wcost_matrix
+from experiments.graph_generator import random_wcost_matrix,\
+                                        random_ccost_matrix,\
+                                        generate_cost_matrices
+
+import config as cfg
 
 class TestMatrixGenerator(unittest.TestCase):
     def setUp(self):
@@ -39,18 +43,76 @@ class TestMatrixGenerator(unittest.TestCase):
         # Row 4: [13,16]
         # Row 5: [19,14]
         """
-
         tasks = 5
         processors = 2
         _min, _max = 10,20 
         seed = 30
         matrix = []
-        random_wcost_matrix(_min,_max,processors,tasks,seed)
-        matrix = self.read_matrix('{0}_wcost.csv'.format(tasks))
-        print(matrix)
+        random_wcost_matrix(_min,_max,processors,tasks,seed,cfg.test_dir)
+        matrix = self.read_matrix(cfg.test_generator_data['wcost_matrix'])
         self.assertTrue(matrix[0] == [15,12])
         self.assertFalse(matrix[2] == [12,14])
 
+    def test_ccost_matrixGenerator(self):
+        """
+        Produce a 5 x 5 matrix
+        # Row 1: [15,12,10,16,12]
+        # Row 2: [15,0,12,12,13] 16 //19,14]
+        """
+        tasks = 5
+        _min, _max = 10,20 
+        seed = 30
+        matrix = []
+        random_ccost_matrix(_min,_max,tasks,seed,cfg.test_dir   )
+        matrix = self.read_matrix(cfg.test_generator_data['ccost_matrix']) 
+        print(matrix)
+        self.assertTrue(matrix[0] == [0,15,12,10,16])
+        
+
+    def testMatrixGenerator(self):
+        """
+        For seed value 30, min/max values of 100/200, the following comp matrix should be produced:
+        Row1    153,128
+        Row2    103,165
+        Row3    121,125
+        Row4    139,164
+        Row5    198,146
+
+        The comm-cost matrix should return the same matrix in test_ccost_matrixGenerator()
+        """
+        tasks = 5
+        processors = 2
+        #_min, _max = 10,20 
+        seed = 30
+        ccr= 0.1
+        mean = 150
+        uniform_range =  50
+
+        comm_mean,comm_min = generate_cost_matrices(seed,ccr, mean,
+                                uniform_range,processors,tasks,cfg.test_dir)
+        comp_matrix = self.read_matrix(
+                                cfg.test_generator_data['ccr_check_wcost'])
+
+        comm_matrix = self.read_matrix(
+                                cfg.test_generator_data['ccr_0.1_ccost'])
+        self.assertTrue(comm_mean==15)
+        self.assertTrue(comp_matrix[3]== [139,164])
+        self.assertTrue(comm_matrix[0] == [0,15,12,10,16])
+
+        ccr = 10
+        comm_mean,comm_min = generate_cost_matrices(seed,ccr,mean,
+                                uniform_range,processors,tasks,cfg.test_dir)
+        comp_matrix = self.read_matrix(
+                                cfg.test_generator_data['ccr_check_wcost'])
+
+        comm_matrix = self.read_matrix(
+                                cfg.test_generator_data['ccr_10_ccost'])
+        # print(comm_matrix[1][2])
+        print(comm_mean)
+        self.assertTrue(comm_mean == 1500)
+        self.assertTrue(comm_min==1000)
+
+        self.assertTrue(comm_matrix[1][2] >= 1200)
         
 
     def read_matrix(self,matrix):
