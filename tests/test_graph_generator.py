@@ -15,7 +15,7 @@
 
 # Test cases for graph and matrix generation
 
-import unittest, random
+import unittest, random,os
 from csv import reader
 
 from experiments.graph_generator import random_wcost_matrix,\
@@ -28,11 +28,29 @@ class TestMatrixGenerator(unittest.TestCase):
     def setUp(self):
         random.seed(30)
 
+    def tearDown(self):
+        for key in cfg.test_generator_data:
+            if os.path.isfile(cfg.test_generator_data[key]):
+                os.remove(cfg.test_generator_data[key])
+
     # Double check the seed is producing the right values
     def test_random_seed(self):
         random.seed(30)
         self.assertTrue(self.uniform_int(10,20) == 15)
         self.assertTrue(self.uniform_int(10,20) == 12)
+
+        # Test global generation with another seeed value
+        # random.seed(10000)
+        # tasks = 100
+        # processors = 2
+        # #_min, _max = 10,20 
+        # seed = 10000
+        # ccr= 10
+        # mean = 1250
+        # uniform_range =  500
+
+        # generate_cost_matrices(seed,ccr, mean, uniform_range,processors,
+        #                                             tasks,cfg.test_dir)
 
     def test_wcost_matrixGenerator(self):
         """
@@ -65,7 +83,6 @@ class TestMatrixGenerator(unittest.TestCase):
         matrix = []
         random_ccost_matrix(_min,_max,tasks,seed,cfg.test_dir   )
         matrix = self.read_matrix(cfg.test_generator_data['ccost_matrix']) 
-        print(matrix)
         self.assertTrue(matrix[0] == [0,15,12,10,16])
         
 
@@ -107,8 +124,6 @@ class TestMatrixGenerator(unittest.TestCase):
 
         comm_matrix = self.read_matrix(
                                 cfg.test_generator_data['ccr_10_ccost'])
-        # print(comm_matrix[1][2])
-        print(comm_mean)
         self.assertTrue(comm_mean == 1500)
         self.assertTrue(comm_min==1000)
 

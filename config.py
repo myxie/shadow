@@ -40,6 +40,6 @@ test_heuristic_data = {'heft_graph': 'tests/data/topcuoglu.graphml',
 test_generator_data = {	'wcost_matrix': 'tests/data/5_wcost_10-20.csv',
 						'ccost_matrix': 'tests/data/5_ccost_10-20.csv',
 
-						'ccr_check_wcost': 'test/data/5_wcost_100-200.csv',
+						'ccr_check_wcost': 'tests/data/5_wcost_100-200.csv',
 						'ccr_0.1_ccost': 'tests/data/5_ccost_10-20.csv',
 						'ccr_10_ccost': 'tests/data/5_ccost_1000-2000.csv'}

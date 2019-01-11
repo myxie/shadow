@@ -19,12 +19,13 @@ import random
 import csv
 
 def random_wcost_matrix(_min, _max, processors,tasks,seed,directory):
+    csv_header= ['P1', 'P2', '...', 'Pn']
     random.seed(seed)
     with open('{0}/{1}_wcost_{2}-{3}.csv'.format(directory,tasks,_min,_max),
                          'w',newline='') as csvfile:
 
         writer = csv.writer(csvfile)
-        writer.writerow(['P1', 'P2', '...', 'Pn'])
+        writer.writerow(csv_header)
         writer = csv.writer(csvfile,delimiter=',')
         for t in range(0,tasks):
             task_wcost = []
@@ -35,6 +36,7 @@ def random_wcost_matrix(_min, _max, processors,tasks,seed,directory):
             writer.writerow(task_wcost)
 
 def random_ccost_matrix(_min, _max, tasks,seed,directory):
+    csv_header ="['T1', 'T2', '...', 'Tn']"
     random.seed(seed) 
     matrix = [[0 for x in range(tasks)] for x in range(tasks)]
     for x in range(tasks-1):
@@ -42,10 +44,10 @@ def random_ccost_matrix(_min, _max, tasks,seed,directory):
             matrix[x][y]=int(random.uniform(_min,_max))
             matrix[y][x]=matrix[x][y]
 
-    csvfile = open('{0}/{1}_ccost_{1}-{2}.csv'.format(directory,tasks,int(_min),int(_max)),
+    csvfile = open('{0}/{1}_ccost_{2}-{3}.csv'.format(directory,tasks,int(_min),int(_max)),
                                                             'w',newline='') 
     writer = csv.writer(csvfile,delimiter=',')
-    writer.writerow("['T1', 'T2', '...', 'Tn']")
+    writer.writerow(csv_header)
     for row in matrix:
         writer.writerow(row) 
 

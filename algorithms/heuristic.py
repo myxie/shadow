@@ -33,7 +33,6 @@ def heft(wf):
     """
     upward_rank(wf) # return a dictionary
     makespan = insertion_policy(wf)
-    print(wf.processors)
     return makespan
 
 
@@ -45,7 +44,6 @@ def pheft(wf):
     oct_rank_matrix = dict()
     upward_oct_rank(wf,oct_rank_matrix)
     makespan = insertion_policy_oct(wf,oct_rank_matrix)
-    print(wf.processors)
     return makespan
 
 
