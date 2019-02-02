@@ -23,3 +23,23 @@
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
 
+"""
+From Yu, Kirley & Buyya 2007
+NSGAII* and SPEAII*: 
+1. Generate intial population
+do:
+    2. crossover on individuals
+    3. perform mutation on offspring
+    4. evaluate current solutions
+    5. select individuals to be carried onto next generation
+while(termination condition not satisfied)
+
+The two differ on evaluation and selection strategy
+"""
+
+def nsgaiistar(wf): 
+
+    return None
+
+def speaiistar(wf): 
+    return None

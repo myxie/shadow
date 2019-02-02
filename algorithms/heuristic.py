@@ -23,9 +23,11 @@
 from random import randint
 import networkx as nx
 
-"""
-HEFT ranking and allocation functionality
-"""
+
+#############################################################################
+############################# HUERISTICS  ###################################
+#############################################################################
+
 
 def heft(wf): 
     """
@@ -38,13 +40,25 @@ def heft(wf):
 
 def pheft(wf):
     """
-    Implementation of the PHEFT algorithm, which adaptst the HEFT algorithm using the concpet of an Optimistic Cost Table (OCT)
+    Implementation of the PHEFT algorithm, which adaptst the HEFT algorithm 
+    using the concpet of an Optimistic Cost Table (OCT)
     """
-    # wf = Workflow(wf)
-    oct_rank_matrix = dict()
+
+    oct_rank_matrix = dict() # Necessary addition for PHEFT
     upward_oct_rank(wf,oct_rank_matrix)
     makespan = insertion_policy_oct(wf,oct_rank_matrix)
     return makespan
+
+
+# TODO: Partial Critical Paths 
+def pcp(wf): 
+    return None
+
+
+#############################################################################
+########################### HELPER FUNCTIONS ################################
+#############################################################################
+
 
 
 def upward_rank(wf):
@@ -276,7 +290,7 @@ def insertion_policy(wf):
             wf.graph.nodes[task]['ast'] = 0
             wf.graph.nodes[task]['aft'] = w
             wf.processors[p].append((wf.graph.nodes[task]['ast'],\
-                                       wf.graph.nodes[task]['ast'],\
+                                       wf.graph.nodes[task]['aft'],\
                                        str(task)))
         else:
             aft = -1 # Finish time for the current task
@@ -296,12 +310,11 @@ def insertion_policy(wf):
             wf.graph.nodes[task]['ast'] = aft - wf.wcost[task][p]
             wf.graph.nodes[task]['aft'] = aft
             if wf.graph.nodes[task]['aft'] >= makespan:
-               makespan  = wf.graph.nodes[task]['aft']
+                makespan  = wf.graph.nodes[task]['aft']
             wf.processors[p].append((wf.graph.nodes[task]['ast'],\
                                        wf.graph.nodes[task]['aft'],\
                                        str(task)))
             wf.processors[p].sort(key=lambda x: x[0])
-        #print(wf.processors)
 
     return makespan
 
