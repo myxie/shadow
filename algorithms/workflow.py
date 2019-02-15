@@ -31,7 +31,7 @@ class Workflow(object):
 
 
 
-    def __init__(self, wcost_vec, resource_vec, attr,graphml):
+    def __init__(self,graphml):
         """
         :params wcost - work cost matrix
         :paramts ccost - communication cost matrix
@@ -39,7 +39,7 @@ class Workflow(object):
         """
         
         self.graph = nx.read_graphml(graphml,int)
-        
+
         ### TODO read in a json file with everything!
         #This is all accessible from self.graph, bur for clearer code we make
         #it directly available from the workflow object
@@ -56,10 +56,10 @@ class Workflow(object):
         'resource' - the supplied FLOP/s 
         'edges' - a second dictionary in which the data products between nodes is stored
         """
-        wcost_vec,resource_vec = []
+        wcost_vec,resource_vec = [],[]
         data_size={}
-        if 'cost' in attr_dict: 
-            wcost_vec = attr_dict['cost']
+        if 'comp' in attr_dict: 
+            wcost_vec = attr_dict['comp']
         else: 
             return -1 # Attribute is not in json file
 
@@ -73,22 +73,22 @@ class Workflow(object):
         else: 
             return -1 
 
-
-
         for node in self.graph.node:
-            self.graph.node['comp'] = np.round(np.divide(wcost_vec[node],resource_vec)).astype(int)
+            self.graph.node[node]['comp'] = np.round(np.divide(wcost_vec[node],resource_vec)).astype(int)
+            self.graph.node[node]['resource']=[False for x in resource_vec]
 
         for edge in self.graph.edges:
             pred,succ = edge[0],edge[1]
-            self.graph.edges[pred,succ]=data_size[pred][succ]
-
-        wcost_vec = attr_dict['cost']
-        resource_vec = attr_dict['resource']
-        data_size = attr_dict['edges']
+            self.graph.edges[pred,succ]['data_size']=data_size[str(pred)][succ]
+        
+        self.processors = [[] for x in range(len(resource_vec))] 
 
 
-        num_processors  =len(self.wcost[0])
-        self.processors = [[] for x in range(0,num_processors)]
+        return 0
+
+        # wcost_vec = attr_dict['cost']
+        # resource_vec = attr_dict['resource']
+        # data_size = attr_dict['edges']
 
         # wcost_vec = self._read_matrix(wcost_vec)
         # resource_vec = self._read_matrix(resource_vec)
@@ -103,7 +103,6 @@ class Workflow(object):
 
 
         
-        return None
 
 
     def _read_matrix(self,matrix):
