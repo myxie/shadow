@@ -36,7 +36,7 @@ def random_wcost_matrix(_min, _max, processors,tasks,seed,directory):
             writer.writerow(task_wcost)
 
 def random_ccost_matrix(_min, _max, tasks,seed,directory):
-    csv_header ="['T1', 'T2', '...', 'Tn']"
+    csv_header =['T1', 'T2', '...', 'Tn']
     random.seed(seed) 
     matrix = [[0 for x in range(tasks)] for x in range(tasks)]
     for x in range(tasks-1):
@@ -44,12 +44,11 @@ def random_ccost_matrix(_min, _max, tasks,seed,directory):
             matrix[x][y]=int(random.uniform(_min,_max))
             matrix[y][x]=matrix[x][y]
 
-    csvfile = open('{0}/{1}_ccost_{2}-{3}.csv'.format(directory,tasks,int(_min),int(_max)),
-                                                            'w',newline='') 
-    writer = csv.writer(csvfile,delimiter=',')
-    writer.writerow(csv_header)
-    for row in matrix:
-        writer.writerow(row) 
+        csvfile = open('{0}/{1}_ccost_{2}-{3}.csv'.format(directory,tasks,int(_min),int(_max)),'w',newline='') 
+        writer = csv.writer(csvfile,delimiter=',')
+        writer.writerow(csv_header) 
+        for row in matrix:
+            writer.writerow(row) 
 
 
 
@@ -80,3 +79,31 @@ def generate_cost_matrices(seed,ccr,mean,uniform_range,
 
     return comm_mean,comm_min
 
+
+# TODO 
+def cost_json_dump(array):
+    
+
+    #generate the node dictionary entry
+
+    #generate the resource dictionary entry
+
+    # Generate the edge dictionary
+    edgedict={}             
+    count=0                   
+    for node in mat:                               
+        edgedict[count]=node
+        count+=1
+
+    # Dump to json 
+    import json
+    fp = open('test.json','w')
+    json.dump(newdict,fp, indent=4)
+    fp.close()
+    
+
+
+    # edgedict={} 
+    # for tup in array:
+    #     tuple2str = ','.join([str(x) for x in tup])
+    #     edgedict[tuple2str] = 4*tup[1]

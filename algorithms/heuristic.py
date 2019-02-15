@@ -143,8 +143,8 @@ def rank_up_random(wf,task):
 
     longest_rank = 0
     for successor in wf.successors(task):
-        if not 'rank' in wf.graph.nodes[successor]: # if we have not assigned a rank
-#            if successor.rank is -1:
+        if not 'rank' in wf.graph.nodes[successor]: 
+        # if we have not assigned a rank
             rank_up(successor)
 
         longest_rank = max(longest_rank, ave_comm_cost(wf,task,successor)+\

@@ -21,15 +21,17 @@ workflow. A workflow object is a struct to keep associated data
 together. 
 """
 
+import json
 from csv import reader
 
 import networkx as nx
-
+import numpy as np
 
 class Workflow(object):
 
 
-    def __init__(self, wcost, ccost, graphml):
+
+    def __init__(self, wcost_vec, resource_vec, attr,graphml):
         """
         :params wcost - work cost matrix
         :paramts ccost - communication cost matrix
@@ -37,17 +39,71 @@ class Workflow(object):
         """
         
         self.graph = nx.read_graphml(graphml,int)
-
+        
+        ### TODO read in a json file with everything!
         #This is all accessible from self.graph, bur for clearer code we make
         #it directly available from the workflow object
     
-        self.wcost = self._read_matrix(wcost)
-        self.ccost = self._read_matrix(ccost)
+
+    def load_attributes(self,attr):
+
+        fp_attr = open(attr,'r')
+        attr_dict = json.load(fp_attr)
+        fp_attr.close()
+        """
+        Attributes in the json file: 
+        'cost' - the total FLOPS cost of each task 
+        'resource' - the supplied FLOP/s 
+        'edges' - a second dictionary in which the data products between nodes is stored
+        """
+        wcost_vec,resource_vec = []
+        data_size={}
+        if 'cost' in attr_dict: 
+            wcost_vec = attr_dict['cost']
+        else: 
+            return -1 # Attribute is not in json file
+
+        if 'resource' in attr_dict: 
+            resource_vec = attr_dict['resource']
+        else: 
+            return -1 
+
+        if 'edge' in attr_dict: 
+            data_size = attr_dict['edge']
+        else: 
+            return -1 
+
+
+
+        for node in self.graph.node:
+            self.graph.node['comp'] = np.round(np.divide(wcost_vec[node],resource_vec)).astype(int)
+
+        for edge in self.graph.edges:
+            pred,succ = edge[0],edge[1]
+            self.graph.edges[pred,succ]=data_size[pred][succ]
+
+        wcost_vec = attr_dict['cost']
+        resource_vec = attr_dict['resource']
+        data_size = attr_dict['edges']
+
 
         num_processors  =len(self.wcost[0])
         self.processors = [[] for x in range(0,num_processors)]
 
+        # wcost_vec = self._read_matrix(wcost_vec)
+        # resource_vec = self._read_matrix(resource_vec)
+        # # ccost = self._read_matrix(ccost)
+
+        # data_rates = self._read_matrix(rates)
+        # data_size = self._read_matrix(sizes)
+
+        # for node in self.graph.node:
+        #     self.graph.node['comp'] = np.round(np.divide(wcost_vec[node],resource_vec)).astype(int)
+
+
+
         
+        return None
 
 
     def _read_matrix(self,matrix):

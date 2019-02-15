@@ -18,15 +18,13 @@
 
 # This is a temporary file whilst existing issues with HEFT code is ironed out.
 
-import time
-
 import networkx as nx
 
 from random import randint
 from queue import Queue
 
 from algorithms.utils import read_matrix
-from algorithms.workflow import Workflow
+# from algorithms.workflow import Workflow
 
 
 # graph = nx.read_graphml(graphml,int)#,Task)

@@ -26,7 +26,6 @@ def run_experiments(args):
     pass
 
 def run_tests(args,tests,curr_parser):
-    print('hello')
     if args['all']:
             suite = unittest.TestSuite()
             loader= unittest.TestLoader()
