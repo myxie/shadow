@@ -22,8 +22,6 @@ import config as cfg
 from algorithms.heuristic import heft
 from algorithms.workflow import Workflow
 
-def run_experiments(args):
-    pass
 
 def run_tests(args,tests,curr_parser):
     if args['all']:
@@ -47,19 +45,15 @@ def run_tests(args,tests,curr_parser):
 
 def run_algorithm(args,parser):
     if args['algorithm'] == 'heft':
-        wf = Workflow(args['wcost'],args['ccost'],args['graph'])
-        print(heft(wf))
-        for processor in wf.processors:
-            print(processor)
-        for node in wf.graph.nodes:
-            print(node,wf.graph.nodes[node]['rank'])
-
+        wf = Workflow(args['graph'])
+        calc_time = (args['calc_time'] == 'True')
+        wf.load_attributes(args['attr'],calc_time)
+        heft(wf)
+        wf.pretty_print_allocation()
 
 
 
 if __name__ == "__main__":
-
-    # Parser and test 
 
     parser = argparse.ArgumentParser(description=\
     		'Multi-Objective Workflow Scheduling Modelling Suite')
@@ -75,28 +69,15 @@ if __name__ == "__main__":
  
     test_parser.set_defaults(func=run_tests)
 
-    generate_parser = subparsers.add_parser(
-                                'generator', help='Data generator for testing')
-
-    # generate_parser.add_parser('data', nargs='+',choices=['graph,matrix'],
-                                # help='Generate graph and/or matrix')
-
     algorithm_parser = subparsers.add_parser('algorithm',help='Run a single algorithm on a given data file') 
     algorithm_parser.set_defaults(func=run_algorithm) 
     algorithm_parser.add_argument('algorithm',help='Name of algorithm')
-    algorithm_parser.add_argument('graph',help='location of graphml file')
-    algorithm_parser.add_argument('wcost')
-    algorithm_parser.add_argument('ccost')
+    algorithm_parser.add_argument('graph',help='Location of graphml file')
+    algorithm_parser.add_argument('attr',help='Location of attributes file')
+    algorithm_parser.add_argument('calc_time',help='Set calc_time True/False',choices=['True','False'])
 
-
-    # args = parser.parse_args() 
-
-    
-    experiment_parser= subparsers.add_parser('experiment', help='Experiment Runner')
-    experiment_parser.set_defaults(func=run_experiments)
 
     args = parser.parse_args()
-    # print(args['commands'])
     if not args.command:
         parser.print_help()
     if args.command == 'algorithm':
@@ -104,7 +85,6 @@ if __name__ == "__main__":
     if args.command == 'test':
         args.func(vars(args),cfg.tests,test_parser)
 
-# ARGPARSE SUBPARSER FUNCTIONS
 
 
 

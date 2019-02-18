@@ -12,7 +12,6 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.  
-# Copyright (C) [Date] RW Bunney
 
 
 """
@@ -29,8 +28,6 @@ import numpy as np
 
 class Workflow(object):
 
-
-
     def __init__(self,graphml):
         """
         :params wcost - work cost matrix
@@ -41,21 +38,27 @@ class Workflow(object):
         self.graph = nx.read_graphml(graphml,int)
 
 
-    def load_attributes(self,attr):
-
-        fp_attr = open(attr,'r')
-        attr_dict = json.load(fp_attr)
-        fp_attr.close()
+    def load_attributes(self,attr,calc_time=True,perc_peak=1.0):
         """
         Attributes in the json file: 
         'comp' - the total FLOPS cost of each task 
         'resource' - the supplied FLOP/s 
         'edge' - a second dictionary in which the data products between nodes is stored
+
+        If calc_time is True, then we calculate how much time each tasks takes based on the resource demand of the application and the supplied FLOPs/sec provided by each 'resource'
+
+        If calc_time is False, then the time has already been calculated, and we have been provided with a cost vector per task instead. 
+
         """
-        wcost_vec,resource_vec = [],[]
+
+        fp_attr = open(attr,'r')
+        attr_dict = json.load(fp_attr)
+        fp_attr.close()
+
+        wcost,resource_vec = [],[]
         data_size={}
         if 'comp' in attr_dict: 
-            wcost_vec = attr_dict['comp']
+            wcost = attr_dict['comp']
         else: 
             return -1 # Attribute is not in json file
 
@@ -69,16 +72,20 @@ class Workflow(object):
         else: 
             return -1 
 
-        for node in self.graph.node:
-            self.graph.node[node]['comp'] = np.round(np.divide(wcost_vec[node],resource_vec)).astype(int)
-            self.graph.node[node]['resource']=[False for x in resource_vec]
+        if calc_time:
+            for node in self.graph.node:
+                self.graph.node[node]['comp'] = np.round(np.divide(wcost[node],resource_vec)).astype(int)                
+        else:
+            for node in self.graph.node:
+                self.graph.node[node]['comp']=wcost[node]
 
+        # TODO implement second data approach, which takes the rate of transfer between resources and calculates time based on that. 
         for edge in self.graph.edges:
             pred,succ = edge[0],edge[1]
             self.graph.edges[pred,succ]['data_size']=data_size[str(pred)][succ]
         
         self.processors = [[] for x in range(len(resource_vec))] 
-
+        self.makespan = 0
 
         return 0
 
@@ -87,25 +94,22 @@ class Workflow(object):
 
         for p in self.processors:
             p = sorted(p)
-            print(p)
+            # print(p)
         print() 
 
 
         for x in range(len(list(self.graph.nodes))):
             print(x,end='\t')
-            # alloc_string=""
             tabstop=""
             for p in range(len(self.processors)):
                 if x < len(self.processors[p]):
                     print("{0}".format(self.processors[p][x]),end='\t')
                 else:
-                # index = self.processors.index(p)
                     tabstop = '\t\t'
                     print(tabstop,end='')
             print()
-            # print(alloc_string)
-            # print(alloc_string)
-            # print(alloc_string)
+
+        print("Total Makespan: {0}".format(self.makespan))
 
 
         # wcost_vec = attr_dict['cost']

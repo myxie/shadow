@@ -33,7 +33,7 @@ def heft(wf):
     """
     Implementation of the original 1999 HEFT algorithm.
     """
-    upward_rank(wf) # return a dictionary
+    upward_rank(wf) 
     makespan = insertion_policy(wf)
     return makespan
 
@@ -67,15 +67,8 @@ def upward_rank(wf):
     then sorted according to the rank. Returns a sorted list of tasks in
     order of rank. 
     """
-
-    # if method == 'up':  
     for task in sorted(list(wf.graph.nodes)):
         rank_up(wf,task)
-        
-    # if method == 'random':
-    #     for node in sorted(list(wf.nodes())):
-    #         rank_up_random(node)
-    #     # return sort_tasks(wf,'rank')
         
 
         
@@ -158,7 +151,6 @@ def rank_up_random(wf,task):
     elif randval is 2: 
         ave_comp = max_comp_cost(task)
 
-    # node.rank = ave_comp + longest_rank
     wf.graph.nodes[task]['rank'] = ave_comp + longest_rank
 
 
@@ -175,7 +167,6 @@ def rank_oct(wf, oct_rank_matrix, node, pk):
             if (successor, processor) not in oct_rank_matrix.keys():
                 rank_oct(wf,oct_rank_matrix,successor, processor) 
             comm_cost = 0
-            # comp_cost = wf.wcost[successor][processor]
             comp_cost = wf.graph.node[successor]['comp'][processor] 
             if processor is not pk:
                 comm_cost = ave_comm_cost(wf,node, successor)
@@ -196,22 +187,18 @@ def ave_comm_cost(wf,task,successor):
     :params node: Starting node
     :params successor: Node with which the starting node is communicating
     """
-    #cost = wf.ccost[task][successor]
     cost = wf.graph.edges[task,successor]['data_size']
     return cost 
 
 def ave_comp_cost(wf,task):
-    # comp = wf.wcost[task]
     comp = wf.graph.node[task]['comp']
     return sum(comp)/len(comp)
 
 def max_comp_cost(wf, task):
-    # comp = wf.wcost[task]
     comp = wf.graph.node[task]['comp']
     return max(comp)
 
 def min_comp_cost(wf, task):
-    # comp = wf.wcost[task]
     comp = wf.graph.node[task]['comp']
     return min(comp)
 
@@ -221,17 +208,16 @@ def calc_est(wf,node,processor_num,task_list):
     Calculate the Estimated Start Time of a node on a given processor
     """
     
-    est = 0 # If the node does not have predecessors
+    est = 0
     predecessors = wf.graph.predecessors(node)
     for pretask in predecessors:
         if not 'processor' in wf.graph.nodes[pretask]:
             wf.graph.nodes[pretask]['processor'] = 0 # Default to 0
-        # If task isn't on the same processor
+        # If task isn't on the same processor, we there is a transfer cost
         if wf.graph.nodes[pretask]['processor'] != processor_num: 
-            # comm_cost = wf.ccost[pretask][node]
             comm_cost = wf.graph.edges[pretask,node]['data_size']
         else:
-            comm_cost = 0 # task is on the same processor, communication cost is 0
+            comm_cost = 0 
 
         # wf.graph.predecessors is not being updated in insertion_policy;
         # need to use the tasks that are being updated to get the right results
@@ -262,7 +248,6 @@ def calc_est(wf,node,processor_num,task_list):
         available_slots.append((processor[len(processor)-1][1],-1))
 
     for slot in available_slots:
-        # if est < slot[0] and slot[0] + wf.wcost[node][processor_num] <= slot[1]:
         if est < slot[0] and slot[0] + \
                 wf.graph.node[node]['comp'][processor_num] <= slot[1]:
             return slot[0]
@@ -292,9 +277,7 @@ def insertion_policy(wf):
     tasks = sort_tasks(wf,'rank')
     for task in tasks:
         if task == tasks[0]: 
-            # w = min(wf.wcost[task])
             w=  min(wf.graph.nodes[task]['comp'])
-            # p = wf.wcost[task].index(w)
             p= list(wf.graph.nodes[task]['comp']).index(w)
             wf.graph.nodes[task]['processor'] = p
             wf.graph.nodes[task]['ast'] = 0
@@ -309,17 +292,15 @@ def insertion_policy(wf):
                 # tasks in self.rank_sort are being updated, not wf.graph;
                 est = calc_est(wf,task, processor, tasks)
                 if aft == -1: # assign initial value of aft for this task
-                    # aft = est + wf.wcost[task][processor]
                     aft = est + wf.graph.nodes[task]['comp'][processor]
                     p = processor
                 # see if the next processor gives us an earlier finish time
-                # elif est + wf.wcost[task][processor] < aft:
                 elif est + wf.graph.nodes[task]['comp'][processor] < aft:
-                    aft = est + wf.graph.nodes[task]['comp'][processor] #wf.wcost[task][processor]
+                    aft = est + wf.graph.nodes[task]['comp'][processor] 
                     p = processor
 
             wf.graph.nodes[task]['processor'] = p
-            wf.graph.nodes[task]['ast'] = aft - wf.graph.nodes[task]['comp'][p] #wf.wcost[task][p]
+            wf.graph.nodes[task]['ast'] = aft - wf.graph.nodes[task]['comp'][p]
             wf.graph.nodes[task]['aft'] = aft
             if wf.graph.nodes[task]['aft'] >= makespan:
                 makespan  = wf.graph.nodes[task]['aft']
@@ -328,6 +309,7 @@ def insertion_policy(wf):
                                        str(task)))
             wf.processors[p].sort(key=lambda x: x[0])
 
+    wf.makespan = makespan
     return makespan
 
 
@@ -349,15 +331,14 @@ def insertion_policy_oct(wf,oct_rank_matrix):
             wf.graph.nodes[task]['ast'] = 0
             min_oeft = -1
             for processor in range(len(wf.processors)):
-                eft_matrix[(task,processor)] = wf.wcost[task][processor]
+                eft_matrix[(task,processor)] = wf.graph.nodes[task]['comp'][processor]
                 oeft_matrix[(task,processor)] = eft_matrix[(task,processor)]\
                                                 + oct_rank_matrix[(task,processor)]
                 if (min_oeft == -1) or \
                         (oeft_matrix[(task,processor)]  < min_oeft): 
                     min_oeft = oeft_matrix[(task,processor)]
                     p = processor
-                    
-            wf.graph.nodes[task]['aft'] = wf.wcost[task][p]
+            wf.graph.nodes[task]['aft'] = wf.graph.nodes[task]['comp'][p]#wf.wcost[task][p]
             wf.graph.nodes[task]['processor'] = p
             wf.processors[p].append((wf.graph.nodes[task]['ast'],\
                                        wf.graph.nodes[task]['aft'],\
@@ -370,7 +351,7 @@ def insertion_policy_oct(wf,oct_rank_matrix):
                     est = calc_est(wf,task,processor,tasks)
                 else:
                     est=0
-                eft = est + wf.wcost[task][processor]
+                eft = est + wf.graph.nodes[task]['comp'][processor]
                 eft_matrix[(task,processor)] = eft
                 oeft_matrix[(task,processor)] = eft_matrix[(task,processor)]\
                     + oct_rank_matrix[(task,processor)]
@@ -381,7 +362,7 @@ def insertion_policy_oct(wf,oct_rank_matrix):
 
             wf.graph.nodes[task]['aft'] =  eft_matrix[(task,p)]  
             wf.graph.nodes[task]['ast'] = wf.graph.nodes[task]['aft']\
-                                            - wf.wcost[task][processor]
+                                            - wf.graph.nodes[task]['comp'][processor]
             wf.graph.nodes[task]['processor'] = p
 
             if wf.graph.nodes[task]['aft'] >= makespan:

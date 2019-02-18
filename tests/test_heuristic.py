@@ -33,13 +33,9 @@ class TestHeftMethods(unittest.TestCase):
     """ 
      
     def setUp(self):
-        self.wf = Workflow(cfg.test_heuristic_data['heft_wcost'],
-                            cfg.test_heuristic_data['heft_ccost'],
-                            cfg.test_heuristic_data['heft_graph'])
+        self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'])
+        self.wf.load_attributes(cfg.test_heuristic_data['heft_attr'],calc_time=False)
 
-
-    def tearDown(self):
-        return -1
     
     def test_rank(self):
         rank_values = [108,77,79,80,69,63,42,35,44,14]
@@ -50,16 +46,25 @@ class TestHeftMethods(unittest.TestCase):
                                 rank_values[node])
     
     def test_schedule(self):
-        # upward_rank(self.wf) 
         retval = heft(self.wf)
         self.assertTrue(retval == 80)
 
+class TestHeftMethodCalcTime(unittest.TestCase):
+    def setUp(self):
+        self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'])
+        self.wf.load_attributes(cfg.test_heuristic_data['flops_test_attr'])
+
+    def test_schedule(self):
+        retval = heft(self.wf)
+        self.assertTrue(retval == 98)
+
+
+# @unittest.skip('For now')
 class TestPHeftMethods(unittest.TestCase):
 
     def setUp(self):
-        self.wf = Workflow(cfg.test_heuristic_data['pheft_wcost'],
-                            cfg.test_heuristic_data['pheft_ccost'],
-                            cfg.test_heuristic_data['pheft_graph'])
+        self.wf = Workflow(cfg.test_heuristic_data['pheft_graph'])
+        self.wf.load_attributes(cfg.test_heuristic_data['pheft_attr'],calc_time=False)
 
         self.up_oct_rank_values = [72,41,37,43,31,41,17,20,16,0]
         self.up_rank_values = [169,114,102,110,129,119,52,92,42,20]
@@ -68,7 +73,6 @@ class TestPHeftMethods(unittest.TestCase):
         return -1
 
     def test_up_rank(self):
-        # oct_rank_matrix = 
         upward_rank(self.wf)
         sorted_tasks = sort_tasks(self.wf,'rank')
         for node in sorted_tasks:
@@ -76,7 +80,6 @@ class TestPHeftMethods(unittest.TestCase):
                             self.up_rank_values[node])  
 
     def test_oct_rank(self):
-        # self.wf.rank('oct')
         oct_rank_matrix = dict()
         upward_oct_rank(self.wf, oct_rank_matrix)
         sorted_tasks = sort_tasks(self.wf,'rank')
@@ -84,12 +87,7 @@ class TestPHeftMethods(unittest.TestCase):
             self.assertTrue(int(self.wf.graph.node[node]['rank']) ==\
                             self.up_oct_rank_values[node])  
     
-    @unittest.skip('Todo')
-    def test_oct_matrix(self):
-        self.heft.rank('oct')
-        for key in self.heft.oct_rank_matrix:
-            print(key, self.heft.oct_rank_matrix[key])
-        
+      
     def test_heft_schedule(self):
         # upward_rank(self.wf) 
         retval = heft(self.wf)
@@ -98,5 +96,8 @@ class TestPHeftMethods(unittest.TestCase):
     def test_pheft_schedule(self):
         # upward_rank(self.wf) 
         retval = pheft(self.wf)
+        print(retval)
+        self.wf.pretty_print_allocation()
         self.assertTrue(retval == 122)
+
 

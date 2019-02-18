@@ -28,14 +28,16 @@ tests = { 'workflow': tests.test_workflow,
 
 test_dir = 'tests/data'
 
-test_heuristic_data = {'heft_graph': 'tests/data/topcuoglu.graphml',
-						'heft_wcost': 'tests/data/topcuoglu_comp.txt',
-						'heft_ccost':'tests/data/topcuoglu_comm.txt',
+test_heuristic_data = {	# Tests that use the Topcuoglu paper graph
+						'topcuoglu_graph': 'tests/data/topcuoglu.graphml',
+						'heft_attr': 'tests/data/heft_attr.json',
+						'flops_test_attr':'tests/data/flop_rep_test.json',
 
-						'pheft_graph': 'tests/data/oct.graphml',
-						'pheft_wcost': 'tests/data/oct_comp.txt',
-						'pheft_ccost':'tests/data/oct_comm.txt',
-						}
+						# Tests that use the PHEFT paper graph
+						'pheft_graph': 'tests/data/pheft.graphml',
+						'pheft_attr': 'tests/data/pheft_attr.json',
+						# 'pheft_ccost':'tests/data/oct_comm.txt',
+					}
 
 test_generator_data = {	'wcost_matrix': 'tests/data/5_wcost_10-20.csv',
 						'ccost_matrix': 'tests/data/5_ccost_10-20.csv',
