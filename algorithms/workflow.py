@@ -40,10 +40,6 @@ class Workflow(object):
         
         self.graph = nx.read_graphml(graphml,int)
 
-        ### TODO read in a json file with everything!
-        #This is all accessible from self.graph, bur for clearer code we make
-        #it directly available from the workflow object
-    
 
     def load_attributes(self,attr):
 
@@ -52,9 +48,9 @@ class Workflow(object):
         fp_attr.close()
         """
         Attributes in the json file: 
-        'cost' - the total FLOPS cost of each task 
+        'comp' - the total FLOPS cost of each task 
         'resource' - the supplied FLOP/s 
-        'edges' - a second dictionary in which the data products between nodes is stored
+        'edge' - a second dictionary in which the data products between nodes is stored
         """
         wcost_vec,resource_vec = [],[]
         data_size={}
@@ -85,6 +81,32 @@ class Workflow(object):
 
 
         return 0
+
+
+    def pretty_print_allocation(self):
+
+        for p in self.processors:
+            p = sorted(p)
+            print(p)
+        print() 
+
+
+        for x in range(len(list(self.graph.nodes))):
+            print(x,end='\t')
+            # alloc_string=""
+            tabstop=""
+            for p in range(len(self.processors)):
+                if x < len(self.processors[p]):
+                    print("{0}".format(self.processors[p][x]),end='\t')
+                else:
+                # index = self.processors.index(p)
+                    tabstop = '\t\t'
+                    print(tabstop,end='')
+            print()
+            # print(alloc_string)
+            # print(alloc_string)
+            # print(alloc_string)
+
 
         # wcost_vec = attr_dict['cost']
         # resource_vec = attr_dict['resource']
