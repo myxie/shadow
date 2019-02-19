@@ -355,7 +355,7 @@ def insertion_policy_oct(wf,oct_rank_matrix):
                         (oeft_matrix[(task,processor)]  < min_oeft): 
                     min_oeft = oeft_matrix[(task,processor)]
                     p = processor
-            wf.graph.nodes[task]['aft'] = wf.graph.nodes[task]['comp'][p]#wf.wcost[task][p]
+            wf.graph.nodes[task]['aft'] = wf.graph.nodes[task]['comp'][p]
             wf.graph.nodes[task]['processor'] = p
             wf.processors[p].append((wf.graph.nodes[task]['ast'],\
                                        wf.graph.nodes[task]['aft'],\

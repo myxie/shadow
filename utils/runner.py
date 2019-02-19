@@ -15,7 +15,7 @@
 
 # Setup and run an experiment given a set of parameters
 
-from algorithms.workflow import Workflow
+from classes.workflow import Workflow
 
 from algorithms.heuristics import heft, pheft
 

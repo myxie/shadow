@@ -93,6 +93,7 @@ class Workflow(object):
         self.processors = [[] for x in range(len(resource_vec))] 
         self.makespan = 0
         self.data_rate = data_rate
+        self.thrpt = 0.0
         return 0
 
 

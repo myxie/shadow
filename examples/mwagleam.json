@@ -1,0 +1,2432 @@
+[
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "stokes images 3",
+        "island": "#0",
+        "oid": "1_-186_0",
+        "storage": "memory",
+        "producers": [
+            "1_-185_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-184_0"
+        ],
+        "loop_cxt": null,
+        "nm": "stokes images 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-185_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/stokesimages.sh 1146606664 G0008",
+        "outputs": [
+            "1_-186_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "really deep clean 3",
+        "consumers": [
+            "1_-185_0"
+        ],
+        "island": "#0",
+        "oid": "1_-184_0",
+        "storage": "memory",
+        "producers": [
+            "1_-183_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-182_0"
+        ],
+        "loop_cxt": null,
+        "nm": "really deep clean 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-183_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/reallydeepclean.sh 1146606664 G0008",
+        "outputs": [
+            "1_-184_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "apply calibration solutions 3",
+        "consumers": [
+            "1_-183_0"
+        ],
+        "island": "#0",
+        "oid": "1_-182_0",
+        "storage": "memory",
+        "producers": [
+            "1_-181_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-180_0"
+        ],
+        "loop_cxt": null,
+        "nm": "apply calibration solutions 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-181_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/applycalibrationsolutions.sh 1146606664 G0008",
+        "outputs": [
+            "1_-182_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "default calibrate 3",
+        "consumers": [
+            "1_-181_0"
+        ],
+        "island": "#0",
+        "oid": "1_-180_0",
+        "storage": "memory",
+        "producers": [
+            "1_-179_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-178_0"
+        ],
+        "loop_cxt": null,
+        "nm": "default calibrate 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-179_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/defaultcalibrate.sh 1146606664 G0008",
+        "outputs": [
+            "1_-180_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "FT stokes 3",
+        "consumers": [
+            "1_-179_0"
+        ],
+        "island": "#0",
+        "oid": "1_-178_0",
+        "storage": "memory",
+        "producers": [
+            "1_-177_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-176_0"
+        ],
+        "loop_cxt": null,
+        "nm": "FT stokes 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-177_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/FTstokes.sh 1146606664 G0008",
+        "outputs": [
+            "1_-178_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "uncorrect beam 3",
+        "consumers": [
+            "1_-177_0"
+        ],
+        "island": "#0",
+        "oid": "1_-176_0",
+        "storage": "memory",
+        "producers": [
+            "1_-175_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-174_0"
+        ],
+        "loop_cxt": null,
+        "nm": "uncorrect beam 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-175_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/uncorrectbeam.sh 1146606664 G0008",
+        "outputs": [
+            "1_-176_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "correct mode file 3",
+        "consumers": [
+            "1_-175_0"
+        ],
+        "island": "#0",
+        "oid": "1_-174_0",
+        "storage": "memory",
+        "producers": [
+            "1_-173_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-172_0"
+        ],
+        "loop_cxt": null,
+        "nm": "correct mode 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-173_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/correctmode.sh 1146606664 G0008",
+        "outputs": [
+            "1_-174_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "correct beam file 3",
+        "consumers": [
+            "1_-173_0"
+        ],
+        "island": "#0",
+        "oid": "1_-172_0",
+        "storage": "memory",
+        "producers": [
+            "1_-171_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-170_0"
+        ],
+        "loop_cxt": null,
+        "nm": "generate correct 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-171_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/correctbeam.sh 1146606664 G0008",
+        "outputs": [
+            "1_-172_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "initial clean file 4",
+        "consumers": [
+            "1_-171_0"
+        ],
+        "island": "#0",
+        "oid": "1_-170_0",
+        "storage": "memory",
+        "producers": [
+            "1_-169_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-22_0"
+        ],
+        "loop_cxt": null,
+        "nm": "initial clean 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-169_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/initialclean.sh 1146606664 G0008",
+        "outputs": [
+            "1_-170_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "stokes images 4",
+        "island": "#0",
+        "oid": "1_-168_0",
+        "storage": "memory",
+        "producers": [
+            "1_-112_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-166_0"
+        ],
+        "loop_cxt": null,
+        "nm": "generate correct 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-167_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/correctbeam.sh 1146607264 G0008",
+        "outputs": [
+            "1_-99_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "initial clean file 4",
+        "consumers": [
+            "1_-167_0"
+        ],
+        "island": "#0",
+        "oid": "1_-166_0",
+        "storage": "memory",
+        "producers": [
+            "1_-165_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-21_0"
+        ],
+        "loop_cxt": null,
+        "nm": "initial clean 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-165_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/initialclean.sh 1146607264 G0008",
+        "outputs": [
+            "1_-166_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "stokes images 3",
+        "island": "#0",
+        "oid": "1_-164_0",
+        "storage": "memory",
+        "producers": [
+            "1_-163_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-162_0"
+        ],
+        "loop_cxt": null,
+        "nm": "stokes images 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-163_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/stokesimages.sh 1146607864 G0008",
+        "outputs": [
+            "1_-164_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "really deep clean 3",
+        "consumers": [
+            "1_-163_0"
+        ],
+        "island": "#0",
+        "oid": "1_-162_0",
+        "storage": "memory",
+        "producers": [
+            "1_-161_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-160_0"
+        ],
+        "loop_cxt": null,
+        "nm": "really deep clean 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-161_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/reallydeepclean.sh 1146607864 G0008",
+        "outputs": [
+            "1_-162_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "apply calibration solutions 3",
+        "consumers": [
+            "1_-161_0"
+        ],
+        "island": "#0",
+        "oid": "1_-160_0",
+        "storage": "memory",
+        "producers": [
+            "1_-159_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-158_0"
+        ],
+        "loop_cxt": null,
+        "nm": "apply calibration solutions 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-159_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/applycalibrationsolutions.sh 1146607864 G0008",
+        "outputs": [
+            "1_-160_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "default calibrate 3",
+        "consumers": [
+            "1_-159_0"
+        ],
+        "island": "#0",
+        "oid": "1_-158_0",
+        "storage": "memory",
+        "producers": [
+            "1_-157_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-156_0"
+        ],
+        "loop_cxt": null,
+        "nm": "default calibrate 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-157_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/defaultcalibrate.sh 1146607864 G0008",
+        "outputs": [
+            "1_-158_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "FT stokes 3",
+        "consumers": [
+            "1_-157_0"
+        ],
+        "island": "#0",
+        "oid": "1_-156_0",
+        "storage": "memory",
+        "producers": [
+            "1_-155_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-154_0"
+        ],
+        "loop_cxt": null,
+        "nm": "FT stokes 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-155_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/FTstokes.sh 1146607864 G0008",
+        "outputs": [
+            "1_-156_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "uncorrect beam 3",
+        "consumers": [
+            "1_-155_0"
+        ],
+        "island": "#0",
+        "oid": "1_-154_0",
+        "storage": "memory",
+        "producers": [
+            "1_-153_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-152_0"
+        ],
+        "loop_cxt": null,
+        "nm": "uncorrect beam 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-153_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/uncorrectbeam.sh 1146607864 G0008",
+        "outputs": [
+            "1_-154_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "correct mode file 3",
+        "consumers": [
+            "1_-153_0"
+        ],
+        "island": "#0",
+        "oid": "1_-152_0",
+        "storage": "memory",
+        "producers": [
+            "1_-151_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-150_0"
+        ],
+        "loop_cxt": null,
+        "nm": "correct mode 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-151_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/correctmode.sh 1146607864 G0008",
+        "outputs": [
+            "1_-152_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "correct beam file 3",
+        "consumers": [
+            "1_-151_0"
+        ],
+        "island": "#0",
+        "oid": "1_-150_0",
+        "storage": "memory",
+        "producers": [
+            "1_-149_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-148_0"
+        ],
+        "loop_cxt": null,
+        "nm": "generate correct 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-149_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/correctbeam.sh 1146607864 G0008",
+        "outputs": [
+            "1_-150_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "initial clean file 3",
+        "consumers": [
+            "1_-149_0"
+        ],
+        "island": "#0",
+        "oid": "1_-148_0",
+        "storage": "memory",
+        "producers": [
+            "1_-147_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-20_0"
+        ],
+        "loop_cxt": null,
+        "nm": "initial clean 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-147_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/initialclean.sh 1146607864 G0008",
+        "outputs": [
+            "1_-148_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "stokes images 2",
+        "island": "#0",
+        "oid": "1_-146_0",
+        "storage": "memory",
+        "producers": [
+            "1_-145_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-144_0"
+        ],
+        "loop_cxt": null,
+        "nm": "stokes images 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-145_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/stokesimages.sh 1146608464 G0008",
+        "outputs": [
+            "1_-146_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "really deep clean 2",
+        "consumers": [
+            "1_-145_0"
+        ],
+        "island": "#0",
+        "oid": "1_-144_0",
+        "storage": "memory",
+        "producers": [
+            "1_-143_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-142_0"
+        ],
+        "loop_cxt": null,
+        "nm": "really deep clean 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-143_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/reallydeepclean.sh 1146608464 G0008",
+        "outputs": [
+            "1_-144_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "apply calibration solutions 2",
+        "consumers": [
+            "1_-143_0"
+        ],
+        "island": "#0",
+        "oid": "1_-142_0",
+        "storage": "memory",
+        "producers": [
+            "1_-141_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-140_0"
+        ],
+        "loop_cxt": null,
+        "nm": "apply calibration solutions 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-141_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/applycalibrationsolutions.sh 1146608464 G0008",
+        "outputs": [
+            "1_-142_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "default calibrate 2",
+        "consumers": [
+            "1_-141_0"
+        ],
+        "island": "#0",
+        "oid": "1_-140_0",
+        "storage": "memory",
+        "producers": [
+            "1_-139_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-138_0"
+        ],
+        "loop_cxt": null,
+        "nm": "default calibrate 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-139_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/defaultcalibrate.sh 1146608464 G0008",
+        "outputs": [
+            "1_-140_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "FT stokes 2",
+        "consumers": [
+            "1_-139_0"
+        ],
+        "island": "#0",
+        "oid": "1_-138_0",
+        "storage": "memory",
+        "producers": [
+            "1_-137_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-136_0"
+        ],
+        "loop_cxt": null,
+        "nm": "FT stokes 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-137_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/FTstokes.sh 1146608464 G0008",
+        "outputs": [
+            "1_-138_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "uncorrect beam 2",
+        "consumers": [
+            "1_-137_0"
+        ],
+        "island": "#0",
+        "oid": "1_-136_0",
+        "storage": "memory",
+        "producers": [
+            "1_-135_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-134_0"
+        ],
+        "loop_cxt": null,
+        "nm": "uncorrect beam 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-135_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/uncorrectbeam.sh 1146608464 G0008",
+        "outputs": [
+            "1_-136_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "correct mode file 2",
+        "consumers": [
+            "1_-135_0"
+        ],
+        "island": "#0",
+        "oid": "1_-134_0",
+        "storage": "memory",
+        "producers": [
+            "1_-133_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-132_0"
+        ],
+        "loop_cxt": null,
+        "nm": "correct mode 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-133_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/correctmode.sh 1146608464 G0008",
+        "outputs": [
+            "1_-134_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "correct beam file 2",
+        "consumers": [
+            "1_-133_0"
+        ],
+        "island": "#0",
+        "oid": "1_-132_0",
+        "storage": "memory",
+        "producers": [
+            "1_-131_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-130_0"
+        ],
+        "loop_cxt": null,
+        "nm": "generate correct 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-131_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/correctbeam.sh 1146608464 G0008",
+        "outputs": [
+            "1_-132_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "initial clean file 2",
+        "consumers": [
+            "1_-131_0"
+        ],
+        "island": "#0",
+        "oid": "1_-130_0",
+        "storage": "memory",
+        "producers": [
+            "1_-129_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-19_0"
+        ],
+        "loop_cxt": null,
+        "nm": "initial clean 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-129_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/initialclean.sh 1146608464 G0008",
+        "outputs": [
+            "1_-130_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "stokes images 1",
+        "island": "#0",
+        "oid": "1_-128_0",
+        "storage": "memory",
+        "producers": [
+            "1_-127_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-126_0"
+        ],
+        "loop_cxt": null,
+        "nm": "stokes images 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-127_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/stokesimages.sh 1146609064 G0008",
+        "outputs": [
+            "1_-128_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "really deep clean 1",
+        "consumers": [
+            "1_-127_0"
+        ],
+        "island": "#0",
+        "oid": "1_-126_0",
+        "storage": "memory",
+        "producers": [
+            "1_-125_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-124_0"
+        ],
+        "loop_cxt": null,
+        "nm": "really deep clean 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-125_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/reallydeepclean.sh 1146609064 G0008",
+        "outputs": [
+            "1_-126_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "apply calibration solutions 1",
+        "consumers": [
+            "1_-125_0"
+        ],
+        "island": "#0",
+        "oid": "1_-124_0",
+        "storage": "memory",
+        "producers": [
+            "1_-123_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-122_0"
+        ],
+        "loop_cxt": null,
+        "nm": "apply calibration solutions 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-123_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/applycalibrationsolutions.sh 1146609064 G0008",
+        "outputs": [
+            "1_-124_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "default calibrate 1",
+        "consumers": [
+            "1_-123_0"
+        ],
+        "island": "#0",
+        "oid": "1_-122_0",
+        "storage": "memory",
+        "producers": [
+            "1_-121_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-120_0"
+        ],
+        "loop_cxt": null,
+        "nm": "default calibrate 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-121_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/defaultcalibrate.sh 1146609064 G0008",
+        "outputs": [
+            "1_-122_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "FT stokes 1",
+        "consumers": [
+            "1_-121_0"
+        ],
+        "island": "#0",
+        "oid": "1_-120_0",
+        "storage": "memory",
+        "producers": [
+            "1_-119_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-118_0"
+        ],
+        "loop_cxt": null,
+        "nm": "FT stokes 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-119_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/FTstokes.sh 1146609064 G0008",
+        "outputs": [
+            "1_-120_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "uncorrect beam 1",
+        "consumers": [
+            "1_-119_0"
+        ],
+        "island": "#0",
+        "oid": "1_-118_0",
+        "storage": "memory",
+        "producers": [
+            "1_-117_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-116_0"
+        ],
+        "loop_cxt": null,
+        "nm": "uncorrect beam 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-117_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/uncorrectbeam.sh 1146609064 G0008",
+        "outputs": [
+            "1_-118_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "correct mode file 1",
+        "consumers": [
+            "1_-117_0"
+        ],
+        "island": "#0",
+        "oid": "1_-116_0",
+        "storage": "memory",
+        "producers": [
+            "1_-115_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-114_0"
+        ],
+        "loop_cxt": null,
+        "nm": "correct mode 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-115_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/correctmode.sh 1146609064 G0008",
+        "outputs": [
+            "1_-116_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "correct beam file 1",
+        "consumers": [
+            "1_-115_0"
+        ],
+        "island": "#0",
+        "oid": "1_-114_0",
+        "storage": "memory",
+        "producers": [
+            "1_-113_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-7_0"
+        ],
+        "loop_cxt": null,
+        "nm": "generate correct 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-113_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/correctbeam.sh 1146609064 G0008",
+        "outputs": [
+            "1_-114_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-111_0"
+        ],
+        "loop_cxt": null,
+        "nm": "stokes images 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-112_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/stokesimages.sh 1146607264 G0008",
+        "outputs": [
+            "1_-168_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "really deep clean 4",
+        "consumers": [
+            "1_-112_0"
+        ],
+        "island": "#0",
+        "oid": "1_-111_0",
+        "storage": "memory",
+        "producers": [
+            "1_-110_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-109_0"
+        ],
+        "loop_cxt": null,
+        "nm": "really deep clean 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-110_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/reallydeepclean.sh 1146607264 G0008",
+        "outputs": [
+            "1_-111_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "apply calibration solutions 4",
+        "consumers": [
+            "1_-110_0"
+        ],
+        "island": "#0",
+        "oid": "1_-109_0",
+        "storage": "memory",
+        "producers": [
+            "1_-108_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-107_0"
+        ],
+        "loop_cxt": null,
+        "nm": "apply calibration solutions 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-108_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/applycalibrationsolutions.sh 1146607264 G0008",
+        "outputs": [
+            "1_-109_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "default calibrate 4",
+        "consumers": [
+            "1_-108_0"
+        ],
+        "island": "#0",
+        "oid": "1_-107_0",
+        "storage": "memory",
+        "producers": [
+            "1_-106_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-105_0"
+        ],
+        "loop_cxt": null,
+        "nm": "default calibrate 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-106_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/defaultcalibrate.sh 1146607264 G0008",
+        "outputs": [
+            "1_-107_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "FT stokes 4",
+        "consumers": [
+            "1_-106_0"
+        ],
+        "island": "#0",
+        "oid": "1_-105_0",
+        "storage": "memory",
+        "producers": [
+            "1_-104_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-103_0"
+        ],
+        "loop_cxt": null,
+        "nm": "FT stokes 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-104_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/FTstokes.sh 1146607264 G0008",
+        "outputs": [
+            "1_-105_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "uncorrect beam 4",
+        "consumers": [
+            "1_-104_0"
+        ],
+        "island": "#0",
+        "oid": "1_-103_0",
+        "storage": "memory",
+        "producers": [
+            "1_-102_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-101_0"
+        ],
+        "loop_cxt": null,
+        "nm": "uncorrect beam 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-102_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/uncorrectbeam.sh 1146607264 G0008",
+        "outputs": [
+            "1_-103_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "correct mode file 4",
+        "consumers": [
+            "1_-102_0"
+        ],
+        "island": "#0",
+        "oid": "1_-101_0",
+        "storage": "memory",
+        "producers": [
+            "1_-100_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-99_0"
+        ],
+        "loop_cxt": null,
+        "nm": "correct mode 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-100_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/correctmode.sh 1146607264 G0008",
+        "outputs": [
+            "1_-101_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "correct beam file 4",
+        "consumers": [
+            "1_-100_0"
+        ],
+        "island": "#0",
+        "oid": "1_-99_0",
+        "storage": "memory",
+        "producers": [
+            "1_-167_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "imaging fits file 5",
+        "island": "#0",
+        "oid": "1_-92_0",
+        "storage": "memory",
+        "producers": [
+            "1_-91_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-90_0"
+        ],
+        "loop_cxt": null,
+        "nm": "wsclean 5",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-91_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/wsclean.sh 1146606664 G0008 3c444 1146606664",
+        "outputs": [
+            "1_-92_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "imaging fits file 5",
+        "consumers": [
+            "1_-91_0"
+        ],
+        "island": "#0",
+        "oid": "1_-90_0",
+        "storage": "memory",
+        "producers": [
+            "1_-80_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "imaging fits file 3",
+        "island": "#0",
+        "oid": "1_-89_0",
+        "storage": "memory",
+        "producers": [
+            "1_-88_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-87_0"
+        ],
+        "loop_cxt": null,
+        "nm": "wsclean 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-88_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/wsclean.sh 1146607864 G0008 3c444 1146607864",
+        "outputs": [
+            "1_-89_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "imaging fits file 3",
+        "consumers": [
+            "1_-88_0"
+        ],
+        "island": "#0",
+        "oid": "1_-87_0",
+        "storage": "memory",
+        "producers": [
+            "1_-84_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "imaging fits file 2",
+        "island": "#0",
+        "oid": "1_-86_0",
+        "storage": "memory",
+        "producers": [
+            "1_-85_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-55_0"
+        ],
+        "loop_cxt": null,
+        "nm": "wsclean 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-85_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/wsclean.sh 1146608464 G0008 3c444 1146608464",
+        "outputs": [
+            "1_-86_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-48_0"
+        ],
+        "loop_cxt": null,
+        "nm": "applysolutions 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-84_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/applysolutions.sh 1146607864 G0008 3c444 1146607864",
+        "outputs": [
+            "1_-87_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "imaging fits file 1",
+        "island": "#0",
+        "oid": "1_-83_0",
+        "storage": "memory",
+        "producers": [
+            "1_-82_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-9_0"
+        ],
+        "loop_cxt": null,
+        "nm": "wsclean 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-82_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/wsclean.sh 1146609064 G0008 3c444 1146609064",
+        "outputs": [
+            "1_-83_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-52_0"
+        ],
+        "loop_cxt": null,
+        "nm": "applysolutions 5",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-80_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/applysolutions.sh 1146606664 G0008 3c444 1146606664",
+        "outputs": [
+            "1_-90_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "imaging fits file 4",
+        "island": "#0",
+        "oid": "1_-79_0",
+        "storage": "memory",
+        "producers": [
+            "1_-78_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-77_0"
+        ],
+        "loop_cxt": null,
+        "nm": "wsclean 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-78_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/wsclean.sh 1146607264 G0008 3c444 1146607264",
+        "outputs": [
+            "1_-79_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "imaging fits file 4",
+        "consumers": [
+            "1_-78_0"
+        ],
+        "island": "#0",
+        "oid": "1_-77_0",
+        "storage": "memory",
+        "producers": [
+            "1_-76_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-50_0"
+        ],
+        "loop_cxt": null,
+        "nm": "applysolutions 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-76_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/applysolutions.sh 1146607264 G0008 3c444 1146607264",
+        "outputs": [
+            "1_-77_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "imaging fits file 2",
+        "consumers": [
+            "1_-85_0"
+        ],
+        "island": "#0",
+        "oid": "1_-55_0",
+        "storage": "memory",
+        "producers": [
+            "1_-54_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-46_0"
+        ],
+        "loop_cxt": null,
+        "nm": "applysolutions 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-54_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/applysolutions.sh 1146608464 G0008 3c444 1146608464",
+        "outputs": [
+            "1_-55_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "Solution bin file 5",
+        "consumers": [
+            "1_-80_0"
+        ],
+        "island": "#0",
+        "oid": "1_-52_0",
+        "storage": "memory",
+        "producers": [
+            "1_-34_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "Solution bin file 4",
+        "consumers": [
+            "1_-76_0"
+        ],
+        "island": "#0",
+        "oid": "1_-50_0",
+        "storage": "memory",
+        "producers": [
+            "1_-32_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "Solution bin file 3",
+        "consumers": [
+            "1_-84_0"
+        ],
+        "island": "#0",
+        "oid": "1_-48_0",
+        "storage": "memory",
+        "producers": [
+            "1_-30_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "Solution bin file 2",
+        "consumers": [
+            "1_-54_0"
+        ],
+        "island": "#0",
+        "oid": "1_-46_0",
+        "storage": "memory",
+        "producers": [
+            "1_-28_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-22_0"
+        ],
+        "loop_cxt": null,
+        "nm": "Basic Calibrate 5",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-34_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/calibrate.sh 1146606664 G0008 3c444",
+        "outputs": [
+            "1_-52_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-21_0"
+        ],
+        "loop_cxt": null,
+        "nm": "Basic Calibrate 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-32_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/calibrate.sh 1146607264 G0008 3c444",
+        "outputs": [
+            "1_-50_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-20_0"
+        ],
+        "loop_cxt": null,
+        "nm": "Basic Calibrate 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-30_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/calibrate.sh 1146607864 G0008 3c444",
+        "outputs": [
+            "1_-48_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-19_0"
+        ],
+        "loop_cxt": null,
+        "nm": "Basic Calibrate 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-28_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/calibrate.sh 1146608464 G0008 3c444",
+        "outputs": [
+            "1_-46_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "MS File 5",
+        "consumers": [
+            "1_-34_0",
+            "1_-169_0"
+        ],
+        "island": "#0",
+        "oid": "1_-22_0",
+        "storage": "memory",
+        "producers": [
+            "1_-13_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "MS File 4",
+        "consumers": [
+            "1_-32_0",
+            "1_-165_0"
+        ],
+        "island": "#0",
+        "oid": "1_-21_0",
+        "storage": "memory",
+        "producers": [
+            "1_-12_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "MS File 3",
+        "consumers": [
+            "1_-30_0",
+            "1_-147_0"
+        ],
+        "island": "#0",
+        "oid": "1_-20_0",
+        "storage": "memory",
+        "producers": [
+            "1_-11_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "MS File 2",
+        "consumers": [
+            "1_-28_0",
+            "1_-129_0"
+        ],
+        "island": "#0",
+        "oid": "1_-19_0",
+        "storage": "memory",
+        "producers": [
+            "1_-10_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "Data Download 5",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-13_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "sleep 5 ; echo 'data downloads' >> /tmp/test.txt",
+        "outputs": [
+            "1_-22_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "Data Download 4",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-12_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "sleep 5 ; echo 'data downloads' >> /tmp/test.txt",
+        "outputs": [
+            "1_-21_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "Data Download 3",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-11_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "sleep 5 ; echo 'data downloads' >> /tmp/test.txt",
+        "outputs": [
+            "1_-20_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "Data Download 2",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-10_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "sleep 5 ; echo 'data downloads' >> /tmp/test.txt",
+        "outputs": [
+            "1_-19_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "solutions 1",
+        "consumers": [
+            "1_-82_0"
+        ],
+        "island": "#0",
+        "oid": "1_-9_0",
+        "storage": "memory",
+        "producers": [
+            "1_-8_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-5_0"
+        ],
+        "loop_cxt": null,
+        "nm": "applysolutions 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-8_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/applysolutions.sh 1146609064 G0008 3c444 1146609064",
+        "outputs": [
+            "1_-9_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "initial clean file 1",
+        "consumers": [
+            "1_-113_0"
+        ],
+        "island": "#0",
+        "oid": "1_-7_0",
+        "storage": "memory",
+        "producers": [
+            "1_-6_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-3_0"
+        ],
+        "loop_cxt": null,
+        "nm": "initial clean 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-6_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/initialclean.sh 1146609064 G0008",
+        "outputs": [
+            "1_-7_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "Solution bin file 1",
+        "consumers": [
+            "1_-8_0"
+        ],
+        "island": "#0",
+        "oid": "1_-5_0",
+        "storage": "memory",
+        "producers": [
+            "1_-4_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "inputs": [
+            "1_-3_0"
+        ],
+        "loop_cxt": null,
+        "nm": "Basic Calibrate 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-4_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "bash /home/blao/course/bin/calibrate.sh 1146609064 G0008 3c444",
+        "outputs": [
+            "1_-5_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "MS File 1",
+        "consumers": [
+            "1_-4_0",
+            "1_-6_0"
+        ],
+        "island": "#0",
+        "oid": "1_-3_0",
+        "storage": "memory",
+        "producers": [
+            "1_-2_0"
+        ],
+        "iid": "0",
+        "dw": 5,
+        "dt": "memory",
+        "type": "plain"
+    },
+    {
+        "node": "#0",
+        "loop_cxt": null,
+        "nm": "Data Download 1",
+        "tw": 5,
+        "app": "dfms.apps.bash_shell_app.BashShellApp",
+        "oid": "1_-2_0",
+        "iid": "0",
+        "island": "#0",
+        "command": "sleep 5 ; echo 'data downloads' >> /tmp/test.txt",
+        "outputs": [
+            "1_-3_0"
+        ],
+        "dt": "BashShellApp",
+        "type": "app",
+        "num_cpus": 1
+    }
+]

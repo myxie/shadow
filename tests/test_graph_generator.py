@@ -18,7 +18,7 @@
 import unittest, random,os
 from csv import reader
 
-from experiments.graph_generator import random_wcost_matrix,\
+from utils.graph_generator import random_wcost_matrix,\
                                         random_ccost_matrix,\
                                         generate_cost_matrices
 

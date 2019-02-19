@@ -20,7 +20,7 @@ import argparse,unittest
 
 import config as cfg
 from algorithms.heuristic import heft
-from algorithms.workflow import Workflow
+from classes.workflow import Workflow
 
 
 def run_tests(args,tests,curr_parser):
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     algorithm_parser.add_argument('algorithm',help='Name of algorithm')
     algorithm_parser.add_argument('graph',help='Location of graphml file')
     algorithm_parser.add_argument('attr',help='Location of attributes file')
-    algorithm_parser.add_argument('calc_time',help='Set calc_time True/False',choices=['True','False'])
+    algorithm_parser.add_argument('--calc_time',help='Set calc_time True/False',choices=['True','False'])
 
 
     args = parser.parse_args()

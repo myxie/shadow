@@ -1,7 +1,7 @@
 # import config as cfg
 
 from algorithms.heuristic import heft
-from algorithms.workflow import Workflow
+from classes.workflow import Workflow
 
 # This workflow calculates the task time for each resource based on the demand and supply vectors provided in the 'flop_rep_test.json' file. 
 wf = Workflow('topcuoglu.graphml')

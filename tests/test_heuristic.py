@@ -19,7 +19,7 @@ import unittest
 import config as cfg
 from algorithms.heuristic import upward_rank, upward_oct_rank, \
                             sort_tasks, heft, pheft
-from algorithms.workflow import Workflow
+from classes.workflow import Workflow
 
 # Tests for /algorithms/heuristic.py
 

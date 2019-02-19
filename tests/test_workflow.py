@@ -17,7 +17,7 @@
 
 import unittest
 
-from algorithms.workflow import Workflow
+from classes.workflow import Workflow
 
 class TestWorkflowClass(unittest.TestCase):
 
