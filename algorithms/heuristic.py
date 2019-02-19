@@ -187,8 +187,23 @@ def ave_comm_cost(wf,task,successor):
     :params node: Starting node
     :params successor: Node with which the starting node is communicating
     """
-    cost = wf.graph.edges[task,successor]['data_size']
-    return cost 
+
+    cost,zeros = 0,0
+    data_product_size = wf.graph.edges[task,successor]['data_size']
+    for val in range(len(wf.data_rate[0])):
+        rate = wf.data_rate[0][val]
+        if rate != 0: 
+            cost+= data_product_size/rate
+        else:
+            zeros+=1
+    denominator = len(wf.data_rate[0])-zeros
+    
+
+    # if denominator is 0, the data rate between each machine is negligible. 
+    if denominator == 0:
+        return 0 
+    else:
+        return int(cost/denominator)
 
 def ave_comp_cost(wf,task):
     comp = wf.graph.node[task]['comp']
@@ -213,9 +228,11 @@ def calc_est(wf,node,processor_num,task_list):
     for pretask in predecessors:
         if not 'processor' in wf.graph.nodes[pretask]:
             wf.graph.nodes[pretask]['processor'] = 0 # Default to 0
-        # If task isn't on the same processor, we there is a transfer cost
-        if wf.graph.nodes[pretask]['processor'] != processor_num: 
-            comm_cost = wf.graph.edges[pretask,node]['data_size']
+        # If task isn't on the same processor, there is a transfer cost
+        pre_processor =wf.graph.nodes[pretask]['processor']
+        rate = wf.data_rate[pre_processor][processor_num]
+        if pre_processor != processor_num and rate > 0: 
+            comm_cost = int(wf.graph.edges[pretask,node]['data_size']/rate)
         else:
             comm_cost = 0 
 
@@ -373,5 +390,6 @@ def insertion_policy_oct(wf,oct_rank_matrix):
                                        str(task)))
             wf.processors[p].sort(key=lambda x: x[0]) 
 
+    wf.makespan=makespan
     return makespan
 

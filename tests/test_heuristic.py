@@ -96,8 +96,6 @@ class TestPHeftMethods(unittest.TestCase):
     def test_pheft_schedule(self):
         # upward_rank(self.wf) 
         retval = pheft(self.wf)
-        print(retval)
-        self.wf.pretty_print_allocation()
         self.assertTrue(retval == 122)
 
 

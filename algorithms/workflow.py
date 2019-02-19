@@ -21,7 +21,6 @@ together.
 """
 
 import json
-from csv import reader
 
 import networkx as nx
 import numpy as np
@@ -45,7 +44,7 @@ class Workflow(object):
         'resource' - the supplied FLOP/s 
         'edge' - a second dictionary in which the data products between nodes is stored
 
-        If calc_time is True, then we calculate how much time each tasks takes based on the resource demand of the application and the supplied FLOPs/sec provided by each 'resource'
+        If calc_time is True, then we calculate how much time each tasks takes based on the resource demand of the application and the supplied FLOPs/sec provided by each 'resource'. We also calculate how much time data transfers take based on the 'data_rate' matrix that is present in json. 
 
         If calc_time is False, then the time has already been calculated, and we have been provided with a cost vector per task instead. 
 
@@ -57,6 +56,7 @@ class Workflow(object):
 
         wcost,resource_vec = [],[]
         data_size={}
+        data_rate=[]
         if 'comp' in attr_dict: 
             wcost = attr_dict['comp']
         else: 
@@ -71,22 +71,28 @@ class Workflow(object):
             data_size = attr_dict['edge']
         else: 
             return -1 
+        if 'data_rate' in attr_dict:
+            data_rate = attr_dict['data_rate']
 
         if calc_time:
             for node in self.graph.node:
-                self.graph.node[node]['comp'] = np.round(np.divide(wcost[node],resource_vec)).astype(int)                
+                self.graph.node[node]['comp'] = np.round(np.divide(wcost[node],resource_vec)).astype(int)
+
+            for edge in self.graph.edges:
+                pred,succ = edge[0],edge[1]
+                self.graph.edges[pred,succ]['data_size']=data_size[str(pred)][succ]
         else:
             for node in self.graph.node:
                 self.graph.node[node]['comp']=wcost[node]
 
-        # TODO implement second data approach, which takes the rate of transfer between resources and calculates time based on that. 
-        for edge in self.graph.edges:
-            pred,succ = edge[0],edge[1]
-            self.graph.edges[pred,succ]['data_size']=data_size[str(pred)][succ]
-        
+            # TODO implement second data approach, which takes the rate of transfer between resources and calculates time based on that. 
+            for edge in self.graph.edges:
+                pred,succ = edge[0],edge[1]
+                self.graph.edges[pred,succ]['data_size']=data_size[str(pred)][succ]
+            
         self.processors = [[] for x in range(len(resource_vec))] 
         self.makespan = 0
-
+        self.data_rate = data_rate
         return 0
 
 
@@ -110,33 +116,3 @@ class Workflow(object):
             print()
 
         print("Total Makespan: {0}".format(self.makespan))
-
-
-        # wcost_vec = attr_dict['cost']
-        # resource_vec = attr_dict['resource']
-        # data_size = attr_dict['edges']
-
-        # wcost_vec = self._read_matrix(wcost_vec)
-        # resource_vec = self._read_matrix(resource_vec)
-        # # ccost = self._read_matrix(ccost)
-
-        # data_rates = self._read_matrix(rates)
-        # data_size = self._read_matrix(sizes)
-
-        # for node in self.graph.node:
-        #     self.graph.node['comp'] = np.round(np.divide(wcost_vec[node],resource_vec)).astype(int)
-
-
-
-        
-
-
-    def _read_matrix(self,matrix):
-        lmatrix = []
-        f = open(matrix)
-        next(f)
-        csv_reader = reader(f)
-        for row in csv_reader:
-            lmatrix.append(list(map(int,row)))
-        f.close()
-        return lmatrix 
