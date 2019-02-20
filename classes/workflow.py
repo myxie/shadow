@@ -24,6 +24,7 @@ import json
 
 import networkx as nx
 import numpy as np
+import matplotlib.pyplot as plt
 
 class Workflow(object):
 
@@ -89,10 +90,11 @@ class Workflow(object):
             for edge in self.graph.edges:
                 pred,succ = edge[0],edge[1]
                 self.graph.edges[pred,succ]['data_size']=data_size[str(pred)][succ]
-            
+        
         self.processors = [[] for x in range(len(resource_vec))] 
         self.makespan = 0
         self.data_rate = data_rate
+        self.data_load = np.array([])
         self.thrpt = 0.0
         return 0
 
@@ -117,3 +119,48 @@ class Workflow(object):
             print()
 
         print("Total Makespan: {0}".format(self.makespan))
+
+        print(self.data_load,len(self.data_load))
+        self.thrpt = np.average(self.data_load)
+
+
+        fig,ax1=plt.subplots()
+        ax1.plot(self.data_load)
+        ax1.set_xlabel("Time (sec)")
+        ax1.set_ylabel("Data Load in Pipeline (Gb)")
+
+        val = 0
+        for edge in self.graph.edges:
+            pred,succ = edge[0],edge[1]
+            val += self.graph.edges[pred,succ]['data_size']
+        print(val)
+
+        ave_throughput = [val/self.makespan for x in range(self.makespan)]
+        ax2 = ax1.twinx()
+        ax2.plot(ave_throughput,'r')
+        ax2.set_ylabel("Throughput (Gb/s)", color='r')
+        ax2.tick_params('y', colors='r')
+        # plt.legend((p1[0],p2[0]),('Instantaneous Load','Average Throughput'),loc=4)
+        plt.title("Data load experienced over workflow vs. Ave Throughput")
+        plt.show()
+
+
+
+
+# fig, ax1 = plt.subplots()
+# t = np.arange(0.01, 10.0, 0.01)
+# s1 = np.exp(t)
+# ax1.plot(t, s1, 'b-')
+# ax1.set_xlabel('time (s)')
+# # Make the y-axis label, ticks and tick labels match the line color.
+# ax1.set_ylabel('exp', color='b')
+# ax1.tick_params('y', colors='b')
+
+# ax2 = ax1.twinx()
+# s2 = np.sin(2 * np.pi * t)
+# ax2.plot(t, s2, 'r.')
+# ax2.set_ylabel('sin', color='r')
+# ax2.tick_params('y', colors='r')
+
+# fig.tight_layout()
+# plt.show()

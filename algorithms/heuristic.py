@@ -22,7 +22,7 @@
 
 from random import randint
 import networkx as nx
-
+import numpy as np
 
 #############################################################################
 ############################# HUERISTICS  ###################################
@@ -319,6 +319,34 @@ def insertion_policy(wf):
             wf.graph.nodes[task]['processor'] = p
             wf.graph.nodes[task]['ast'] = aft - wf.graph.nodes[task]['comp'][p]
             wf.graph.nodes[task]['aft'] = aft
+
+            # Calculate Throughput
+            for pred in wf.graph.predecessors(task): 
+                timeslot = (wf.graph.nodes[pred]['aft'],\
+                            wf.graph.nodes[task]['aft'])
+                load = wf.graph.edges[pred,task]['data_size']
+                if len(wf.data_load) == 0:
+                    wf.data_load = np.zeros(timeslot[1])
+
+                    # append([0 for x in range(0,timeslot[1]+1)])
+                    wf.data_load[timeslot[0]:timeslot[1]] = load
+                elif len(wf.data_load) < timeslot[1]:
+                    diff = timeslot[1] -len(wf.data_load)
+                    # print(wf.data_load,diff,timeslot[1])
+                    newload = np.zeros(len(wf.data_load)+diff)
+                    # Retain our previous values in larger array
+                    newload[0:len(wf.data_load)]+=wf.data_load 
+                    newload[timeslot[0]:timeslot[1]] += load
+                    wf.data_load=np.zeros(len(newload))
+                    wf.data_load+=newload # saves us from using copy()
+                else: 
+                    wf.data_load[timeslot[0]:timeslot[1]] += load
+
+                print(wf.data_load[:timeslot[1]])
+
+
+
+            # Makespan 
             if wf.graph.nodes[task]['aft'] >= makespan:
                 makespan  = wf.graph.nodes[task]['aft']
             wf.processors[p].append((wf.graph.nodes[task]['ast'],\

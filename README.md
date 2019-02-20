@@ -1,4 +1,4 @@
-# Shadow
+# _shadow_
 
 SHeduling Algorithms for Data-intensive Workflows (_shadow_)
 
