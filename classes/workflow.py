@@ -120,7 +120,6 @@ class Workflow(object):
 
         print("Total Makespan: {0}".format(self.makespan))
 
-        print(self.data_load,len(self.data_load))
         self.thrpt = np.average(self.data_load)
 
 
@@ -133,7 +132,6 @@ class Workflow(object):
         for edge in self.graph.edges:
             pred,succ = edge[0],edge[1]
             val += self.graph.edges[pred,succ]['data_size']
-        print(val)
 
         ave_throughput = [val/self.makespan for x in range(self.makespan)]
         ax2 = ax1.twinx()
