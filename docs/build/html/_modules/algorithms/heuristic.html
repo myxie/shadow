@@ -1,0 +1,517 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>algorithms.heuristic &#8212; shadow 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for algorithms.heuristic</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2018 RW Bunney</span>
+
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.  </span>
+
+<span class="c1">########################################################################</span>
+
+<span class="c1"># This file contains code for implementing heuristic-based scheduling</span>
+<span class="c1"># algorithms. Currently, this file implements the following algorithms:</span>
+<span class="c1"># * HEFT </span>
+<span class="c1"># * PHEFT </span>
+
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">randint</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1">#############################################################################</span>
+<span class="c1">############################# HUERISTICS  ###################################</span>
+<span class="c1">#############################################################################</span>
+
+
+<div class="viewcode-block" id="heft"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.heft">[docs]</a><span class="k">def</span> <span class="nf">heft</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span> 
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of the original 1999 HEFT algorithm.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">upward_rank</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span> 
+    <span class="n">makespan</span> <span class="o">=</span> <span class="n">insertion_policy</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">makespan</span></div>
+
+
+<div class="viewcode-block" id="pheft"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.pheft">[docs]</a><span class="k">def</span> <span class="nf">pheft</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of the PHEFT algorithm, which adaptst the HEFT algorithm </span>
+<span class="sd">    using the concpet of an Optimistic Cost Table (OCT)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">oct_rank_matrix</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="c1"># Necessary addition for PHEFT</span>
+    <span class="n">upward_oct_rank</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">oct_rank_matrix</span><span class="p">)</span>
+    <span class="n">makespan</span> <span class="o">=</span> <span class="n">insertion_policy_oct</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">oct_rank_matrix</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">makespan</span></div>
+
+
+<span class="c1"># TODO: Partial Critical Paths </span>
+<span class="k">def</span> <span class="nf">pcp</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span> 
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="c1">#############################################################################</span>
+<span class="c1">########################### HELPER FUNCTIONS ################################</span>
+<span class="c1">#############################################################################</span>
+
+
+
+<div class="viewcode-block" id="upward_rank"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.upward_rank">[docs]</a><span class="k">def</span> <span class="nf">upward_rank</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ranks tasks according to the specified method. Tasks need to be ranked,</span>
+<span class="sd">    then sorted according to the rank. Returns a sorted list of tasks in</span>
+<span class="sd">    order of rank. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)):</span>
+        <span class="n">rank_up</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">)</span></div>
+        
+
+        
+<span class="k">def</span> <span class="nf">upward_oct_rank</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">oct_rank_matrix</span><span class="p">):</span> 
+    
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()),</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span> 
+            <span class="n">rank_oct</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">oct_rank_matrix</span><span class="p">,</span><span class="n">node</span><span class="p">,</span><span class="n">val</span><span class="p">)</span>   
+
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()):</span>
+        <span class="n">ave</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="ow">in</span> <span class="n">oct_rank_matrix</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="n">node</span><span class="p">:</span>
+                <span class="n">ave</span> <span class="o">+=</span> <span class="n">oct_rank_matrix</span><span class="p">[(</span><span class="n">n</span><span class="p">,</span><span class="n">p</span><span class="p">)]</span>
+
+        <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ave</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="sort_tasks"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.sort_tasks">[docs]</a><span class="k">def</span> <span class="nf">sort_tasks</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">sort_type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sorts task in a task wf based on a specified sort_type</span>
+<span class="sd">    </span>
+<span class="sd">    :params task_wf - Wf that has tasks to be sorted </span>
+<span class="sd">    :params sort_type - How we sort the tasks (topological, task rank etc.)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">sort_type</span> <span class="o">==</span> <span class="s1">&#39;rank&#39;</span><span class="p">:</span>        
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> \
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="s1">&#39;rank&#39;</span><span class="p">],</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+
+    <span class="k">if</span> <span class="n">sort_type</span> <span class="o">==</span> <span class="s1">&#39;topological&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">topological_sort</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="rank_up"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.rank_up">[docs]</a><span class="k">def</span> <span class="nf">rank_up</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Upward ranking heuristic outlined in Topcuoglu, Hariri &amp; Wu (2002)</span>
+<span class="sd">    Closely modelled off &#39;cal_up_rank&#39; function at: </span>
+<span class="sd">    https://github.com/oyld/heft/blob/master/src/heft.py</span>
+
+<span class="sd">    Ranks individual tasks and then allocates this final value to the attribute of the workflow graph</span>
+
+<span class="sd">    :param wf - Subject workflow</span>
+<span class="sd">    :param node -  A task node in an DAG that is being ranked</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">longest_rank</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">successor</span> <span class="ow">in</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;rank&#39;</span> <span class="ow">in</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">successor</span><span class="p">]:</span> <span class="c1"># if we have not assigned a rank</span>
+            <span class="n">rank_up</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">successor</span><span class="p">)</span>
+
+        <span class="n">longest_rank</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">longest_rank</span><span class="p">,</span> <span class="n">ave_comm_cost</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">,</span><span class="n">successor</span><span class="p">)</span><span class="o">+</span>\
+                       <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">successor</span><span class="p">][</span><span class="s1">&#39;rank&#39;</span><span class="p">])</span>
+
+    <span class="n">ave_comp</span> <span class="o">=</span> <span class="n">ave_comp_cost</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">)</span>
+    <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ave_comp</span> <span class="o">+</span> <span class="n">longest_rank</span></div>
+
+<div class="viewcode-block" id="rank_up_random"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.rank_up_random">[docs]</a><span class="k">def</span> <span class="nf">rank_up_random</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the upward rank based on either the average, max or minimum</span>
+<span class="sd">    computational cost</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">longest_rank</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">successor</span> <span class="ow">in</span> <span class="n">wf</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;rank&#39;</span> <span class="ow">in</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">successor</span><span class="p">]:</span> 
+        <span class="c1"># if we have not assigned a rank</span>
+            <span class="n">rank_up</span><span class="p">(</span><span class="n">successor</span><span class="p">)</span>
+
+        <span class="n">longest_rank</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">longest_rank</span><span class="p">,</span> <span class="n">ave_comm_cost</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">,</span><span class="n">successor</span><span class="p">)</span><span class="o">+</span>\
+                <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">successor</span><span class="p">][</span><span class="s1">&#39;rank&#39;</span><span class="p">])</span>
+
+    <span class="n">randval</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span><span class="o">%</span><span class="mi">3</span>
+    <span class="k">if</span> <span class="n">randval</span> <span class="ow">is</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">ave_comp</span> <span class="o">=</span> <span class="n">ave_comp_cost</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">randval</span> <span class="ow">is</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">ave_comp</span> <span class="o">=</span> <span class="n">max_comp_cost</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">randval</span> <span class="ow">is</span> <span class="mi">2</span><span class="p">:</span> 
+        <span class="n">ave_comp</span> <span class="o">=</span> <span class="n">max_comp_cost</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+
+    <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ave_comp</span> <span class="o">+</span> <span class="n">longest_rank</span></div>
+
+
+<div class="viewcode-block" id="rank_oct"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.rank_oct">[docs]</a><span class="k">def</span> <span class="nf">rank_oct</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">oct_rank_matrix</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Optimistic cost table ranking heuristic outlined in </span>
+<span class="sd">    Arabnejad and Barbos (2014)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">max_successor</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">successor</span> <span class="ow">in</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="n">min_processor</span><span class="o">=</span><span class="mi">1000</span>
+        <span class="k">for</span> <span class="n">processor</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">)):</span>
+            <span class="n">oct_val</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">successor</span><span class="p">,</span> <span class="n">processor</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">oct_rank_matrix</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">rank_oct</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">oct_rank_matrix</span><span class="p">,</span><span class="n">successor</span><span class="p">,</span> <span class="n">processor</span><span class="p">)</span> 
+            <span class="n">comm_cost</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">comp_cost</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">successor</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">][</span><span class="n">processor</span><span class="p">]</span> 
+            <span class="k">if</span> <span class="n">processor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">pk</span><span class="p">:</span>
+                <span class="n">comm_cost</span> <span class="o">=</span> <span class="n">ave_comm_cost</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">node</span><span class="p">,</span> <span class="n">successor</span><span class="p">)</span>
+            <span class="n">oct_val</span> <span class="o">=</span> <span class="n">oct_rank_matrix</span><span class="p">[(</span><span class="n">successor</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span> <span class="o">+</span>\
+                    <span class="n">comp_cost</span><span class="o">+</span> <span class="n">comm_cost</span>
+            <span class="n">min_processor</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_processor</span><span class="p">,</span><span class="n">oct_val</span><span class="p">)</span>
+        <span class="n">max_successor</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_successor</span><span class="p">,</span> <span class="n">min_processor</span><span class="p">)</span>
+
+    <span class="n">oct_rank_matrix</span><span class="p">[(</span><span class="n">node</span><span class="p">,</span><span class="n">pk</span><span class="p">)]</span> <span class="o">=</span> <span class="n">max_successor</span></div>
+
+
+<div class="viewcode-block" id="ave_comm_cost"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.ave_comm_cost">[docs]</a><span class="k">def</span> <span class="nf">ave_comm_cost</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">,</span><span class="n">successor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the &#39;average&#39; communication cost, which is just </span>
+<span class="sd">    the cost in the matrix. Not sure how the ave. in the </span>
+<span class="sd">    original paper was calculate or represented...</span>
+<span class="sd">        </span>
+<span class="sd">    :params node: Starting node</span>
+<span class="sd">    :params successor: Node with which the starting node is communicating</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cost</span><span class="p">,</span><span class="n">zeros</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span>
+    <span class="n">data_product_size</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">task</span><span class="p">,</span><span class="n">successor</span><span class="p">][</span><span class="s1">&#39;data_size&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">data_rate</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">data_rate</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">val</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">rate</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> 
+            <span class="n">cost</span><span class="o">+=</span> <span class="n">data_product_size</span><span class="o">/</span><span class="n">rate</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">zeros</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">data_rate</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="n">zeros</span>
+    
+
+    <span class="c1"># if denominator is 0, the data rate between each machine is negligible. </span>
+    <span class="k">if</span> <span class="n">denominator</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span> 
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">cost</span><span class="o">/</span><span class="n">denominator</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">ave_comp_cost</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">):</span>
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">max_comp_cost</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">min_comp_cost</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="calc_est"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.calc_est">[docs]</a><span class="k">def</span> <span class="nf">calc_est</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">node</span><span class="p">,</span><span class="n">processor_num</span><span class="p">,</span><span class="n">task_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the Estimated Start Time of a node on a given processor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">est</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">predecessors</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pretask</span> <span class="ow">in</span> <span class="n">predecessors</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;processor&#39;</span> <span class="ow">in</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">pretask</span><span class="p">]:</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">pretask</span><span class="p">][</span><span class="s1">&#39;processor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Default to 0</span>
+        <span class="c1"># If task isn&#39;t on the same processor, there is a transfer cost</span>
+        <span class="n">pre_processor</span> <span class="o">=</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">pretask</span><span class="p">][</span><span class="s1">&#39;processor&#39;</span><span class="p">]</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">data_rate</span><span class="p">[</span><span class="n">pre_processor</span><span class="p">][</span><span class="n">processor_num</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">pre_processor</span> <span class="o">!=</span> <span class="n">processor_num</span> <span class="ow">and</span> <span class="n">rate</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> 
+            <span class="n">comm_cost</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">pretask</span><span class="p">,</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;data_size&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">rate</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">comm_cost</span> <span class="o">=</span> <span class="mi">0</span> 
+
+        <span class="c1"># wf.graph.predecessors is not being updated in insertion_policy;</span>
+        <span class="c1"># need to use the tasks that are being updated to get the right results</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">task_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">pretask</span><span class="p">)</span>
+        <span class="n">aft</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task_list</span><span class="p">[</span><span class="n">index</span><span class="p">]][</span><span class="s1">&#39;aft&#39;</span><span class="p">]</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">aft</span>  <span class="o">+</span> <span class="n">comm_cost</span>
+        <span class="k">if</span> <span class="n">tmp</span> <span class="o">&gt;=</span> <span class="n">est</span><span class="p">:</span>
+            <span class="n">est</span> <span class="o">=</span> <span class="n">tmp</span>
+
+    <span class="c1"># Now we find the time it fits in on the processor</span>
+    <span class="n">processor</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">processor_num</span><span class="p">]</span> <span class="c1"># return the list of allocated tasks</span>
+    <span class="n">available_slots</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">processor</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">est</span> <span class="c1"># Nothing in the time slots yet </span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">processor</span><span class="p">)):</span>
+            <span class="c1"># For each start/finish time tuple that exists in the processor</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">processor</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> <span class="c1">#If the start time of the first tuple is not 0</span>
+                    <span class="n">available_slots</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="n">processor</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span><span class="c1"># add a 0-current_start time tuple</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="c1"># Append the finish time of the previous slot and the start time of this slot</span>
+                <span class="n">available_slots</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">processor</span><span class="p">[</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">processor</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+        
+        <span class="c1"># Add a very large number to the final time slot available, so we have a gap after </span>
+        <span class="n">available_slots</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">processor</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">processor</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">available_slots</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">est</span> <span class="o">&lt;</span> <span class="n">slot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">slot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">][</span><span class="n">processor_num</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">slot</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">slot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">est</span> <span class="o">&gt;=</span> <span class="n">slot</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">est</span> <span class="o">+</span> \
+                <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">][</span><span class="n">processor_num</span><span class="p">]</span> <span class="o">&lt;=</span><span class="n">slot</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span> 
+           <span class="k">return</span> <span class="n">est</span> 
+        <span class="c1"># At the &#39;end&#39; of available slots</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">est</span> <span class="o">&gt;=</span> <span class="n">slot</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">slot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">est</span> 
+        <span class="c1"># This last case occurs when we have a low est but a high cost, so</span>
+        <span class="c1"># it doesn&#39;t fit in any gaps; hence we have to put it at the &#39;end&#39;</span>
+        <span class="c1"># and start it late</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">est</span> <span class="o">&lt;</span> <span class="n">slot</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">slot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">slot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
+
+    <span class="k">return</span> <span class="n">est</span></div>
+
+<div class="viewcode-block" id="insertion_policy"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.insertion_policy">[docs]</a><span class="k">def</span> <span class="nf">insertion_policy</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Allocate tasks to processors following the insertion based policy outline </span>
+<span class="sd">    in Tocuoglu et al.(2002)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO The tasks below are from a list, not the global graph; so we do</span>
+    <span class="c1"># a lot of checking of both the list and the graph to get information. </span>
+    <span class="c1"># Need to figure out a cleaner way of dealing with this. </span>
+    <span class="n">makespan</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="n">sort_tasks</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="s1">&#39;rank&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="n">tasks</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> 
+            <span class="n">w</span><span class="o">=</span>  <span class="nb">min</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">])</span>
+            <span class="n">p</span><span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;processor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">],</span>\
+                                       <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">],</span>\
+                                       <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">aft</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># Finish time for the current task</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span> 
+            <span class="k">for</span> <span class="n">processor</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">)):</span>
+                <span class="c1"># tasks in self.rank_sort are being updated, not wf.graph;</span>
+                <span class="n">est</span> <span class="o">=</span> <span class="n">calc_est</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">,</span> <span class="n">processor</span><span class="p">,</span> <span class="n">tasks</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">aft</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="c1"># assign initial value of aft for this task</span>
+                    <span class="n">aft</span> <span class="o">=</span> <span class="n">est</span> <span class="o">+</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">][</span><span class="n">processor</span><span class="p">]</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">processor</span>
+                <span class="c1"># see if the next processor gives us an earlier finish time</span>
+                <span class="k">elif</span> <span class="n">est</span> <span class="o">+</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">][</span><span class="n">processor</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">aft</span><span class="p">:</span>
+                    <span class="n">aft</span> <span class="o">=</span> <span class="n">est</span> <span class="o">+</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">][</span><span class="n">processor</span><span class="p">]</span> 
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">processor</span>
+
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;processor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aft</span> <span class="o">-</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">][</span><span class="n">p</span><span class="p">]</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aft</span>
+
+            <span class="c1"># Calculate Throughput</span>
+            <span class="k">for</span> <span class="n">pred</span> <span class="ow">in</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">task</span><span class="p">):</span> 
+                <span class="n">timeslot</span> <span class="o">=</span> <span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">pred</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">],</span>\
+                            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">])</span>
+                <span class="n">load</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">pred</span><span class="p">,</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;data_size&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">data_load</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">wf</span><span class="o">.</span><span class="n">data_load</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">timeslot</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">wf</span><span class="o">.</span><span class="n">data_load</span><span class="p">[</span><span class="n">timeslot</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">timeslot</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">load</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">data_load</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">timeslot</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="n">timeslot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">data_load</span><span class="p">)</span>
+                    <span class="n">newload</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">data_load</span><span class="p">)</span><span class="o">+</span><span class="n">diff</span><span class="p">)</span>
+                    <span class="n">newload</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">data_load</span><span class="p">)]</span><span class="o">+=</span><span class="n">wf</span><span class="o">.</span><span class="n">data_load</span> 
+                    <span class="n">newload</span><span class="p">[</span><span class="n">timeslot</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">timeslot</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">load</span>
+                    <span class="n">wf</span><span class="o">.</span><span class="n">data_load</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">newload</span><span class="p">))</span>
+                    <span class="n">wf</span><span class="o">.</span><span class="n">data_load</span><span class="o">+=</span><span class="n">newload</span> <span class="c1"># saves us from using copy()</span>
+                <span class="k">else</span><span class="p">:</span> 
+                    <span class="n">wf</span><span class="o">.</span><span class="n">data_load</span><span class="p">[</span><span class="n">timeslot</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">timeslot</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">load</span>
+
+
+
+
+            <span class="c1"># Makespan </span>
+            <span class="k">if</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">makespan</span><span class="p">:</span>
+                <span class="n">makespan</span>  <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">]</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">],</span>\
+                                       <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">],</span>\
+                                       <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="p">)))</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">wf</span><span class="o">.</span><span class="n">makespan</span> <span class="o">=</span> <span class="n">makespan</span>
+    <span class="k">return</span> <span class="n">makespan</span></div>
+
+
+<div class="viewcode-block" id="insertion_policy_oct"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.insertion_policy_oct">[docs]</a><span class="k">def</span> <span class="nf">insertion_policy_oct</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">oct_rank_matrix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Allocate tasks to processors following the insertion based policy outline </span>
+<span class="sd">    in Tocuoglu et al.(2002)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">makespan</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">oct_rank_matrix</span><span class="p">:</span>
+        <span class="n">upward_oct_rank</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
+    <span class="n">eft_matrix</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">oeft_matrix</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">p</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="n">sort_tasks</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="s1">&#39;rank&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="n">tasks</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">min_oeft</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">processor</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">)):</span>
+                <span class="n">eft_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">][</span><span class="n">processor</span><span class="p">]</span>
+                <span class="n">oeft_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span> <span class="o">=</span> <span class="n">eft_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span>\
+                                                <span class="o">+</span> <span class="n">oct_rank_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">min_oeft</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> \
+                        <span class="p">(</span><span class="n">oeft_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span>  <span class="o">&lt;</span> <span class="n">min_oeft</span><span class="p">):</span> 
+                    <span class="n">min_oeft</span> <span class="o">=</span> <span class="n">oeft_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">processor</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">][</span><span class="n">p</span><span class="p">]</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;processor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">],</span>\
+                                       <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">],</span>\
+                                       <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="p">)))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">min_oeft</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">processor</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+                    <span class="n">est</span> <span class="o">=</span> <span class="n">calc_est</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">,</span><span class="n">tasks</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">est</span><span class="o">=</span><span class="mi">0</span>
+                <span class="n">eft</span> <span class="o">=</span> <span class="n">est</span> <span class="o">+</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">][</span><span class="n">processor</span><span class="p">]</span>
+                <span class="n">eft_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span> <span class="o">=</span> <span class="n">eft</span>
+                <span class="n">oeft_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span> <span class="o">=</span> <span class="n">eft_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span>\
+                    <span class="o">+</span> <span class="n">oct_rank_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">min_oeft</span> <span class="o">==-</span><span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> \
+                        <span class="p">(</span><span class="n">oeft_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span>  <span class="o">&lt;</span> <span class="n">min_oeft</span><span class="p">):</span> 
+                    <span class="n">min_oeft</span> <span class="o">=</span> <span class="n">oeft_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">processor</span><span class="p">)]</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">processor</span>
+
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="n">eft_matrix</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="n">p</span><span class="p">)]</span>  
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">]</span>\
+                                            <span class="o">-</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">][</span><span class="n">processor</span><span class="p">]</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;processor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+
+            <span class="k">if</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">makespan</span><span class="p">:</span>
+                <span class="n">makespan</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">]</span>
+                
+            <span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;ast&#39;</span><span class="p">],</span>\
+                                       <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;aft&#39;</span><span class="p">],</span>\
+                                       <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="p">)))</span>
+            <span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> 
+
+    <span class="n">wf</span><span class="o">.</span><span class="n">makespan</span><span class="o">=</span><span class="n">makespan</span>
+    <span class="k">return</span> <span class="n">makespan</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">shadow</a></h1>
+
+
+
+<p class="blurb">Scheduling algorithms for                                      data-intensive science workflows</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=myxie&repo=shadow&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, RW Bunney.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
