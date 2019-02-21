@@ -56,7 +56,7 @@ def run_algorithm(args,parser):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description=\
-    		'Multi-Objective Workflow Scheduling Modelling Suite')
+            'Multi-Objective Workflow Scheduling Modelling Suite')
 
 
     subparsers = parser.add_subparsers(help='Command',dest='command')

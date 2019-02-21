@@ -37,9 +37,47 @@ while(termination condition not satisfied)
 The two differ on evaluation and selection strategy
 """
 
-def nsgaiistar(wf): 
-
+def nsga2(wf,seed): 
+    generate_population(wf,seed)
     return None
 
-def speaiistar(wf): 
+
+def spea2(wf,seed): 
+    generate_population(wf,seed)
     return None
+
+
+def generate_population(wf,seed):
+    pop = []
+    """
+    task_assign[0] is the resource to which Task0 is assigned
+    exec_order[0] is the task that will be executed first
+    """
+    task_assign = [] 
+    exec_order = []
+
+    return pop
+
+def execution_feasibility(task_order):
+    # Check that task_order is a valid topological sort
+    return True
+
+def crossover(soln):
+    return None
+
+def mutation(soln):
+    return None
+
+
+def cost_fitness():
+    return None
+
+def time_fitness():
+    return None
+
+def throughput_fitness():
+    return None
+
+def reliability_fitness():
+    return None
+
