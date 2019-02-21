@@ -97,8 +97,8 @@ html_theme = 'alabaster'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {'description':'Scheduling algorithms for  \
-                                    data-intensive science workflows',
+html_theme_options = {'description':'ScHeduling Algorithms for  \
+                                    Data-intensive Workflows',
                         'github_user': 'myxie',
                         'github_repo': 'shadow',
                     }

@@ -3,10 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+=========
 *shadow*
-====================================================================
+=========
 
-**S**\ c\ **H**\ eduling **A**\lgorithms for **D**\ata-intensive **W**\orkflows
+.. include:: ../../README.rst
+
+Contents
+========
 
 .. toctree::
    :maxdepth: 2
