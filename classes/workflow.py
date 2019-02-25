@@ -133,13 +133,14 @@ class Workflow(object):
             pred,succ = edge[0],edge[1]
             val += self.graph.edges[pred,succ]['data_size']
 
-        ave_throughput = [val/self.makespan for x in range(self.makespan)]
-        ax2 = ax1.twinx()
-        ax2.plot(ave_throughput,'r')
-        ax2.set_ylabel("Throughput (Gb/s)", color='r')
-        ax2.tick_params('y', colors='r')
+        ave_throughput = np.gradient(self.data_load)
+        # ave_throughput = [val/self.makespan for x in range(self.makespan)]
+        # ax2 = ax1.twinx()
+        ax1.plot(ave_throughput,'r')
+        # ax2.set_ylabel("Throughput (Gb/s)", color='r')
+        # ax2.tick_params('y', colors='r')
         # plt.legend((p1[0],p2[0]),('Instantaneous Load','Average Throughput'),loc=4)
-        plt.title("Data load experienced over workflow vs. Ave Throughput")
+        plt.title("Data load experienced over workflow vs. Rate of change of Throughput")
         plt.show()
 
 
