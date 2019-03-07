@@ -54,11 +54,13 @@ def pheft(wf):
 def pcp(wf): 
     return None
 
+# TODO: Multi-objective list scheduling 
+def mols(wf): 
+    return None
 
 #############################################################################
-########################### HELPER FUNCTIONS ################################
+############### HELPER FUNCTIONS & HEURISTIC-SPECIFIC POLICIES ##############
 #############################################################################
-
 
 
 def upward_rank(wf):

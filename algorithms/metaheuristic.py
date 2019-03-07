@@ -58,8 +58,10 @@ def generate_population(wf,seed):
 
     return pop
 
-def execution_feasibility(task_order):
-    # Check that task_order is a valid topological sort
+def is_feasibility(task_order):
+    """
+    Check that task_order is a valid topological sort
+    """
     return True
 
 def crossover(soln):
