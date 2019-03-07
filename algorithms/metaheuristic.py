@@ -39,6 +39,14 @@ The two differ on evaluation and selection strategy
 
 def nsga2(wf,seed): 
     generate_population(wf,seed)
+
+    """
+    Whilst we have not reached our terminal condition, do: 
+        crossover on individual solutions
+        mutate the offspring
+        evaluate the quality of the solutions
+        select individuals to carry over to the new population
+    """
     return None
 
 
@@ -52,6 +60,11 @@ def generate_population(wf,seed):
     """
     task_assign[0] is the resource to which Task0 is assigned
     exec_order[0] is the task that will be executed first
+
+    each 'solution' should be a tuple of a task-assign and exec-order solution
+    
+    In the future it might be useful, in addition to checking feasibility of solution, to minimise duplicates of the population generated. Not sure about this. 
+
     """
     task_assign = [] 
     exec_order = []
@@ -65,6 +78,15 @@ def is_feasibility(task_order):
     return True
 
 def crossover(soln):
+    """
+    As described in Yu & Buyya 2007
+
+    Two step approach: 
+    1. Two parents are selected at random from population
+    2. Two random points are selected from the task-assignment strings
+    3. all tasks between the points are chosen as crossover points
+    4. the service allocation of the tasks within the crossover points are exchanged. 
+    """
     return None
 
 def mutation(soln):
