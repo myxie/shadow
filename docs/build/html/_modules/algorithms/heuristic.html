@@ -32,9 +32,46 @@
 
   </head>
   <body>
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">shadow</a></h1>
 
-    <div class="document">
+
+
+<p class="blurb">ScHeduling Algorithms for                                      Data-intensive Workflows</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=myxie&repo=shadow&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../classes.html">Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../roadmap.html">Roadmap</a></li>
+</ul>
+
+
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body" role="main">
@@ -56,12 +93,12 @@
 <span class="c1"># along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.  </span>
 
 <span class="c1">########################################################################</span>
-
-<span class="c1"># This file contains code for implementing heuristic-based scheduling</span>
-<span class="c1"># algorithms. Currently, this file implements the following algorithms:</span>
-<span class="c1"># * HEFT </span>
-<span class="c1"># * PHEFT </span>
-
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains code for implementing heuristic-based scheduling</span>
+<span class="sd">algorithms. Currently, this file implements the following algorithms:</span>
+<span class="sd">* HEFT </span>
+<span class="sd">* PHEFT </span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">randint</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -71,7 +108,7 @@
 <span class="c1">#############################################################################</span>
 
 
-<div class="viewcode-block" id="heft"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.heft">[docs]</a><span class="k">def</span> <span class="nf">heft</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span> 
+<div class="viewcode-block" id="heft"><a class="viewcode-back" href="../../algorithms.html#algorithms.heuristic.heft">[docs]</a><span class="k">def</span> <span class="nf">heft</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span> 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Implementation of the original 1999 HEFT algorithm.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -80,7 +117,7 @@
     <span class="k">return</span> <span class="n">makespan</span></div>
 
 
-<div class="viewcode-block" id="pheft"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.pheft">[docs]</a><span class="k">def</span> <span class="nf">pheft</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span>
+<div class="viewcode-block" id="pheft"><a class="viewcode-back" href="../../algorithms.html#algorithms.heuristic.pheft">[docs]</a><span class="k">def</span> <span class="nf">pheft</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Implementation of the PHEFT algorithm, which adaptst the HEFT algorithm </span>
 <span class="sd">    using the concpet of an Optimistic Cost Table (OCT)</span>
@@ -96,14 +133,16 @@
 <span class="k">def</span> <span class="nf">pcp</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span> 
     <span class="k">return</span> <span class="kc">None</span>
 
+<span class="c1"># TODO: Multi-objective list scheduling </span>
+<span class="k">def</span> <span class="nf">mols</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span> 
+    <span class="k">return</span> <span class="kc">None</span>
 
 <span class="c1">#############################################################################</span>
-<span class="c1">########################### HELPER FUNCTIONS ################################</span>
+<span class="c1">############### HELPER FUNCTIONS &amp; HEURISTIC-SPECIFIC POLICIES ##############</span>
 <span class="c1">#############################################################################</span>
 
 
-
-<div class="viewcode-block" id="upward_rank"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.upward_rank">[docs]</a><span class="k">def</span> <span class="nf">upward_rank</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span>
+<div class="viewcode-block" id="upward_rank"><a class="viewcode-back" href="../../algorithms.html#algorithms.heuristic.upward_rank">[docs]</a><span class="k">def</span> <span class="nf">upward_rank</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ranks tasks according to the specified method. Tasks need to be ranked,</span>
 <span class="sd">    then sorted according to the rank. Returns a sorted list of tasks in</span>
@@ -129,7 +168,7 @@
         <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ave</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">processors</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="sort_tasks"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.sort_tasks">[docs]</a><span class="k">def</span> <span class="nf">sort_tasks</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">sort_type</span><span class="p">):</span>
+<div class="viewcode-block" id="sort_tasks"><a class="viewcode-back" href="../../algorithms.html#algorithms.heuristic.sort_tasks">[docs]</a><span class="k">def</span> <span class="nf">sort_tasks</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">sort_type</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sorts task in a task wf based on a specified sort_type</span>
 <span class="sd">    </span>
@@ -148,7 +187,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="rank_up"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.rank_up">[docs]</a><span class="k">def</span> <span class="nf">rank_up</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">):</span>
+<div class="viewcode-block" id="rank_up"><a class="viewcode-back" href="../../algorithms.html#algorithms.heuristic.rank_up">[docs]</a><span class="k">def</span> <span class="nf">rank_up</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Upward ranking heuristic outlined in Topcuoglu, Hariri &amp; Wu (2002)</span>
 <span class="sd">    Closely modelled off &#39;cal_up_rank&#39; function at: </span>
@@ -170,7 +209,7 @@
     <span class="n">ave_comp</span> <span class="o">=</span> <span class="n">ave_comp_cost</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">)</span>
     <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ave_comp</span> <span class="o">+</span> <span class="n">longest_rank</span></div>
 
-<div class="viewcode-block" id="rank_up_random"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.rank_up_random">[docs]</a><span class="k">def</span> <span class="nf">rank_up_random</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">):</span>
+<div class="viewcode-block" id="rank_up_random"><a class="viewcode-back" href="../../algorithms.html#algorithms.heuristic.rank_up_random">[docs]</a><span class="k">def</span> <span class="nf">rank_up_random</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes the upward rank based on either the average, max or minimum</span>
 <span class="sd">    computational cost</span>
@@ -196,7 +235,7 @@
     <span class="n">wf</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ave_comp</span> <span class="o">+</span> <span class="n">longest_rank</span></div>
 
 
-<div class="viewcode-block" id="rank_oct"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.rank_oct">[docs]</a><span class="k">def</span> <span class="nf">rank_oct</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">oct_rank_matrix</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
+<div class="viewcode-block" id="rank_oct"><a class="viewcode-back" href="../../algorithms.html#algorithms.heuristic.rank_oct">[docs]</a><span class="k">def</span> <span class="nf">rank_oct</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">oct_rank_matrix</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Optimistic cost table ranking heuristic outlined in </span>
 <span class="sd">    Arabnejad and Barbos (2014)</span>
@@ -220,7 +259,7 @@
     <span class="n">oct_rank_matrix</span><span class="p">[(</span><span class="n">node</span><span class="p">,</span><span class="n">pk</span><span class="p">)]</span> <span class="o">=</span> <span class="n">max_successor</span></div>
 
 
-<div class="viewcode-block" id="ave_comm_cost"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.ave_comm_cost">[docs]</a><span class="k">def</span> <span class="nf">ave_comm_cost</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">,</span><span class="n">successor</span><span class="p">):</span>
+<div class="viewcode-block" id="ave_comm_cost"><a class="viewcode-back" href="../../algorithms.html#algorithms.heuristic.ave_comm_cost">[docs]</a><span class="k">def</span> <span class="nf">ave_comm_cost</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">task</span><span class="p">,</span><span class="n">successor</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the &#39;average&#39; communication cost, which is just </span>
 <span class="sd">    the cost in the matrix. Not sure how the ave. in the </span>
@@ -260,7 +299,7 @@
     <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="calc_est"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.calc_est">[docs]</a><span class="k">def</span> <span class="nf">calc_est</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">node</span><span class="p">,</span><span class="n">processor_num</span><span class="p">,</span><span class="n">task_list</span><span class="p">):</span>
+<div class="viewcode-block" id="calc_est"><a class="viewcode-back" href="../../algorithms.html#algorithms.heuristic.calc_est">[docs]</a><span class="k">def</span> <span class="nf">calc_est</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">node</span><span class="p">,</span><span class="n">processor_num</span><span class="p">,</span><span class="n">task_list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the Estimated Start Time of a node on a given processor</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -324,7 +363,7 @@
 
     <span class="k">return</span> <span class="n">est</span></div>
 
-<div class="viewcode-block" id="insertion_policy"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.insertion_policy">[docs]</a><span class="k">def</span> <span class="nf">insertion_policy</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span>
+<div class="viewcode-block" id="insertion_policy"><a class="viewcode-back" href="../../algorithms.html#algorithms.heuristic.insertion_policy">[docs]</a><span class="k">def</span> <span class="nf">insertion_policy</span><span class="p">(</span><span class="n">wf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Allocate tasks to processors following the insertion based policy outline </span>
 <span class="sd">    in Tocuoglu et al.(2002)</span>
@@ -395,7 +434,7 @@
     <span class="k">return</span> <span class="n">makespan</span></div>
 
 
-<div class="viewcode-block" id="insertion_policy_oct"><a class="viewcode-back" href="../../introduction.html#algorithms.heuristic.insertion_policy_oct">[docs]</a><span class="k">def</span> <span class="nf">insertion_policy_oct</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">oct_rank_matrix</span><span class="p">):</span>
+<div class="viewcode-block" id="insertion_policy_oct"><a class="viewcode-back" href="../../algorithms.html#algorithms.heuristic.insertion_policy_oct">[docs]</a><span class="k">def</span> <span class="nf">insertion_policy_oct</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span><span class="n">oct_rank_matrix</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Allocate tasks to processors following the insertion based policy outline </span>
 <span class="sd">    in Tocuoglu et al.(2002)</span>
@@ -463,44 +502,8 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">shadow</a></h1>
-
-
-
-<p class="blurb">ScHeduling Algorithms for                                      Data-intensive Workflows</p>
-
-
-
-
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=myxie&repo=shadow&type=watch&count=true&size=large&v=2"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
-
-
-
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div><h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
-</ul>
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2019, RW Bunney.
       

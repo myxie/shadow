@@ -24,7 +24,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Introduction" href="introduction.html" />
+    <link rel="next" title="Algorithms" href="algorithms.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -33,33 +33,8 @@
 
   </head>
   <body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="section" id="shadow">
-<h1><em>shadow</em><a class="headerlink" href="#shadow" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="what-is-shadow">
-<h2>What is <em>shadow</em>?<a class="headerlink" href="#what-is-shadow" title="Permalink to this headline">¶</a></h2>
-<p><em>shadow</em> is a library for the use and testing of workflow scheduling    algorithms, with a focus on data-intensive science applications. <em>shadow</em> provides implementations for various heuristic and metaheuristic algorithms to address single-and multi-objective scheduling problems, with schedule-reporting and visualisation options.</p>
-</div>
-<div class="section" id="contents">
-<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-</ul>
-</div>
-</div>
-</div>
-
-
-          </div>
-        </div>
-      </div>
+  <div class="document">
+    
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="#">shadow</a></h1>
@@ -84,19 +59,77 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="introduction.html" title="next chapter">Introduction</a></li>
+      <li>Next: <a href="algorithms.html" title="next chapter">Algorithms</a></li>
   </ul></li>
 </ul>
 </div><h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classes.html">Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Roadmap</a></li>
 </ul>
 
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="shadow">
+<h1><em>shadow</em><a class="headerlink" href="#shadow" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-is-shadow">
+<h2>What is <em>shadow</em>?<a class="headerlink" href="#what-is-shadow" title="Permalink to this headline">¶</a></h2>
+<p><em>shadow</em> is a library for the use and testing of workflow scheduling    algorithms, with a focus on data-intensive science applications. <em>shadow</em> provides implementations for various heuristic and metaheuristic algorithms to address single-and multi-objective scheduling problems, with schedule-reporting and visualisation options.</p>
+<p><em>shadow</em> has been designed to test the effectiveness of a vareity of algorithms
+that may be used to schedule Radio Interferometry pipelines for the Square
+kilometre Array (SKA).</p>
+<p>An example model is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">algorithms.heuristic</span> <span class="k">import</span> <span class="n">heft</span>
+<span class="kn">from</span> <span class="nn">classes.workflow</span> <span class="k">import</span> <span class="n">Workflow</span>
+
+<span class="c1"># This workflow calculates the task time for each resource based on the</span>
+<span class="c1"># demand and supply vectors provided in the &#39;flop_rep_test.json&#39; file.</span>
+<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="s1">&#39;topcuoglu.graphml&#39;</span><span class="p">)</span>
+<span class="n">retval</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">load_attributes</span><span class="p">(</span><span class="s1">&#39;flop_rep_test.json&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">heft</span><span class="p">(</span><span class="n">wf</span><span class="p">))</span>
+<span class="n">wf</span><span class="o">.</span><span class="n">pretty_print_allocation</span><span class="p">()</span>
+
+
+<span class="c1"># Original HEFT workflow; task time on reach resource is provided</span>
+<span class="c1"># directly by the .json file.</span>
+
+<span class="n">wf</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span><span class="s1">&#39;topcuoglu.graphml&#39;</span><span class="p">)</span>
+<span class="n">retval</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">load_attributes</span><span class="p">(</span><span class="s1">&#39;heft.json&#39;</span><span class="p">,</span><span class="n">calc_time</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">heft</span><span class="p">(</span><span class="n">wf</span><span class="p">))</span>
+<span class="n">wf</span><span class="o">.</span><span class="n">pretty_print_allocation</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The output of <code class="docutils literal"><span class="pre">wf.pretty_print_allocation()</span></code>  looks something like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">0</span>       <span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">)</span>   <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">)</span>   <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
+<span class="mi">1</span>       <span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">81</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">)</span>                   <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span>
+<span class="mi">2</span>       <span class="p">(</span><span class="mi">84</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">)</span>                   <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
+<span class="mi">3</span>                                       <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">)</span>
+<span class="mi">4</span>                                       <span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">)</span>
+<span class="mi">5</span>                                       <span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">)</span>
+<span class="mi">6</span>
+<span class="mi">7</span>
+<span class="mi">8</span>
+<span class="mi">9</span>
+<span class="n">Total</span> <span class="n">Makespan</span><span class="p">:</span> <span class="mi">98</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2019, RW Bunney.
       

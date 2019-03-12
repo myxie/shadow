@@ -101,6 +101,8 @@ html_theme_options = {'description':'ScHeduling Algorithms for  \
                                     Data-intensive Workflows',
                         'github_user': 'myxie',
                         'github_repo': 'shadow',
+                        'sidebar_includehidden':True,
+                        'fixed_sidebar': True,
                     }
 
 # Add any paths that contain custom static files (such as style sheets) here,

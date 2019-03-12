@@ -1,7 +1,12 @@
-ul{
+/*ul {
     list-style: none;
     margin: 0;
-    /*padding: 0;*/
-    padding-left: 0;
+    /*padding: 0;
+    /*padding-left: 0;
 
 }
+*/
+/*.simple {
+	list-style: initial;
+	list-style-position: inside;
+}*/
