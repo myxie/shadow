@@ -90,40 +90,26 @@ def generate_population(wf,size,seed,skip_limit):
     
     In the future it might be useful, in addition to checking feasibility of solution, to minimise duplicates of the population generated. Not sure about this. 
     """
-    # pop = [Solution() for x in range(size)]
+    pop = [Solution() for x in range(size)]
     # top_sort_generator = wf.top_sorts()
     # _exhausted = object()
     # for soln in pop: 
     #     soln.generate_solution(seed,top_sort_generator,len(wf.processors))
 
     # In order to generate solutions, we need to ensure that 
-    top_sort_list = []
-    generator=nx.all_topological_sorts(wf.graph)
-    retval = peek(generator)
-    if retval is None:
+    exec_order = generate_exec_orders(wf,size,seed,skip_limit)
+    
+    # Generate a list of task/resource assignments  
+    task_assign = generate_allocations(wf.graph.number_of_nodes(),size,4,seed)
+
+    if(len(pop) != len(exec_order) or len(pop) != len(task_assign)):
         return None
     else:
-        first, generator = retval
-        top_sort_list.append(first)
-    random.seed(seed)    
-    while (len(top_sort_list) < size):
-        generator=nx.all_topological_sorts(wf.graph)
-        for top in generator:
-            # 'skip through' a number of different top sorts to ensure we are
-            # getting a diverse range. 
-            skip = random.randint(0,100) % skip_limit 
-            for x in range(skip):
-                next(generator)
-            top_sort_list.append(list(top))
-            if len(top_sort_list) == size:
-                break
+        for soln in pop:
+            soln.exec_order = exec_order.pop()
+            soln.task_assign = task_assign.pop()
 
-
-
-    pop=top_sort_list
-    task_assign = [] 
-    exec_order = []
-
+        
     return pop
 
 def dominates(p,q,objective_set):
@@ -166,6 +152,43 @@ def peek(iterable):
     except StopIteration:
         return None
     return first, itertools.chain([first], iterable)
+
+def generate_exec_orders(wf,popsize,seed,skip_limit):
+    top_sort_list = []
+    generator=nx.all_topological_sorts(wf.graph)
+    retval = peek(generator)
+    if retval is None:
+        return None
+    else:
+        first, generator = retval
+        top_sort_list.append(first)
+
+    # Generate a list of topological sorts
+    random.seed(seed)    
+    while (len(top_sort_list) < popsize):
+        generator=nx.all_topological_sorts(wf.graph)
+        for top in generator:
+            # 'skip through' a number of different top sorts to ensure we are
+            # getting a diverse range. 
+            skip = random.randint(0,100) % skip_limit 
+            for x in range(skip):
+                next(generator)
+            top_sort_list.append(list(top))
+            if len(top_sort_list) == popsize:
+                break
+
+    return top_sort_list
+
+
+def generate_allocations(num_nodes,popsize,num_resource,seed):
+    alloc_list = []
+    random.seed(seed)
+    for x in range(popsize):
+        alloc_list.append(\
+            [random.randint(0,1000)%num_resource for \
+                            x in range(num_nodes)])
+    return alloc_list
+
 
 class Solution:
     """ A simple class to store each solutions' related information
