@@ -19,6 +19,9 @@
 # Currently, this file implements the following algorithms:
 # 
 
+import networkx as nx 
+import itertools
+import random
 
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
@@ -41,6 +44,29 @@ def nsga2(wf,seed):
     generate_population(wf,seed)
 
     """
+
+    Create a random parent population P size N
+    Apply non-dominated sort to P
+    Binary tournament selection to create population Q, size N
+    For each generation, taking the most recent sets P and Q:
+        Combine the populations to make R, size 2N
+        Apply non-dominated sort to R 
+        Starting from the first Front:
+            If we can add all solutions from the current front to the new
+            population, Pt+1, without going over the population limit N, add the
+            front to Pt+1
+            When an overlap on a Front Fl occurs, in which adding all solutions
+            from the front would cause size(Pt+1) > N, we sort all solutions
+            from this last front, FL, using the crowded comparison operator, in
+            descending order, and choose the best solutions to fill remaining
+            slots. 
+            
+            We then use tournament selection again to create Q, and start again
+            generation_counter++
+
+
+
+
     Whilst we have not reached our terminal condition, do: 
         crossover on individual solutions
         mutate the offspring
@@ -55,8 +81,7 @@ def spea2(wf,seed):
     return None
 
 
-def generate_population(wf,seed):
-    pop = []
+def generate_population(wf,size,seed,skip_limit):
     """
     task_assign[0] is the resource to which Task0 is assigned
     exec_order[0] is the task that will be executed first
@@ -64,18 +89,54 @@ def generate_population(wf,seed):
     each 'solution' should be a tuple of a task-assign and exec-order solution
     
     In the future it might be useful, in addition to checking feasibility of solution, to minimise duplicates of the population generated. Not sure about this. 
-
     """
+    # pop = [Solution() for x in range(size)]
+    # top_sort_generator = wf.top_sorts()
+    # _exhausted = object()
+    # for soln in pop: 
+    #     soln.generate_solution(seed,top_sort_generator,len(wf.processors))
+
+    # In order to generate solutions, we need to ensure that 
+    top_sort_list = []
+    generator=nx.all_topological_sorts(wf.graph)
+    retval = peek(generator)
+    if retval is None:
+        return None
+    else:
+        first, generator = retval
+        top_sort_list.append(first)
+    random.seed(seed)    
+    while (len(top_sort_list) < size):
+        generator=nx.all_topological_sorts(wf.graph)
+        for top in generator:
+            # 'skip through' a number of different top sorts to ensure we are
+            # getting a diverse range. 
+            skip = random.randint(0,100) % skip_limit 
+            for x in range(skip):
+                next(generator)
+            top_sort_list.append(list(top))
+            if len(top_sort_list) == size:
+                break
+
+
+
+    pop=top_sort_list
     task_assign = [] 
     exec_order = []
 
     return pop
 
-def is_feasibility(task_order):
+def dominates(p,q,objective_set):
     """
-    Check that task_order is a valid topological sort
+    Checks if the given solution 'p' dominates 'q' for each objective outlined
+    in 'objective set'
     """
+
     return True
+
+
+def binary_tournament(pop):
+    return None
 
 def crossover(soln):
     """
@@ -92,16 +153,39 @@ def crossover(soln):
 def mutation(soln):
     return None
 
-
-def cost_fitness():
+def non_dom_sort(pop):
     return None
 
-def time_fitness():
+def crowding_distance():
     return None
 
-def throughput_fitness():
-    return None
 
-def reliability_fitness():
-    return None
+def peek(iterable):
+    try:
+        first = next(iterable)
+    except StopIteration:
+        return None
+    return first, itertools.chain([first], iterable)
 
+class Solution:
+    """ A simple class to store each solutions' related information
+    """
+    task_assign = [] 
+    exec_order = []
+    nondom_rank = -1
+    crowding_dist = -1
+
+
+    def generate_solution(self,generator,resources,seed):
+        for sort in generator:
+            self.task_assign + sort
+
+
+        return None 
+
+
+    def _is_feasible(task_order):
+        """
+        Check that task_order is a valid topological sort
+        """
+        return True

@@ -15,14 +15,36 @@
 
 ########################################################################
 
-# This file contains code for implementing heuristic-based scheduling
-# algorithms. Currently, this file implements the following algorithms:
-# * HEFT 
-# * PHEFT 
+"""
+This module contains code for implementing heuristic-based scheduling
+algorithms. Currently, this file implements the following algorithms:
 
+* HEFT 
+* PHEFT 
+"""
 from random import randint
 import networkx as nx
 import numpy as np
+
+class Foo:
+    """Docstring for class Foo."""
+
+    #: Doc comment for class attribute Foo.bar.
+    #: It can have multiple lines.
+    bar = 1
+
+    flox = 1.5   #: Doc comment for Foo.flox. One line only.
+
+    baz = 2
+    """Docstring for class attribute Foo.baz."""
+
+    def __init__(self):
+        #: Doc comment for instance attribute qux.
+        self.qux = 3
+
+        self.spam = 4
+        """Docstring for instance attribute spam."""
+
 
 #############################################################################
 ############################# HUERISTICS  ###################################
@@ -32,6 +54,9 @@ import numpy as np
 def heft(wf): 
     """
     Implementation of the original 1999 HEFT algorithm.
+
+    :params wf: The workflow object to schedule
+    :returns: The makespan of the resulting schedule
     """
     upward_rank(wf) 
     makespan = insertion_policy(wf)

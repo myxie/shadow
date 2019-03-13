@@ -1,0 +1,267 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>classes.workflow &#8212; shadow 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">shadow</a></h1>
+
+
+
+<p class="blurb">ScHeduling Algorithms for                                      Data-intensive Workflows</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=myxie&repo=shadow&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../classes.html">Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../roadmap.html">Roadmap</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for classes.workflow</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2018 RW Bunney</span>
+
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.  </span>
+
+
+
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<div class="viewcode-block" id="Workflow"><a class="viewcode-back" href="../../classes.html#classes.workflow.Workflow">[docs]</a><span class="k">class</span> <span class="nc">Workflow</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Workflow class acts as a wrapper for all things associated with a task</span>
+<span class="sd">    workflow. A workflow object is a struct to keep associated data</span>
+<span class="sd">    together. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">graphml</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :params wcost - work cost matrix</span>
+<span class="sd">        :paramts ccost - communication cost matrix</span>
+<span class="sd">        :graphml - graphml file in which workflows are stored</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1">#: Initialised from graphml file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">read_graphml</span><span class="p">(</span><span class="n">graphml</span><span class="p">,</span><span class="nb">int</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Workflow.load_attributes"><a class="viewcode-back" href="../../classes.html#classes.workflow.Workflow.load_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">load_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attr</span><span class="p">,</span><span class="n">calc_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">perc_peak</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attributes in the json file: </span>
+<span class="sd">        &#39;comp&#39; - the total FLOPS cost of each task </span>
+<span class="sd">        &#39;resource&#39; - the supplied FLOP/s </span>
+<span class="sd">        &#39;edge&#39; - a second dictionary in which the data products between nodes is stored</span>
+
+<span class="sd">        If calc_time is True, then we calculate how much time each tasks takes based on the resource demand of the application and the supplied FLOPs/sec provided by each &#39;resource&#39;. We also calculate how much time data transfers take based on the &#39;data_rate&#39; matrix that is present in json. </span>
+
+<span class="sd">        If calc_time is False, then the time has already been calculated, and we have been provided with a cost vector per task instead. </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">fp_attr</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">attr_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp_attr</span><span class="p">)</span>
+        <span class="n">fp_attr</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">wcost</span><span class="p">,</span><span class="n">resource_vec</span> <span class="o">=</span> <span class="p">[],[]</span>
+        <span class="n">data_size</span><span class="o">=</span><span class="p">{}</span>
+        <span class="n">data_rate</span><span class="o">=</span><span class="p">[]</span>
+        <span class="k">if</span> <span class="s1">&#39;comp&#39;</span> <span class="ow">in</span> <span class="n">attr_dict</span><span class="p">:</span> 
+            <span class="n">wcost</span> <span class="o">=</span> <span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;comp&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># Attribute is not in json file</span>
+
+        <span class="k">if</span> <span class="s1">&#39;resource&#39;</span> <span class="ow">in</span> <span class="n">attr_dict</span><span class="p">:</span> 
+            <span class="n">resource_vec</span> <span class="o">=</span> <span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;resource&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> 
+
+        <span class="k">if</span> <span class="s1">&#39;edge&#39;</span> <span class="ow">in</span> <span class="n">attr_dict</span><span class="p">:</span> 
+            <span class="n">data_size</span> <span class="o">=</span> <span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;edge&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> 
+        <span class="k">if</span> <span class="s1">&#39;data_rate&#39;</span> <span class="ow">in</span> <span class="n">attr_dict</span><span class="p">:</span>
+            <span class="n">data_rate</span> <span class="o">=</span> <span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;data_rate&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">calc_time</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">wcost</span><span class="p">[</span><span class="n">node</span><span class="p">],</span><span class="n">resource_vec</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+                <span class="n">pred</span><span class="p">,</span><span class="n">succ</span> <span class="o">=</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">pred</span><span class="p">,</span><span class="n">succ</span><span class="p">][</span><span class="s1">&#39;data_size&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">data_size</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">pred</span><span class="p">)][</span><span class="n">succ</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;comp&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">wcost</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+
+            <span class="c1"># TODO implement second data approach, which takes the rate of transfer between resources and calculates time based on that. </span>
+            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+                <span class="n">pred</span><span class="p">,</span><span class="n">succ</span> <span class="o">=</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">pred</span><span class="p">,</span><span class="n">succ</span><span class="p">][</span><span class="s1">&#39;data_size&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">data_size</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">pred</span><span class="p">)][</span><span class="n">succ</span><span class="p">]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">processors</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">resource_vec</span><span class="p">))]</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">makespan</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_rate</span> <span class="o">=</span> <span class="n">data_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_load</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thrpt</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+
+    <span class="k">def</span> <span class="nf">pretty_print_allocation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">processors</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+            <span class="c1"># print(p)</span>
+        <span class="nb">print</span><span class="p">()</span> 
+
+
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">))):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">tabstop</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processors</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">p</span><span class="p">]):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processors</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="n">x</span><span class="p">]),</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">tabstop</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1">&#39;</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">tabstop</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total Makespan: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">makespan</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">thrpt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_load</span><span class="p">)</span>
+
+        <span class="n">fig</span><span class="p">,</span><span class="n">ax1</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_load</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (sec)&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Data Load in Pipeline (Gb)&quot;</span><span class="p">)</span>
+
+        <span class="n">val</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span><span class="n">edge</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">):</span>
+            <span class="n">pred</span><span class="p">,</span><span class="n">succ</span> <span class="o">=</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">val</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">pred</span><span class="p">,</span><span class="n">succ</span><span class="p">][</span><span class="s1">&#39;data_size&#39;</span><span class="p">]</span>
+
+
+        <span class="n">ave_throughput</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_load</span><span class="p">)</span>
+        <span class="c1"># ave_throughput = [val/self.makespan for x in range(self.makespan)]</span>
+        <span class="c1"># ax2 = ax1.twinx()</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ave_throughput</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="c1"># ax1.plot(cumulative,&#39;r&#39;)</span>
+        <span class="c1"># ax2.set_ylabel(&quot;Throughput (Gb/s)&quot;, color=&#39;r&#39;)</span>
+        <span class="c1"># ax2.tick_params(&#39;y&#39;, colors=&#39;r&#39;)</span>
+        <span class="c1"># plt.legend((p1[0],p2[0]),(&#39;Instantaneous Load&#39;,&#39;Average Throughput&#39;),loc=4)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Data load experienced over workflow vs. Rate of change of Throughput&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+
+
+<span class="c1"># fig, ax1 = plt.subplots()</span>
+<span class="c1"># t = np.arange(0.01, 10.0, 0.01)</span>
+<span class="c1"># s1 = np.exp(t)</span>
+<span class="c1"># ax1.plot(t, s1, &#39;b-&#39;)</span>
+<span class="c1"># ax1.set_xlabel(&#39;time (s)&#39;)</span>
+<span class="c1"># # Make the y-axis label, ticks and tick labels match the line color.</span>
+<span class="c1"># ax1.set_ylabel(&#39;exp&#39;, color=&#39;b&#39;)</span>
+<span class="c1"># ax1.tick_params(&#39;y&#39;, colors=&#39;b&#39;)</span>
+
+<span class="c1"># ax2 = ax1.twinx()</span>
+<span class="c1"># s2 = np.sin(2 * np.pi * t)</span>
+<span class="c1"># ax2.plot(t, s2, &#39;r.&#39;)</span>
+<span class="c1"># ax2.set_ylabel(&#39;sin&#39;, color=&#39;r&#39;)</span>
+<span class="c1"># ax2.tick_params(&#39;y&#39;, colors=&#39;r&#39;)</span>
+
+<span class="c1"># fig.tight_layout()</span>
+<span class="c1"># plt.show()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2019, RW Bunney.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

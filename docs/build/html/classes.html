@@ -80,6 +80,31 @@
             
   <div class="section" id="classes">
 <h1>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="classes.workflow.Workflow">
+<em class="property">class </em><code class="descclassname">classes.workflow.</code><code class="descname">Workflow</code><span class="sig-paren">(</span><em>graphml</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/classes/workflow.html#Workflow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.workflow.Workflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Workflow class acts as a wrapper for all things associated with a task
+workflow. A workflow object is a struct to keep associated data
+together.</p>
+<dl class="attribute">
+<dt id="classes.workflow.Workflow.graph">
+<code class="descname">graph</code><em class="property"> = None</em><a class="headerlink" href="#classes.workflow.Workflow.graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialised from graphml file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="classes.workflow.Workflow.load_attributes">
+<code class="descname">load_attributes</code><span class="sig-paren">(</span><em>attr</em>, <em>calc_time=True</em>, <em>perc_peak=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/classes/workflow.html#Workflow.load_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.workflow.Workflow.load_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attributes in the json file: 
+‘comp’ - the total FLOPS cost of each task 
+‘resource’ - the supplied FLOP/s 
+‘edge’ - a second dictionary in which the data products between nodes is stored</p>
+<p>If calc_time is True, then we calculate how much time each tasks takes based on the resource demand of the application and the supplied FLOPs/sec provided by each ‘resource’. We also calculate how much time data transfers take based on the ‘data_rate’ matrix that is present in json.</p>
+<p>If calc_time is False, then the time has already been calculated, and we have been provided with a cost vector per task instead.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

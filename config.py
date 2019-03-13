@@ -19,11 +19,13 @@
 # Configuration settings for this project
 
 # Files and directorys for test data used in tests/
-import tests.test_heuristic,tests.test_graph_generator, tests.test_workflow 
+import tests.test_heuristic,tests.test_graph_generator, tests.test_workflow,\
+		tests.test_metaheuristic
 
 tests = { 'workflow': tests.test_workflow,
         'graph_generator': tests.test_graph_generator,
-        'heuristic': tests.test_heuristic}
+        'heuristic': tests.test_heuristic,
+        'metaheuristic': tests.test_metaheuristic}
 
 
 test_dir = 'tests/data'

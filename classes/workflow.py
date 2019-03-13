@@ -14,11 +14,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.  
 
 
-"""
-Workflow class acts as a wrapper for all things associated with a task
-workflow. A workflow object is a struct to keep associated data
-together. 
-"""
 
 import json
 
@@ -27,6 +22,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Workflow(object):
+    """
+    Workflow class acts as a wrapper for all things associated with a task
+    workflow. A workflow object is a struct to keep associated data
+    together. 
+    """
 
     def __init__(self,graphml):
         """
@@ -35,6 +35,7 @@ class Workflow(object):
         :graphml - graphml file in which workflows are stored
         """
         
+        #: Initialised from graphml file
         self.graph = nx.read_graphml(graphml,int)
 
 
