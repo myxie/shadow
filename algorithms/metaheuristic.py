@@ -40,11 +40,8 @@ while(termination condition not satisfied)
 The two differ on evaluation and selection strategy
 """
 
-def nsga2(wf,seed): 
-    generate_population(wf,seed)
-
+def nsga2(wf,seed,generations=100,popsize=100): 
     """
-
     Create a random parent population P size N
     Apply non-dominated sort to P
     Binary tournament selection to create population Q, size N
@@ -64,15 +61,17 @@ def nsga2(wf,seed):
             We then use tournament selection again to create Q, and start again
             generation_counter++
 
-
-
-
     Whilst we have not reached our terminal condition, do: 
         crossover on individual solutions
         mutate the offspring
         evaluate the quality of the solutions
         select individuals to carry over to the new population
     """
+    objectives = []
+    pop = generate_population(wf,seed)
+    non_dom_sort(pop,objectives)
+
+
     return None
 
 
@@ -91,10 +90,6 @@ def generate_population(wf,size,seed,skip_limit):
     In the future it might be useful, in addition to checking feasibility of solution, to minimise duplicates of the population generated. Not sure about this. 
     """
     pop = [Solution() for x in range(size)]
-    # top_sort_generator = wf.top_sorts()
-    # _exhausted = object()
-    # for soln in pop: 
-    #     soln.generate_solution(seed,top_sort_generator,len(wf.processors))
 
     # In order to generate solutions, we need to ensure that 
     exec_order = generate_exec_orders(wf,size,seed,skip_limit)
@@ -109,8 +104,42 @@ def generate_population(wf,size,seed,skip_limit):
             soln.exec_order = exec_order.pop()
             soln.task_assign = task_assign.pop()
 
-        
     return pop
+
+def non_dom_sort(pop,objectives):
+    front = {0:[]}        
+    dominated = {}
+    for p in pop:
+        print(p,'thisisp')
+        p.dom_counter = 0 # reset between different sorts, as may have changed
+        for q in pop: 
+            if dominates(p,q,objectives): # if p dominates q
+                if p not in dominated:
+                    dominated[p] = [q]
+                else:
+                    dominated[p]+=[q] # add q to set of soln dominated by p
+            elif dominates(q,p,objectives):
+                p.dom_counter+=1
+        if p.dom_counter == 0: 
+            p.nondom_rank=1
+            front[0].append(p)
+
+
+    i = 1
+    
+    if i in front: 
+        Q = []
+        for p in front[i]:
+            for q in dominated[p]:
+                q.dom_counter-=1
+                if q.dom_counter==0:
+                    q.nondom_rank=i+1
+                    Q.append(q)
+        i +=1 
+        front[i]=Q
+
+    return None
+
 
 def dominates(p,q,objective_set):
     """
@@ -137,10 +166,17 @@ def crossover(soln):
     return None
 
 def mutation(soln):
+    """
+    Mutation requires us to separate the nodes into levels of nodes that are
+    independent of each other with respect to precedence:
+
+    Level 0 should have just the first task(s) - those with no indegree
+    Level n should have just the final task(s) - those with no outdegree
+    """
+
+
     return None
 
-def non_dom_sort(pop):
-    return None
 
 def crowding_distance():
     return None
@@ -195,17 +231,9 @@ class Solution:
     """
     task_assign = [] 
     exec_order = []
+    dom_counter = 0
     nondom_rank = -1
     crowding_dist = -1
-
-
-    def generate_solution(self,generator,resources,seed):
-        for sort in generator:
-            self.task_assign + sort
-
-
-        return None 
-
 
     def _is_feasible(task_order):
         """

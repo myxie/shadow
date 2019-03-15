@@ -17,7 +17,11 @@
 import unittest
 
 import config as cfg
-from algorithms.metaheuristic import generate_population, generate_allocations
+from algorithms.metaheuristic import generate_population,\
+                                     generate_allocations,\
+                                     non_dom_sort
+
+
 
 from classes.workflow import Workflow
 
@@ -53,4 +57,9 @@ class TestPopulationGeneration(unittest.TestCase):
         a = generate_allocations(self.wf.graph.number_of_nodes(),10, 4,seed)
         print(a)
 
-
+    def test_nondomsort(self):
+        seed = 10
+        pop = generate_population(self.wf,10,seed,2)
+        objectives = []
+        print(pop)
+        non_dom_sort(pop,objectives)

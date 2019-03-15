@@ -99,6 +99,9 @@ class Workflow(object):
         self.thrpt = 0.0
         return 0
 
+    def top_sorts(self):
+        return nx.all_topological_sorts(self.graph)
+
 
     def pretty_print_allocation(self):
 
