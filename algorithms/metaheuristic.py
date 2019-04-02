@@ -23,6 +23,9 @@ import networkx as nx
 import itertools
 import random
 
+from fitness import cost_fitness, time_fitness, throughput_fitness, \
+                    reliability_fitness
+
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
 
@@ -110,7 +113,6 @@ def non_dom_sort(pop,objectives):
     front = {0:[]}        
     dominated = {}
     for p in pop:
-        print(p,'thisisp')
         p.dom_counter = 0 # reset between different sorts, as may have changed
         for q in pop: 
             if dominates(p,q,objectives): # if p dominates q

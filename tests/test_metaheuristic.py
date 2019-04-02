@@ -37,8 +37,8 @@ class TestPopulationGeneration(unittest.TestCase):
     def test_pop_gen(self):
         seed = 10
         a= generate_population(self.wf,10,seed,2)
-        for x in a: 
-            print(x.exec_order)
+        # for x in a: 
+        #     print(x.exec_order)
         b= generate_population(self.wf,10,seed,2)
 
         self.assertTrue(a==a)
@@ -47,19 +47,21 @@ class TestPopulationGeneration(unittest.TestCase):
         b= generate_population(self.wf,10,seed,2)
         self.assertFalse(a==b)
 
-        for soln in a: 
-            print(soln.task_assign)
+        # for soln in a: 
+        #     print(soln.task_assign)
 
     def test_allocation(self):
         seed = 10
         a = generate_allocations(self.wf.graph.number_of_nodes(),10, 4,seed)
-        print(a)
-        a = generate_allocations(self.wf.graph.number_of_nodes(),10, 4,seed)
-        print(a)
+        # print(a)  
+        # a = generate_allocations(self.wf.graph.number_of_nodes(),10, 4,seed)
+        # print(a)
 
     def test_nondomsort(self):
         seed = 10
         pop = generate_population(self.wf,10,seed,2)
         objectives = []
-        print(pop)
+        # print(pop)
         non_dom_sort(pop,objectives)
+        for p in pop: 
+            print(p.nondom_rank)

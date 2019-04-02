@@ -29,3 +29,24 @@ def throughput_fitness():
 def reliability_fitness():
     return None
 
+# This is ugly - I should place this somewhere else (e.g current_globs.py)
+# which keeps the current state of the shadow library options available; e.g.
+# visualisation parameters, objectives that can be tested etc.
+
+objective_set = {"cost": cost_fitness,\
+				"time":time_fitness,\
+				"throughput":throughput_fitness,\
+				"reliability":reliability_fitness}
+
+def run_objectives(objectives):
+	retdict = {}
+	for objective in objectives:
+		if objective in objective_set:
+			func = objective_set[objective]
+			retdict[objective] = func()
+
+	return None
+
+
+
+
