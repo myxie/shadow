@@ -23,7 +23,7 @@ import networkx as nx
 import itertools
 import random
 
-from fitness import cost_fitness, time_fitness, throughput_fitness, \
+from algorithms.fitness import cost_fitness, time_fitness, throughput_fitness, \
                     reliability_fitness
 
 # TODO; initial setup required for a genetic algorithm

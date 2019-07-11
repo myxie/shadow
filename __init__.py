@@ -1,4 +1,4 @@
-# Copyright (C) 2018 RW Bunney
+# Copyright (C) 2019 RW Bunney
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -11,20 +11,7 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.  
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Test workflow class and functions
+########################################################################
 
-import unittest
-
-from classes.workflow import Workflow
-
-class TestWorkflowClass(unittest.TestCase):
-
-	def test_load_attributes(self):
-		wf = Workflow('tests/data/topcuoglu.graphml')
-		retval = wf.load_attributes('test.json')
-
-		self.assertEqual(retval,0)
-		self.assertEqual(wf.graph.node[5]['comp'][1],28)
-		self.assertEqual(wf.graph.edges[3,7]['data_size'],27)

@@ -28,7 +28,7 @@ from classes.workflow import Workflow
 
 class TestHeftMethods(unittest.TestCase):
     """
-    This class tests HEFT on the same example graph presented by 
+    This class test HEFT on the same example graph presented by
     Topcuoglu et al
     """ 
      
@@ -36,7 +36,6 @@ class TestHeftMethods(unittest.TestCase):
         self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'])
         self.wf.load_attributes(cfg.test_heuristic_data['heft_attr'],calc_time=False)
 
-    
     def test_rank(self):
         rank_values = [108,77,79,80,69,63,42,35,44,14]
         upward_rank(self.wf) 
@@ -48,6 +47,7 @@ class TestHeftMethods(unittest.TestCase):
     def test_schedule(self):
         retval = heft(self.wf)
         self.assertTrue(retval == 80)
+
 
 class TestHeftMethodCalcTime(unittest.TestCase):
     def setUp(self):

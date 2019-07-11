@@ -31,14 +31,14 @@ from algorithms.heft import Heft
 
 class TestHeftMethodsTopcuoglu(unittest.TestCase):
     """
-    This class tests HEFT on the same example graph presented by 
+    This class test HEFT on the same example graph presented by
     Topcuoglu et al
     """ 
      
     def setUp(self):
-        self.heft = Heft('tests/data/topcuoglu_comp.txt',\
-            'tests/data/topcuoglu_comm.txt',\
-            'tests/data/topcuoglu.graphml')
+        self.heft = Heft('test/data/topcuoglu_comp.txt',\
+            'test/data/topcuoglu_comm.txt',\
+            'test/data/topcuoglu.graphml')
 
 
     def tearDown(self):
@@ -64,13 +64,13 @@ class TestHeftMethodsTopcuoglu(unittest.TestCase):
 class TestHeftMethodsOCT(unittest.TestCase):
 
     """
-    This class tests HEFT on the same example graph presented by Arabnejad 
+    This class test HEFT on the same example graph presented by Arabnejad
     and Barbos
     """
     def setUp(self):
-        self.heft= Heft('tests/data/oct_comp.txt',\
-            'tests/data/oct_comm.txt',\
-            'tests/data/oct.graphml')
+        self.heft= Heft('test/data/oct_comp.txt',\
+            'test/data/oct_comm.txt',\
+            'test/data/oct.graphml')
         self.oct_rank_values = [72,41,37,43,31,41,17,20,16,0]
         self.up_rank_values = [169,114,102,110,129,119,52,92,42,20]
 
