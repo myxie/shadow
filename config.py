@@ -26,7 +26,7 @@ import test.test_heuristic, test.test_graph_generator, test.test_workflow, \
 test_dir = 'test/data'
 
 test_heuristic_data = {  # Tests that use the Topcuoglu paper graph
-	'topcuoglu_graph': 'test/data/topcuoglu.graphml',
+	'topcuoglu_graph': 'test/data/final_heft.json',
 	'heft_attr': 'test/data/heft_attr.json',
 	'flops_test_attr': 'test/data/flop_rep_test.json',
 

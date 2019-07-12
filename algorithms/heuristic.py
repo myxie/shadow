@@ -122,15 +122,16 @@ def rank_up(wf, task):
 	Ranks individual tasks and then allocates this final value to the attribute of the workflow graph
 
 	:param wf - Subject workflow
-	:param node -  A task node in an DAG that is being ranked
+	:param task -  A task node in an DAG that is being ranked
 	"""
 	longest_rank = 0
 	for successor in wf.graph.successors(task):
-		if not 'rank' in wf.graph[successor]:  # if we have not assigned a rank
+		if 'rank' not in wf.graph[successor]:  # if we have not assigned a rank
 			rank_up(wf, successor)
 
-		longest_rank = max(longest_rank, ave_comm_cost(wf, task, successor) + \
-						   wf.graph.nodes[successor]['rank'])
+		longest_rank = max(
+			longest_rank, ave_comm_cost(wf, task, successor)
+			+ wf.graph.nodes[successor]['rank'])
 
 	ave_comp = ave_comp_cost(wf, task)
 	wf.graph.nodes[task]['rank'] = ave_comp + longest_rank
@@ -144,20 +145,22 @@ def rank_up_random(wf, task):
 
 	longest_rank = 0
 	for successor in wf.successors(task):
-		if not 'rank' in wf.graph.nodes[successor]:
+		if 'rank' not in wf.graph.nodes[successor]:
 			# if we have not assigned a rank
-			rank_up(successor)
+			rank_up(wf, successor)
 
-		longest_rank = max(longest_rank, ave_comm_cost(wf, task, successor) + \
-						   wf.graph.nodes[successor]['rank'])
+		longest_rank = max(
+			longest_rank, ave_comm_cost(wf, task, successor)
+			+ wf.graph.nodes[successor]['rank'])
 
 	randval = randint(0, 1000) % 3
+	ave_comp = 0
 	if randval is 0:
-		ave_comp = ave_comp_cost(task)
+		ave_comp = ave_comp_cost(wf, task)
 	elif randval is 1:
-		ave_comp = max_comp_cost(task)
+		ave_comp = max_comp_cost(wf, task)
 	elif randval is 2:
-		ave_comp = max_comp_cost(task)
+		ave_comp = max_comp_cost(wf, task)
 
 	wf.graph.nodes[task]['rank'] = ave_comp + longest_rank
 
@@ -236,7 +239,7 @@ def calc_est(wf, node, processor_num, task_list):
 	est = 0
 	predecessors = wf.graph.predecessors(node)
 	for pretask in predecessors:
-		if not 'processor' in wf.graph.nodes[pretask]:
+		if 'processor' not in wf.graph.nodes[pretask]:
 			wf.graph.nodes[pretask]['processor'] = 0  # Default to 0
 		# If task isn't on the same processor, there is a transfer cost
 		pre_processor = wf.graph.nodes[pretask]['processor']
@@ -278,8 +281,9 @@ def calc_est(wf, node, processor_num, task_list):
 		if est < slot[0] and slot[0] + \
 				wf.graph.node[node]['comp'][processor_num] <= slot[1]:
 			return slot[0]
-		if (est >= slot[0]) and (est + \
-								 wf.graph.node[node]['comp'][processor_num] <= slot[1]):
+		if (est >= slot[0]) and \
+				(est +
+				 wf.graph.node[node]['comp'][processor_num] <= slot[1]):
 			return est
 		# At the 'end' of available slots
 		if (est >= slot[0]) and (slot[1] < 0):
@@ -310,9 +314,10 @@ def insertion_policy(wf):
 			wf.graph.nodes[task]['processor'] = p
 			wf.graph.nodes[task]['ast'] = 0
 			wf.graph.nodes[task]['aft'] = w
-			wf.processors[p].append((wf.graph.nodes[task]['ast'], \
-									 wf.graph.nodes[task]['aft'], \
-									 str(task)))
+			wf.processors[p].append((
+				wf.graph.nodes[task]['ast'],
+				wf.graph.nodes[task]['aft'],
+				str(task)))
 		else:
 			aft = -1  # Finish time for the current task
 			p = 0
@@ -333,8 +338,9 @@ def insertion_policy(wf):
 
 			# Calculate Throughput
 			for pred in wf.graph.predecessors(task):
-				timeslot = (wf.graph.nodes[pred]['aft'], \
-							wf.graph.nodes[task]['aft'])
+				timeslot = (
+					wf.graph.nodes[pred]['aft'],
+					wf.graph.nodes[task]['aft'])
 				load = wf.graph.edges[pred, task]['data_size']
 				if len(wf.data_load) == 0:
 					wf.data_load = np.zeros(timeslot[1])
@@ -352,9 +358,10 @@ def insertion_policy(wf):
 			# Makespan
 			if wf.graph.nodes[task]['aft'] >= makespan:
 				makespan = wf.graph.nodes[task]['aft']
-			wf.processors[p].append((wf.graph.nodes[task]['ast'], \
-									 wf.graph.nodes[task]['aft'], \
-									 str(task)))
+			wf.processors[p].append((
+				wf.graph.nodes[task]['ast'],
+				wf.graph.nodes[task]['aft'],
+				str(task)))
 			wf.processors[p].sort(key=lambda x: x[0])
 
 	wf.makespan = makespan
@@ -369,7 +376,7 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 
 	makespan = 0
 	if not oct_rank_matrix:
-		upward_oct_rank(wf)
+		upward_oct_rank(wf, oct_rank_matrix)
 	eft_matrix = dict()
 	oeft_matrix = dict()
 	p = 0
@@ -380,10 +387,10 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 			min_oeft = -1
 			for processor in range(len(wf.processors)):
 				eft_matrix[(task, processor)] = wf.graph.nodes[task]['comp'][processor]
-				oeft_matrix[(task, processor)] =\
+				oeft_matrix[(task, processor)] = \
 					eft_matrix[(task, processor)] + oct_rank_matrix[(task, processor)]
 				if (min_oeft == -1) or \
-					(oeft_matrix[(task, processor)] < min_oeft):
+						(oeft_matrix[(task, processor)] < min_oeft):
 					min_oeft = oeft_matrix[(task, processor)]
 					p = processor
 			wf.graph.nodes[task]['aft'] = wf.graph.nodes[task]['comp'][p]
@@ -405,7 +412,7 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 				oeft_matrix[(task, processor)] = \
 					eft_matrix[(task, processor)] + oct_rank_matrix[(task, processor)]
 				if (min_oeft == -1) or \
-					(oeft_matrix[(task, processor)] < min_oeft):
+						(oeft_matrix[(task, processor)] < min_oeft):
 					min_oeft = oeft_matrix[(task, processor)]
 					p = processor
 
