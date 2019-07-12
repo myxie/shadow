@@ -28,7 +28,7 @@ class Workflow(object):
 	together.
 	"""
 
-	def __init__(self, graphml):
+	def __init__(self, json_file, calc_time=True):
 		"""
 		:params wcost - work cost matrix
 		:paramts ccost - communication cost matrix
@@ -36,72 +36,34 @@ class Workflow(object):
 		"""
 		# TODO No more graphml format for us! Move to new multi-dictionary json format
 		#: Initialised from graphml file
-		self.graph = nx.read_graphml(graphml, int)
 
-	def load_attributes(self, attr, calc_time=True, perc_peak=1.0):
-		"""
-		Attributes in the json file:
-		'comp' - the total FLOPS cost of each task
-		'resource' - the supplied FLOP/s
-		'edge' - a second dictionary in which the data products between nodes is stored
-
-		If calc_time is True, then we calculate how much time each tasks takes based on the resource demand of the
-		application and the supplied FLOPs/sec provided by each 'resource'. We also calculate how much time data
-		transfers take based on the 'data_rate' matrix that is present in json.
-
-		If calc_time is False, then the time has already been calculated, and we have been provided with a cost vector
-		per task instead.
-
-		"""
-		# TODO this function is probably unnecessary (can use the constructor only)
-		fp_attr = open(attr, 'r')
-		attr_dict = json.load(fp_attr)
-		fp_attr.close()
-
-		wcost, resource_vec = [], []
-		data_size = {}
-		data_rate = []
+		with open(json_file, 'r') as infile:
+			jgraph = json.load(infile)
+		self.graph = nx.readwrite.json_graph.node_link_graph(jgraph['graph'])
+		# self.graph = nx.read_graphml(graphml, int)
+		self.system = jgraph['system']
+		# wcost, resource_vec = [], []
+		# data_size = {}
+		# data_rate = []
 		# TODO None of this should need to change?
-		if 'comp' in attr_dict:
-			wcost = attr_dict['comp']
-		else:
-			return -1  # Attribute is not in json file
 
-		if 'resource' in attr_dict:
-			resource_vec = attr_dict['resource']
-		else:
-			return -1
-
-		if 'edge' in attr_dict:
-			data_size = attr_dict['edge']
-		else:
-			return -1
-		if 'data_rate' in attr_dict:
-			data_rate = attr_dict['data_rate']
+		# graph.node[node_id] -> {'comp':119}
+		# graph.edge[node1,node2] -> {'data_size':9}
 
 		if calc_time:
 			for node in self.graph.node:
-				self.graph.node[node]['comp'] = np.round(np.divide(wcost[node], resource_vec)).astype(int)
-
-			for edge in self.graph.edges:
-				pred, succ = edge[0], edge[1]
-				self.graph.edges[pred, succ]['data_size'] = data_size[str(pred)][succ]
-		else:
-			for node in self.graph.node:
-				self.graph.node[node]['comp'] = wcost[node]
-
+				self.graph.node[node]['comp'] = np.round(np.divide(self.graph.node[node]['comp'], self.system['resource'])).astype(int)
 			# TODO implement second data approach, which takes the rate of transfer
 			#  between resources and calculates time based on that.
-			for edge in self.graph.edges:
-				pred, succ = edge[0], edge[1]
-				self.graph.edges[pred, succ]['data_size'] = data_size[str(pred)][succ]
+			# for edge in self.graph.edges:
+			# 	pred, succ = edge[0], edge[1]
+			# 	self.graph.edges[pred, succ]['data_size'] = data_size[str(pred)][succ]
 
-		self.processors = [[] for x in range(len(resource_vec))]
+		self.processors = [[] for x in range(len(self.system['resource']))]
 		self.makespan = 0
-		self.data_rate = data_rate
+		# self.data_rate = data_rate
 		self.data_load = np.array([])
 		self.thrpt = 0.0
-		return 0
 
 	def top_sorts(self):
 		return nx.all_topological_sorts(self.graph)

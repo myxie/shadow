@@ -23,9 +23,9 @@ from classes.workflow import Workflow
 class TestWorkflowClass(unittest.TestCase):
 
 	def test_load_attributes(self):
-		wf = Workflow('test/data/topcuoglu.graphml')
-		retval = wf.load_attributes('test/data/flop_rep_test.json')
+		wf = Workflow('final_graph_heft.json')
+		# retval = wf.load_attributes('test/data/flop_rep_test.json')
 
-		self.assertEqual(retval, 0)
+		# self.assertEqual(retval, 0)
 		self.assertEqual(wf.graph.node[5]['comp'][1], 28)
 		self.assertEqual(wf.graph.edges[3, 7]['data_size'], 27)
