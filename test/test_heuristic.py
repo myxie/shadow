@@ -34,7 +34,8 @@ class TestHeftMethods(unittest.TestCase):
 	"""
 
 	def setUp(self):
-		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'])
+		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph_nocalc'],
+					calc_time=False)
 
 	# self.wf.load_attributes(cfg.test_heuristic_data['heft_attr'],calc_time=False)
 
@@ -45,9 +46,9 @@ class TestHeftMethods(unittest.TestCase):
 		import networkx as nx
 		json = nx.readwrite.json_graph.node_link_data(self.wf.graph)
 
+		print(json)
 		for node in sorted_tasks:
-			self.assertTrue(int(self.wf.graph.nodes[node]['rank']) ==
-							rank_values[node])
+			self.assertTrue(rank_values[node] == int(self.wf.graph.nodes[node]['rank']))
 
 	def test_schedule(self):
 		retval = heft(self.wf)
@@ -57,7 +58,8 @@ class TestHeftMethods(unittest.TestCase):
 class TestHeftMethodCalcTime(unittest.TestCase):
 	def setUp(self):
 		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'])
-		# self.wf.load_attributes(cfg.test_heuristic_data['flops_test_attr'])
+
+	# self.wf.load_attributes(cfg.test_heuristic_data['flops_test_attr'])
 
 	def test_schedule(self):
 		retval = heft(self.wf)
@@ -68,7 +70,7 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 class TestPHeftMethods(unittest.TestCase):
 
 	def setUp(self):
-		self.wf = Workflow(cfg.test_heuristic_data['pheft_graph'])
+		self.wf = Workflow(cfg.test_heuristic_data['pheft_graph'],calc_time=False)
 		# self.wf.load_attributes(cfg.test_heuristic_data['pheft_attr'], calc_time=False)
 
 		self.up_oct_rank_values = [72, 41, 37, 43, 31, 41, 17, 20, 16, 0]
