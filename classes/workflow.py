@@ -14,142 +14,102 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.  
 
 
-
 import json
 
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class Workflow(object):
-    """
-    Workflow class acts as a wrapper for all things associated with a task
-    workflow. A workflow object is a struct to keep associated data
-    together. 
-    """
+	"""
+	Workflow class acts as a wrapper for all things associated with a task
+	workflow. A workflow object is a struct to keep associated data
+	together.
+	"""
 
-    def __init__(self,graphml):
-        """
-        :params wcost - work cost matrix
-        :paramts ccost - communication cost matrix
-        :graphml - graphml file in which workflows are stored
-        """
-        
-        #: Initialised from graphml file
-        self.graph = nx.read_graphml(graphml,int)
+	def __init__(self, json_file, calc_time=True):
+		"""
+		:params wcost - work cost matrix
+		:paramts ccost - communication cost matrix
+		:graphml - graphml file in which workflows are stored
+		"""
+		# TODO No more graphml format for us! Move to new multi-dictionary json format
+		#: Initialised from graphml file
 
+		with open(json_file, 'r') as infile:
+			jgraph = json.load(infile)
+		self.graph = nx.readwrite.json_graph.node_link_graph(jgraph['graph'])
+		# self.graph = nx.read_graphml(graphml, int)
+		self.system = jgraph['system']
+		# wcost, resource_vec = [], []
+		# data_size = {}
+		# data_rate = []
+		# TODO None of this should need to change?
 
-    def load_attributes(self,attr,calc_time=True,perc_peak=1.0):
-        """
-        Attributes in the json file: 
-        'comp' - the total FLOPS cost of each task 
-        'resource' - the supplied FLOP/s 
-        'edge' - a second dictionary in which the data products between nodes is stored
+		# graph.node[node_id] -> {'comp':119}
+		# graph.edge[node1,node2] -> {'data_size':9}
 
-        If calc_time is True, then we calculate how much time each tasks takes based on the resource demand of the application and the supplied FLOPs/sec provided by each 'resource'. We also calculate how much time data transfers take based on the 'data_rate' matrix that is present in json. 
+		if calc_time:
+			for node in self.graph.node:
+				self.graph.node[node]['comp'] = np.round(np.divide(self.graph.node[node]['comp'], self.system['resource'])).astype(int)
+			# TODO implement second data approach, which takes the rate of transfer
+			#  between resources and calculates time based on that.
+			# for edge in self.graph.edges:
+			# 	pred, succ = edge[0], edge[1]
+			# 	self.graph.edges[pred, succ]['data_size'] = data_size[str(pred)][succ]
 
-        If calc_time is False, then the time has already been calculated, and we have been provided with a cost vector per task instead. 
+		self.processors = [[] for x in range(len(self.system['resource']))]
+		self.makespan = 0
+		# self.data_rate = data_rate
+		self.data_load = np.array([])
+		self.thrpt = 0.0
 
-        """
+	def top_sorts(self):
+		return nx.all_topological_sorts(self.graph)
 
-        fp_attr = open(attr,'r')
-        attr_dict = json.load(fp_attr)
-        fp_attr.close()
+	def pretty_print_allocation(self):
 
-        wcost,resource_vec = [],[]
-        data_size={}
-        data_rate=[]
-        if 'comp' in attr_dict: 
-            wcost = attr_dict['comp']
-        else: 
-            return -1 # Attribute is not in json file
+		for p in self.processors:
+			p = sorted(p)
+		# print(p)
+		print()
 
-        if 'resource' in attr_dict: 
-            resource_vec = attr_dict['resource']
-        else: 
-            return -1 
+		for x in range(len(list(self.graph.nodes))):
+			print(x, end='\t')
+			tabstop = ""
+			for p in range(len(self.processors)):
+				if x < len(self.processors[p]):
+					print("{0}".format(self.processors[p][x]), end='\t')
+				else:
+					tabstop = '\t\t'
+					print(tabstop, end='')
+			print()
 
-        if 'edge' in attr_dict: 
-            data_size = attr_dict['edge']
-        else: 
-            return -1 
-        if 'data_rate' in attr_dict:
-            data_rate = attr_dict['data_rate']
+		print("Total Makespan: {0}".format(self.makespan))
 
-        if calc_time:
-            for node in self.graph.node:
-                self.graph.node[node]['comp'] = np.round(np.divide(wcost[node],resource_vec)).astype(int)
+		self.thrpt = np.average(self.data_load)
 
-            for edge in self.graph.edges:
-                pred,succ = edge[0],edge[1]
-                self.graph.edges[pred,succ]['data_size']=data_size[str(pred)][succ]
-        else:
-            for node in self.graph.node:
-                self.graph.node[node]['comp']=wcost[node]
+		fig, ax1 = plt.subplots()
+		ax1.plot(self.data_load)
+		ax1.set_xlabel("Time (sec)")
+		ax1.set_ylabel("Data Load in Pipeline (Gb)")
 
-            # TODO implement second data approach, which takes the rate of transfer between resources and calculates time based on that. 
-            for edge in self.graph.edges:
-                pred,succ = edge[0],edge[1]
-                self.graph.edges[pred,succ]['data_size']=data_size[str(pred)][succ]
-        
-        self.processors = [[] for x in range(len(resource_vec))] 
-        self.makespan = 0
-        self.data_rate = data_rate
-        self.data_load = np.array([])
-        self.thrpt = 0.0
-        return 0
+		val = 0
+		for x, edge in enumerate(self.graph.edges):
+			pred, succ = edge[0], edge[1]
+			val += self.graph.edges[pred, succ]['data_size']
 
-    def top_sorts(self):
-        return nx.all_topological_sorts(self.graph)
-
-
-    def pretty_print_allocation(self):
-
-        for p in self.processors:
-            p = sorted(p)
-            # print(p)
-        print() 
-
-
-        for x in range(len(list(self.graph.nodes))):
-            print(x,end='\t')
-            tabstop=""
-            for p in range(len(self.processors)):
-                if x < len(self.processors[p]):
-                    print("{0}".format(self.processors[p][x]),end='\t')
-                else:
-                    tabstop = '\t\t'
-                    print(tabstop,end='')
-            print()
-
-        print("Total Makespan: {0}".format(self.makespan))
-
-        self.thrpt = np.average(self.data_load)
-
-        fig,ax1=plt.subplots()
-        ax1.plot(self.data_load)
-        ax1.set_xlabel("Time (sec)")
-        ax1.set_ylabel("Data Load in Pipeline (Gb)")
-
-        val = 0
-        for x,edge in enumerate(self.graph.edges):
-            pred,succ = edge[0],edge[1]
-            val += self.graph.edges[pred,succ]['data_size']
-
-
-        ave_throughput = np.gradient(self.data_load)
-        # ave_throughput = [val/self.makespan for x in range(self.makespan)]
-        # ax2 = ax1.twinx()
-        ax1.plot(ave_throughput,'r')
-        # ax1.plot(cumulative,'r')
-        # ax2.set_ylabel("Throughput (Gb/s)", color='r')
-        # ax2.tick_params('y', colors='r')
-        # plt.legend((p1[0],p2[0]),('Instantaneous Load','Average Throughput'),loc=4)
-        plt.title("Data load experienced over workflow vs. Rate of change of Throughput")
-        plt.show()
-
-
-
+		ave_throughput = np.gradient(self.data_load)
+		# ave_throughput = [val/self.makespan for x in range(self.makespan)]
+		# ax2 = ax1.twinx()
+		ax1.plot(ave_throughput, 'r')
+		# ax1.plot(cumulative,'r')
+		# ax2.set_ylabel("Throughput (Gb/s)", color='r')
+		# ax2.tick_params('y', colors='r')
+		# plt.legend((p1[0],p2[0]),('Instantaneous Load','Average Throughput'),loc=4)
+		plt.title("Data load experienced over workflow vs. Rate of change of Throughput")
+		plt.show()
 
 # fig, ax1 = plt.subplots()
 # t = np.arange(0.01, 10.0, 0.01)
