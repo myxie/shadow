@@ -1,6 +1,6 @@
 {
     "graph": {
-        "directed": true,
+       "directed": true,
         "multigraph": false,
         "graph": {
             "node_default": {},

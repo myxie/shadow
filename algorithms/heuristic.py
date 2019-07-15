@@ -131,7 +131,7 @@ def rank_up(wf, task):
 
 		longest_rank = max(
 			longest_rank, ave_comm_cost(wf, task, successor)
-			+ wf.graph.nodes[successor]['rank'])
+						  + wf.graph.nodes[successor]['rank'])
 
 	ave_comp = ave_comp_cost(wf, task)
 	wf.graph.nodes[task]['rank'] = ave_comp + longest_rank
@@ -151,7 +151,7 @@ def rank_up_random(wf, task):
 
 		longest_rank = max(
 			longest_rank, ave_comm_cost(wf, task, successor)
-			+ wf.graph.nodes[successor]['rank'])
+						  + wf.graph.nodes[successor]['rank'])
 
 	randval = randint(0, 1000) % 3
 	ave_comp = 0
@@ -282,8 +282,8 @@ def calc_est(wf, node, processor_num, task_list):
 				wf.graph.node[node]['comp'][processor_num] <= slot[1]:
 			return slot[0]
 		if (est >= slot[0]) and \
-				(est +
-				 wf.graph.node[node]['comp'][processor_num] <= slot[1]):
+			(est +
+				wf.graph.node[node]['comp'][processor_num] <= slot[1]):
 			return est
 		# At the 'end' of available slots
 		if (est >= slot[0]) and (slot[1] < 0):

@@ -27,12 +27,12 @@ test_dir = 'test/data'
 
 test_heuristic_data = {  # Tests that use the Topcuoglu paper graph
 	'topcuoglu_graph': 'test/data/final_heft.json',
-	'heft_attr': 'test/data/heft_attr.json',
+	'topcuoglu_graph_nocalc': 'test/data/heft_nocalc.json',
 	'flops_test_attr': 'test/data/flop_rep_test.json',
 
 	# Tests that use the PHEFT paper graph
-	'pheft_graph': 'test/data/pheft.graphml',
-	'pheft_attr': 'test/data/pheft_attr.json',
+	'pheft_graph': 'test/data/pheft_nocalc.json',
+	# 'pheft_attr': 'test/data/pheft_attr.json',
 	# 'pheft_ccost':'test/data/oct_comm.txt',
 }
 
