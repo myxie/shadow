@@ -91,8 +91,8 @@ if __name__ == '__main__':
 
 	else:
 		print('Generating json')
-		for path in sorted(os.listdir('dots/')):
+		for path in sorted(os.listdir('.')):
 			if 'dot' in path:
 				print('Generating json for{0}'.format(path))
-				generate_graph_costs('dots/{0}'.format(path), 1, 100, 50, 3)
+				generate_graph_costs('{0}'.format(path), 1, 100, 50, 3)
 
