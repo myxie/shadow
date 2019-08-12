@@ -35,7 +35,7 @@ class TestHeftMethods(unittest.TestCase):
 
 	def setUp(self):
 		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph_nocalc'],
-					calc_time=False)
+						   calc_time=False)
 
 	# self.wf.load_attributes(cfg.test_heuristic_data['heft_attr'],calc_time=False)
 
@@ -70,7 +70,7 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 class TestPHeftMethods(unittest.TestCase):
 
 	def setUp(self):
-		self.wf = Workflow(cfg.test_heuristic_data['pheft_graph'],calc_time=False)
+		self.wf = Workflow(cfg.test_heuristic_data['pheft_graph'], calc_time=False)
 		# self.wf.load_attributes(cfg.test_heuristic_data['pheft_attr'], calc_time=False)
 
 		self.up_oct_rank_values = [72, 41, 37, 43, 31, 41, 17, 20, 16, 0]
@@ -103,3 +103,27 @@ class TestPHeftMethods(unittest.TestCase):
 		# upward_rank(self.wf)
 		retval = pheft(self.wf)
 		self.assertTrue(retval == 122)
+
+
+class testDALiuGEGraph(unittest.TestCase):
+
+	def setUp(self):
+		self.wf = Workflow('test/data/daliugesample.json', calc_time=False)
+		self.dense = Workflow('test/data/ggen_out_4-denselu.json', calc_time=False)
+		self.gnp = Workflow('test/data/ggen_out_20-0.5.json', calc_time=False)
+
+		pass
+
+	def tearDown(self):
+		pass
+
+	def test_it_works(self):
+		#print(heft(self.wf))
+		print(heft(self.dense))
+		self.dense.pretty_print_allocation()
+
+		# for p in self.dense.processors:
+		# 	print(p)
+		# #print(heft(self.gnp))
+
+		pass

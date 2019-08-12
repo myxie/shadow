@@ -1,0 +1,227 @@
+{
+  "graph": {
+    "directed": true,
+    "multigraph": false,
+    "graph": {
+      "name": "dag"
+    },
+    "nodes": [
+      {
+        "comp": [
+          52,
+          80,
+          57
+        ],
+        "id": 0
+      },
+      {
+        "comp": [
+          80,
+          61,
+          101
+        ],
+        "id": 1
+      },
+      {
+        "comp": [
+          121,
+          125,
+          139
+        ],
+        "id": 2
+      },
+      {
+        "comp": [
+          64,
+          65,
+          103
+        ],
+        "id": 3
+      },
+      {
+        "comp": [
+          89,
+          124,
+          95
+        ],
+        "id": 4
+      },
+      {
+        "comp": [
+          130,
+          91,
+          51
+        ],
+        "id": 5
+      },
+      {
+        "comp": [
+          146,
+          114,
+          101
+        ],
+        "id": 6
+      },
+      {
+        "comp": [
+          88,
+          149,
+          112
+        ],
+        "id": 7
+      },
+      {
+        "comp": [
+          139,
+          110,
+          104
+        ],
+        "id": 8
+      },
+      {
+        "comp": [
+          131,
+          81,
+          108
+        ],
+        "id": 9
+      }
+    ],
+    "links": [
+      {
+        "data_size": 96,
+        "source": 0,
+        "target": 1
+      },
+      {
+        "data_size": 129,
+        "source": 0,
+        "target": 2
+      },
+      {
+        "data_size": 148,
+        "source": 0,
+        "target": 3
+      },
+      {
+        "data_size": 137,
+        "source": 0,
+        "target": 4
+      },
+      {
+        "data_size": 55,
+        "source": 0,
+        "target": 5
+      },
+      {
+        "data_size": 57,
+        "source": 0,
+        "target": 6
+      },
+      {
+        "data_size": 117,
+        "source": 1,
+        "target": 8
+      },
+      {
+        "data_size": 62,
+        "source": 1,
+        "target": 3
+      },
+      {
+        "data_size": 99,
+        "source": 1,
+        "target": 4
+      },
+      {
+        "data_size": 68,
+        "source": 2,
+        "target": 8
+      },
+      {
+        "data_size": 129,
+        "source": 2,
+        "target": 4
+      },
+      {
+        "data_size": 148,
+        "source": 2,
+        "target": 9
+      },
+      {
+        "data_size": 145,
+        "source": 3,
+        "target": 4
+      },
+      {
+        "data_size": 114,
+        "source": 3,
+        "target": 5
+      },
+      {
+        "data_size": 64,
+        "source": 7,
+        "target": 1
+      },
+      {
+        "data_size": 123,
+        "source": 7,
+        "target": 2
+      },
+      {
+        "data_size": 145,
+        "source": 7,
+        "target": 8
+      },
+      {
+        "data_size": 55,
+        "source": 7,
+        "target": 4
+      },
+      {
+        "data_size": 94,
+        "source": 7,
+        "target": 9
+      },
+      {
+        "data_size": 137,
+        "source": 8,
+        "target": 3
+      },
+      {
+        "data_size": 99,
+        "source": 8,
+        "target": 4
+      },
+      {
+        "data_size": 120,
+        "source": 8,
+        "target": 5
+      }
+    ]
+  },
+  "system": {
+    "resource": [
+      16,
+      3,
+      11
+    ],
+    "data_rate": [
+      [
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        0
+      ]
+    ]
+  }
+}
