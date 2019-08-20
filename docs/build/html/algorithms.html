@@ -1,27 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Algorithms &#8212; shadow 0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Classes" href="classes.html" />
@@ -32,8 +22,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   <div class="document">
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -76,73 +65,37 @@
       </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="module-algorithms.heuristic">
 <span id="algorithms"></span><h1>Algorithms<a class="headerlink" href="#module-algorithms.heuristic" title="Permalink to this headline">¶</a></h1>
-<p>This module contains code for implementing heuristic-based scheduling
+<p>This module contais code for implementing heuristic-based scheduling
 algorithms. Currently, this file implements the following algorithms:</p>
 <ul class="simple">
-<li>HEFT</li>
-<li>PHEFT</li>
+<li><p>HEFT</p></li>
+<li><p>PHEFT</p></li>
 </ul>
 <dl class="function">
 <dt id="algorithms.heuristic.heft">
-<code class="descclassname">algorithms.heuristic.</code><code class="descname">heft</code><span class="sig-paren">(</span><em>wf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/algorithms/heuristic.html#heft"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#algorithms.heuristic.heft" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">algorithms.heuristic.</code><code class="sig-name descname">heft</code><span class="sig-paren">(</span><em class="sig-param">wf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/algorithms/heuristic.html#heft"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#algorithms.heuristic.heft" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implementation of the original 1999 HEFT algorithm.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Params wf:</th><td class="field-body">The workflow object to schedule</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The makespan of the resulting schedule</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="class">
-<dt id="algorithms.heuristic.Foo">
-<em class="property">class </em><code class="descclassname">algorithms.heuristic.</code><code class="descname">Foo</code><a class="reference internal" href="_modules/algorithms/heuristic.html#Foo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#algorithms.heuristic.Foo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Docstring for class Foo.</p>
-<dl class="attribute">
-<dt id="algorithms.heuristic.Foo.bar">
-<code class="descname">bar</code><em class="property"> = 1</em><a class="headerlink" href="#algorithms.heuristic.Foo.bar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Doc comment for class attribute Foo.bar.
-It can have multiple lines.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="algorithms.heuristic.Foo.baz">
-<code class="descname">baz</code><em class="property"> = 2</em><a class="headerlink" href="#algorithms.heuristic.Foo.baz" title="Permalink to this definition">¶</a></dt>
-<dd><p>Docstring for class attribute Foo.baz.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="algorithms.heuristic.Foo.flox">
-<code class="descname">flox</code><em class="property"> = 1.5</em><a class="headerlink" href="#algorithms.heuristic.Foo.flox" title="Permalink to this definition">¶</a></dt>
-<dd><p>Doc comment for Foo.flox. One line only.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="algorithms.heuristic.Foo.qux">
-<code class="descname">qux</code><em class="property"> = None</em><a class="headerlink" href="#algorithms.heuristic.Foo.qux" title="Permalink to this definition">¶</a></dt>
-<dd><p>Doc comment for instance attribute qux.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="algorithms.heuristic.Foo.spam">
-<code class="descname">spam</code><em class="property"> = None</em><a class="headerlink" href="#algorithms.heuristic.Foo.spam" title="Permalink to this definition">¶</a></dt>
-<dd><p>Docstring for instance attribute spam.</p>
-</dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Params wf</dt>
+<dd class="field-odd"><p>The workflow object to schedule</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The makespan of the resulting schedule</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 
 
           </div>
+          
         </div>
       </div>
     <div class="clearer"></div>
@@ -151,8 +104,8 @@ It can have multiple lines.</p>
       &copy;2019, RW Bunney.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/algorithms.rst.txt"

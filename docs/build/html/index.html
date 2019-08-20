@@ -1,27 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>shadow &#8212; shadow 0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Algorithms" href="algorithms.html" />
@@ -31,8 +21,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   <div class="document">
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -74,18 +63,17 @@
       </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="shadow">
 <h1><em>shadow</em><a class="headerlink" href="#shadow" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="what-is-shadow">
-<h2>What is <em>shadow</em>?<a class="headerlink" href="#what-is-shadow" title="Permalink to this headline">¶</a></h2>
-<p><em>shadow</em> is a library for the use and testing of workflow scheduling    algorithms, with a focus on data-intensive science applications. <em>shadow</em> provides implementations for various heuristic and metaheuristic algorithms to address single-and multi-objective scheduling problems, with schedule-reporting and visualisation options.</p>
 <p><em>shadow</em> has been designed to test the effectiveness of a vareity of algorithms
 that may be used to schedule Radio Interferometry pipelines for the Square
 kilometre Array (SKA).</p>
 <p>An example model is as follows:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">algorithms.heuristic</span> <span class="k">import</span> <span class="n">heft</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">algorithms.heuristic</span> <span class="k">import</span> <span class="n">heft</span>
 <span class="kn">from</span> <span class="nn">classes.workflow</span> <span class="k">import</span> <span class="n">Workflow</span>
 
 <span class="c1"># This workflow calculates the task time for each resource based on the</span>
@@ -105,8 +93,8 @@ kilometre Array (SKA).</p>
 <span class="n">wf</span><span class="o">.</span><span class="n">pretty_print_allocation</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The output of <code class="docutils literal"><span class="pre">wf.pretty_print_allocation()</span></code>  looks something like this:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">0</span>       <span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">)</span>   <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">)</span>   <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
+<p>The output of <code class="docutils literal notranslate"><span class="pre">wf.pretty_print_allocation()</span></code>  looks something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span>       <span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">)</span>   <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">)</span>   <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
 <span class="mi">1</span>       <span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">81</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">)</span>                   <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span>
 <span class="mi">2</span>       <span class="p">(</span><span class="mi">84</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">)</span>                   <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
 <span class="mi">3</span>                                       <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">)</span>
@@ -122,10 +110,10 @@ kilometre Array (SKA).</p>
 <div class="toctree-wrapper compound">
 </div>
 </div>
-</div>
 
 
           </div>
+          
         </div>
       </div>
     <div class="clearer"></div>
@@ -134,8 +122,8 @@ kilometre Array (SKA).</p>
       &copy;2019, RW Bunney.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/index.rst.txt"

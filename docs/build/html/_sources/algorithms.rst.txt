@@ -6,5 +6,3 @@ Algorithms
 
 .. autofunction:: algorithms.heuristic.heft
 
-.. autoclass:: algorithms.heuristic.Foo
-	:members:

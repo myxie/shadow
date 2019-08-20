@@ -1,27 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Classes &#8212; shadow 0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Roadmap" href="roadmap.html" />
@@ -32,8 +22,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   <div class="document">
     
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -76,39 +65,25 @@
       </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="classes">
 <h1>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="classes.workflow.Workflow">
-<em class="property">class </em><code class="descclassname">classes.workflow.</code><code class="descname">Workflow</code><span class="sig-paren">(</span><em>graphml</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/classes/workflow.html#Workflow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.workflow.Workflow" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">classes.workflow.</code><code class="sig-name descname">Workflow</code><span class="sig-paren">(</span><em class="sig-param">json_file</em>, <em class="sig-param">calc_time=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/classes/workflow.html#Workflow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.workflow.Workflow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Workflow class acts as a wrapper for all things associated with a task
 workflow. A workflow object is a struct to keep associated data
 together.</p>
-<dl class="attribute">
-<dt id="classes.workflow.Workflow.graph">
-<code class="descname">graph</code><em class="property"> = None</em><a class="headerlink" href="#classes.workflow.Workflow.graph" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialised from graphml file</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="classes.workflow.Workflow.load_attributes">
-<code class="descname">load_attributes</code><span class="sig-paren">(</span><em>attr</em>, <em>calc_time=True</em>, <em>perc_peak=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/classes/workflow.html#Workflow.load_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#classes.workflow.Workflow.load_attributes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attributes in the json file: 
-‘comp’ - the total FLOPS cost of each task 
-‘resource’ - the supplied FLOP/s 
-‘edge’ - a second dictionary in which the data products between nodes is stored</p>
-<p>If calc_time is True, then we calculate how much time each tasks takes based on the resource demand of the application and the supplied FLOPs/sec provided by each ‘resource’. We also calculate how much time data transfers take based on the ‘data_rate’ matrix that is present in json.</p>
-<p>If calc_time is False, then the time has already been calculated, and we have been provided with a cost vector per task instead.</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
 
 
           </div>
+          
         </div>
       </div>
     <div class="clearer"></div>
@@ -117,8 +92,8 @@ together.</p>
       &copy;2019, RW Bunney.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/classes.rst.txt"
