@@ -1,4 +1,4 @@
-# Copyright (C) 2018 RW Bunney
+# Copyright (C) 2019 RW Bunney
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -11,25 +11,27 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.  
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import unittest
+from config import test_environment_data
+import os
+from classes.environment import Environment
+# Tests for /algorithms/heuristic.py
 
-# Setup and run an experiment given a set of parameters
 
-from classes.workflow import Workflow
+# Testing heft algorithms in heuristics.py
 
-from algorithms.heuristics import heft, pheft
+class TestEnvironmentInit(unittest.TestCase):
+	def setUp(self) -> None:
+		print(os.listdir('.'))
+		self.env = Environment(test_environment_data['environment_sys'])
+		pass
+
+	def test_init(self):
+		self.assertTrue(self.env.has_comp)
 
 
-def runner(graphname, ccost,wcost,algorithms=[]):
-	"""
-	Given the file name of the graph, and the wcost/ccost matrices, run the specified algorithms, 
-	"""
-	wf = Workflow(graphname,wcost,ccost)
-	for alg in algorithms():
-		if alg is 'heft':
-			heft(wf)
-		elif alg is 'pheft': 
-			pheft(wf)
 
-	return None
+	def tearDown(self) -> None:
+		pass
 

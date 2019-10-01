@@ -45,14 +45,14 @@ class TestMatrixGenerator(unittest.TestCase):
 		# Test global generation with another seeed value
 		# random.seed(10000)
 		# tasks = 100
-		# processors = 2
+		# machines = 2
 		# #_min, _max = 10,20
 		# seed = 10000
 		# ccr= 10
 		# mean = 1250
 		# uniform_range =  500
 
-		# generate_cost_matrices(seed,ccr, mean, uniform_range,processors,
+		# generate_cost_matrices(seed,ccr, mean, uniform_range,machines,
 		#                                             tasks,cfg.test_dir)
 
 	def test_wcost_matrixGenerator(self):

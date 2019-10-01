@@ -1,4 +1,7 @@
 {
+    "header" : {
+        "time": false
+    },
     "graph": {
        "directed": true,
         "multigraph": false,
@@ -9,43 +12,43 @@
         },
         "nodes": [
             {
-                "comp": 119,
+                "comp": 119000,
                 "id": 0
             },
             {
-                "comp": 92,
+                "comp": 92000,
                 "id": 1
             },
             {
-                "comp": 95,
+                "comp": 95000,
                 "id": 2
             },
             {
-                "comp": 109,
+                "comp": 109000,
                 "id": 3
             },
             {
-                "comp": 107,
+                "comp": 107000,
                 "id": 4
             },
             {
-                "comp": 169,
+                "comp": 169000,
                 "id": 5
             },
             {
-                "comp": 110,
+                "comp": 110000,
                 "id": 6
             },
             {
-                "comp": 147,
+                "comp": 147000,
                 "id": 7
             },
             {
-                "comp": 146,
+                "comp": 146000,
                 "id": 8
             },
             {
-                "comp": 101,
+                "comp": 101000,
                 "id": 9
             }
         ],

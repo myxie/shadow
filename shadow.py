@@ -18,20 +18,18 @@
 
 import argparse, unittest
 
-import test as project_tests
+import test.test_workflow, test.test_heuristic 
 from algorithms.heuristic import heft
 from classes.workflow import Workflow
 
 testcases = {  # Tests for the test runner
-	"workflow": project_tests.test_workflow,
-	"graph_generator": project_tests.test_graph_generator,
-	"heuristic": project_tests.test_heuristic,
-	"metaheuristic": project_tests.test_metaheuristic
+	"workflow": test.test_workflow,
+	"heuristic": test.test_heuristic
 }
 
 
-def run_tests(args, tests, curr_parser):
-	if args['all']:
+def run_tests(arg, tests, curr_parser):
+	if arg['all']:
 		suite = unittest.TestSuite()
 		loader = unittest.TestLoader()
 		for test in tests:
@@ -40,8 +38,8 @@ def run_tests(args, tests, curr_parser):
 		runner.run(suite)
 		return True
 
-	if args['case']:
-		for case in args['case']:
+	if arg['case']:
+		for case in arg['case']:
 			suite = unittest.TestSuite()
 			loader = unittest.TestLoader()
 			suite.addTests(loader.loadTestsFromModule(tests[case]))
@@ -50,19 +48,29 @@ def run_tests(args, tests, curr_parser):
 	else:
 		curr_parser.print_help()
 
+def run_shadow():
+	"""
+	env = Environment(environment_config)
+	wf = Workflow(workflow_config)
+	wf.add_environment()
+	env.run_workflows(heuristic.heft)
 
-def run_algorithm(args, parser):
-	if args['algorithm'] == 'heft':
-		wf = Workflow(args['graph'])
-		calc_time = (args['calc_time'] == 'True')
-		wf.load_attributes(args['attr'], calc_time)
+	:return:
+	"""
+	pass
+
+def run_algorithm(arg, parser):
+	if arg['algorithm'] == 'heft':
+		wf = Workflow(arg['graph'])
+		calc_time = (arg['calc_time'] == 'True')
+		wf.load_attributes(arg['attr'], calc_time)
 		heft(wf)
 		wf.pretty_print_allocation()
 
 
 if __name__ == "__main__":
 
-	parser = argparse.ArgumentParser(description='Multi-Objective Workflow Scheduling Modelling Suite')
+	parser = argparse.ArgumentParser(description='ScHeduling Algorithms for Data-Intensive			 Workflows')
 
 	subparsers = parser.add_subparsers(help='Command', dest='command')
 

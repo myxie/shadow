@@ -31,7 +31,7 @@ from algorithms.utils import read_matrix
 # comp_matrix = read_matrix(comp)
 # comm_matrix = read_matrix(comm)
 # num_processors = len(self.comp_matrix[0])
-# processors = [[] for x in range(0,self.num_processors)]
+# machines = [[] for x in range(0,self.num_processors)]
 # # TODO have this matrix generated only when we are
 # # ranking/scheduling for this particular type of thing
 # oct_rank_matrix = dict()
@@ -335,7 +335,7 @@ class Heft(object):
     
     def insertion_policy(self,option=None):
         """
-        Allocate tasks to processors following the insertion based policy outline 
+        Allocate tasks to machines following the insertion based policy outline
         in Tocuoglu et al.(2002)
         """
         # TODO The tasks below are from a list, not the global graph; so we do
@@ -375,14 +375,14 @@ class Heft(object):
                                            self.graph.nodes[task]['aft'],\
                                            str(task)))
                 self.processors[p].sort(key=lambda x: x[0])
-            #print(self.processors)
+            #print(self.machines)
 
         return makespan
 
 
     def insertion_policy_oct(self):
         """
-        Allocate tasks to processors following the insertion based policy outline 
+        Allocate tasks to machines following the insertion based policy outline
         in Tocuoglu et al.(2002)
         """
 

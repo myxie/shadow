@@ -15,6 +15,7 @@
 
 ########################################################################
 import unittest
+import networkx as nx
 
 import config as cfg
 from algorithms.heuristic import upward_rank, upward_oct_rank, \
@@ -35,7 +36,8 @@ class TestHeftMethods(unittest.TestCase):
 
 	def setUp(self):
 		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph_nocalc'],
-						   calc_time=False)
+						cfg.test_heuristic_data['topcuoglu_graph_system'],
+						calc_time=False)
 
 	# self.wf.load_attributes(cfg.test_heuristic_data['heft_attr'],calc_time=False)
 
@@ -43,7 +45,6 @@ class TestHeftMethods(unittest.TestCase):
 		rank_values = [108, 77, 79, 80, 69, 63, 42, 35, 44, 14]
 		upward_rank(self.wf)
 		sorted_tasks = sort_tasks(self.wf, 'rank')
-		import networkx as nx
 		json = nx.readwrite.json_graph.node_link_data(self.wf.graph)
 
 		print(json)
@@ -57,7 +58,8 @@ class TestHeftMethods(unittest.TestCase):
 
 class TestHeftMethodCalcTime(unittest.TestCase):
 	def setUp(self):
-		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'])
+		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'],
+						cfg.test_heuristic_data['topcuoglu_graph_system'])
 
 	# self.wf.load_attributes(cfg.test_heuristic_data['flops_test_attr'])
 
@@ -70,7 +72,7 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 class TestPHeftMethods(unittest.TestCase):
 
 	def setUp(self):
-		self.wf = Workflow(cfg.test_heuristic_data['pheft_graph'], calc_time=False)
+		self.wf = Workflow(cfg.test_heuristic_data['pheft_graph'], cfg.test_heuristic_data['topcuoglu_graph_system'], calc_time=False)
 		# self.wf.load_attributes(cfg.test_heuristic_data['pheft_attr'], calc_time=False)
 
 		self.up_oct_rank_values = [72, 41, 37, 43, 31, 41, 17, 20, 16, 0]
@@ -83,7 +85,7 @@ class TestPHeftMethods(unittest.TestCase):
 		upward_rank(self.wf)
 		sorted_tasks = sort_tasks(self.wf, 'rank')
 		for node in sorted_tasks:
-			self.assertTrue(int(self.wf.graph.node[node]['rank']) == \
+			self.assertTrue(int(self.wf.graph.node[node]['rank']) ==
 							self.up_rank_values[node])
 
 	def test_oct_rank(self):
@@ -91,7 +93,7 @@ class TestPHeftMethods(unittest.TestCase):
 		upward_oct_rank(self.wf, oct_rank_matrix)
 		sorted_tasks = sort_tasks(self.wf, 'rank')
 		for node in sorted_tasks:
-			self.assertTrue(int(self.wf.graph.node[node]['rank']) == \
+			self.assertTrue(int(self.wf.graph.node[node]['rank']) ==
 							self.up_oct_rank_values[node])
 
 	def test_heft_schedule(self):
@@ -105,24 +107,28 @@ class TestPHeftMethods(unittest.TestCase):
 		self.assertTrue(retval == 122)
 
 
-class testDALiuGEGraph(unittest.TestCase):
+class TestDALiuGEGraph(unittest.TestCase):
 
 	def setUp(self):
-		self.wf = Workflow('test/data/daliugesample.json', calc_time=False)
-		self.dense = Workflow('test/data/ggen_out_4-denselu.json', calc_time=False)
-		self.gnp = Workflow('test/data/ggen_out_20-0.5.json', calc_time=False)
-
-		pass
+		self.wf = Workflow('test/data/daliugesample.json',
+						cfg.test_heuristic_data['topcuoglu_graph_system'],
+						calc_time=False)
+		self.dense = Workflow('test/data/ggen_out_4-denselu.json',
+							cfg.test_heuristic_data['topcuoglu_graph_system'],
+							calc_time=False)
+		self.gnp = Workflow('test/data/ggen_out_20-0.5.json',
+							cfg.test_heuristic_data['topcuoglu_graph_system'],
+							calc_time=False)
 
 	def tearDown(self):
 		pass
 
 	def test_it_works(self):
-		#print(heft(self.wf))
+		# print(heft(self.wf))
 		print(heft(self.dense))
 		self.dense.pretty_print_allocation()
 
-		# for p in self.dense.processors:
+		# for p in self.dense.machines:
 		# 	print(p)
 		# #print(heft(self.gnp))
 

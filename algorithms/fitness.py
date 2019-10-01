@@ -17,26 +17,32 @@
 Fitness functions for use in evaluating objectives
 """
 
+
 def cost_fitness():
-    return None
+	return None
+
 
 def time_fitness():
-    return None
+	return None
+
 
 def throughput_fitness():
-    return None
+	return None
+
 
 def reliability_fitness():
-    return None
+	return None
+
 
 # This is ugly - I should place this somewhere else (e.g current_globs.py)
 # which keeps the current state of the shadow library options available; e.g.
 # visualisation parameters, objectives that can be tested etc.
 
-objective_set = {"cost": cost_fitness,\
-				"time":time_fitness,\
-				"throughput":throughput_fitness,\
-				"reliability":reliability_fitness}
+objective_set = {"cost": cost_fitness,
+				"time": time_fitness,
+				"throughput": throughput_fitness,
+				"reliability": reliability_fitness}
+
 
 def run_objectives(objectives):
 	retdict = {}
@@ -46,7 +52,3 @@ def run_objectives(objectives):
 			retdict[objective] = func()
 
 	return None
-
-
-
-

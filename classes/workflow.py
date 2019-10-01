@@ -15,6 +15,7 @@
 
 
 import json
+import sys
 
 import networkx as nx
 import numpy as np
@@ -28,49 +29,56 @@ class Workflow(object):
 	together.
 	"""
 
-	def __init__(self, json_file, calc_time=True):
+	def __init__(self, wfdesc):
 		"""
-		:params wcost - work cost matrix
-		:paramts ccost - communication cost matrix
-		:graphml - graphml file in which workflows are stored
 		"""
-		# TODO No more graphml format for us! Move to new multi-dictionary json format
-		#: Initialised from graphml file
 
-		with open(json_file, 'r') as infile:
-			jgraph = json.load(infile)
-		self.graph = nx.readwrite.json_graph.node_link_graph(jgraph['graph'])
-		# self.graph = nx.read_graphml(graphml, int)
-		self.system = jgraph['system']
-		# wcost, resource_vec = [], []
-		# data_size = {}
-		# data_rate = []
-		# TODO None of this should need to change?
+		with open(wfdesc, 'r') as infile:
+			wfconfig = json.load(infile)
+		self.graph = nx.readwrite.json_graph.node_link_graph(wfconfig['graph'])
+		self.environment = None
+		# This lets us know when reading the graph if 'comp' attribute
+		# in the Networkx graph is time or FLOPs based
+		self._time = wfconfig['header']['time']
 
-		# graph.node[node_id] -> {'comp':119}
-		# graph.edge[node1,node2] -> {'data_size':9}
+	# self.makespan = 0
+		# if calc_time:
+		# 	for node in self.graph.node:
+		# 		self.graph.node[node]['comp'] = np.round(np.divide(self.graph.node[node]['total_flop'], self.system['resource'])).astype(int)
+		# 	# TODO implement second data approach, which takes the rate of transfer
+		# 	#  between resources and calculates time based on that.
+		# 	# for edge in self.graph.edges:
+		# 	# 	pred, succ = edge[0], edge[1]
+		# 	# 	self.graph.edges[pred, succ]['data_size'] = data_size[str(pred)][succ]
 
-		if calc_time:
-			for node in self.graph.node:
-				self.graph.node[node]['comp'] = np.round(np.divide(self.graph.node[node]['comp'], self.system['resource'])).astype(int)
-			# TODO implement second data approach, which takes the rate of transfer
-			#  between resources and calculates time based on that.
-			# for edge in self.graph.edges:
-			# 	pred, succ = edge[0], edge[1]
-			# 	self.graph.edges[pred, succ]['data_size'] = data_size[str(pred)][succ]
-
-		self.processors = [[] for x in range(len(self.system['resource']))]
-		self.makespan = 0
 		# self.data_rate = data_rate
-		self.data_load = np.array([])
-		self.thrpt = 0.0
+
+	def add_environment(self, environment):
+		self.env = environment
+		# Go through environment flags and check what processing we can do to the workflow
+		if self._time:
+			# Check the number of computation values stored for each node so they match the
+			# nunber of machines in the system config
+			for node in self.graph.node:
+				if len(self.graph.node[node]['comp'])  is not self.env.num_machines:
+					sys.exit("Number of machines defined in environment is"
+						  "not equivalent to the number definited in the workflow graph")
+		if self.env.has_comp:
+			# Use compute provided by system values to calculate the time taken
+			provided_flops =  []
+			for m in self.env.machines:
+				provided_flops.append(self.env.machines[m]['flops'])
+			for node in self.graph.node:
+				# self.graph.node[node]['comp'] = np.round(np.divide(self.graph.node[node]['total_flop'], self.system['resource'])).astype(int)
+				self.graph.node[node]['comp'] = np.round(np.divide(self.graph[node][node]['comp'],provided_flops)).astype(int)
+
 
 	def top_sorts(self):
 		return nx.all_topological_sorts(self.graph)
 
 	def pretty_print_allocation(self):
 
-		for p in self.processors:
+		for p in self.machines:
 			p = sorted(p)
 		# print(p)
 		print()
@@ -78,9 +86,9 @@ class Workflow(object):
 		for x in range(len(list(self.graph.nodes))):
 			print(x, end='\t')
 			tabstop = ""
-			for p in range(len(self.processors)):
-				if x < len(self.processors[p]):
-					print("{0}".format(self.processors[p][x]), end='\t')
+			for p in range(len(self.machines)):
+				if x < len(self.machines[p]):
+					print("{0}".format(self.machines[p][x]), end='\t')
 				else:
 					tabstop = '\t\t'
 					print(tabstop, end='')

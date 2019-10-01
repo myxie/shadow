@@ -3604,7 +3604,7 @@ jQuery.extend( {
 									// Handle a returned thenable
 									if ( jQuery.isFunction( then ) ) {
 
-										// Special processors (notify) just wait for resolution
+										// Special machines (notify) just wait for resolution
 										if ( special ) {
 											then.call(
 												returned,
@@ -3612,7 +3612,7 @@ jQuery.extend( {
 												resolve( maxDepth, deferred, Thrower, special )
 											);
 
-										// Normal processors (resolve) also hook into progress
+										// Normal machines (resolve) also hook into progress
 										} else {
 
 											// ...and disregard older resolution values
@@ -3643,7 +3643,7 @@ jQuery.extend( {
 									}
 								},
 
-								// Only normal processors (resolve) catch and reject exceptions
+								// Only normal machines (resolve) catch and reject exceptions
 								process = special ?
 									mightThrow :
 									function() {

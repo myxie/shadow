@@ -1,0 +1,20 @@
+{
+  "system": {
+    "resources": {
+      "cat0_m0": {
+        "flops": 7.0
+      },
+      "cat1_m1": {
+        "flops": 6.0
+      },
+      "cat2_m3": {
+        "flops": 11.0
+      }
+    },
+    "rates": {
+      "cat0": 1.0,
+      "cat1": 1.0,
+      "cat2": 1.0
+    }
+  }
+}

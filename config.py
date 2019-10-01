@@ -19,19 +19,17 @@
 # Configuration settings for this project
 
 # Files and directorys for test data used in test/
-import test.test_heuristic, test.test_graph_generator, test.test_workflow, \
-	test.test_metaheuristic
 
 
-test_dir = 'test/data'
+# test_dir = 'test/data'
 
 test_heuristic_data = {  # Tests that use the Topcuoglu paper graph
-	'topcuoglu_graph': 'test/data/final_heft.json',
-	'topcuoglu_graph_nocalc': 'test/data/heft_nocalc.json',
-	'flops_test_attr': 'test/data/flop_rep_test.json',
-
+	'topcuoglu_graph': 'data/final_heft.json',
+	'topcuoglu_graph_nocalc': 'data/heft_nocalc.json',
+	'flops_test_attr': 'data/flop_rep_test.json',
+	"topcuoglu_graph_system": 'data/test_system_config',
 	# Tests that use the PHEFT paper graph
-	'pheft_graph': 'test/data/pheft_nocalc.json',
+	'pheft_graph': 'data/pheft_nocalc.json',
 	# 'pheft_attr': 'test/data/pheft_attr.json',
 	# 'pheft_ccost':'test/data/oct_comm.txt',
 }
@@ -44,4 +42,7 @@ test_generator_data = {
 	'ccr_10_ccost': 'test/data/5_ccost_1000-2000.csv'
 }
 
+test_environment_data = {
+	'environment_sys': 'data/environment/ggen_out_2-denselu_sys.json'
+}
 

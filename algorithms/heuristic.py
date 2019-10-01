@@ -299,7 +299,7 @@ def calc_est(wf, node, processor_num, task_list):
 
 def insertion_policy(wf):
 	"""
-	Allocate tasks to processors following the insertion based policy outline
+	Allocate tasks to machines following the insertion based policy outline
 	in Tocuoglu et al.(2002)
 	"""
 	# TODO The tasks below are from a list, not the global graph; so we do
@@ -370,7 +370,7 @@ def insertion_policy(wf):
 
 def insertion_policy_oct(wf, oct_rank_matrix):
 	"""
-	Allocate tasks to processors following the insertion based policy outline
+	Allocate tasks to machines following the insertion based policy outline
 	in Tocuoglu et al.(2002)
 	"""
 
