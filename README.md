@@ -1,1 +1,1 @@
-Experiments run using MOSWS algorithm library
+Experiments run using _shadow_ algorithm library
