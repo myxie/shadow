@@ -1,0 +1,117 @@
+{
+  "graph": {
+    "directed": true,
+    "multigraph": false,
+    "graph": {
+      "name": "dag"
+    },
+    "nodes": [
+      {
+        "kernel": "lu",
+        "comp": [
+          77,
+          59,
+          95
+        ],
+        "id": 0
+      },
+      {
+        "kernel": "fwd",
+        "comp": [
+          149,
+          62,
+          140
+        ],
+        "id": 1
+      },
+      {
+        "kernel": "bdiv",
+        "comp": [
+          64,
+          91,
+          147
+        ],
+        "id": 2
+      },
+      {
+        "kernel": "bmod",
+        "comp": [
+          103,
+          122,
+          139
+        ],
+        "id": 3
+      },
+      {
+        "kernel": "lu",
+        "comp": [
+          67,
+          90,
+          53
+        ],
+        "id": 4
+      }
+    ],
+    "links": [
+      {
+        "x": "0",
+        "y": "0",
+        "data_size": 106,
+        "source": 0,
+        "target": 1
+      },
+      {
+        "x": "0",
+        "y": "0",
+        "data_size": 63,
+        "source": 0,
+        "target": 2
+      },
+      {
+        "x": "0",
+        "y": "1",
+        "data_size": 141,
+        "source": 1,
+        "target": 3
+      },
+      {
+        "x": "1",
+        "y": "0",
+        "data_size": 116,
+        "source": 2,
+        "target": 3
+      },
+      {
+        "x": "1",
+        "y": "1",
+        "data_size": 99,
+        "source": 3,
+        "target": 4
+      }
+    ]
+  },
+  "system": {
+    "resource": [
+      6,
+      0,
+      11
+    ],
+    "data_rate": [
+      [
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        0
+      ]
+    ]
+  }
+}
