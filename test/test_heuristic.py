@@ -21,6 +21,7 @@ import config as cfg
 from algorithms.heuristic import upward_rank, upward_oct_rank, \
 	sort_tasks, heft, pheft
 from classes.workflow import Workflow
+from classes.environment import Environment
 
 
 # Tests for /algorithms/heuristic.py
@@ -35,9 +36,9 @@ class TestHeftMethods(unittest.TestCase):
 	"""
 
 	def setUp(self):
-		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph_nocalc'],
-						cfg.test_heuristic_data['topcuoglu_graph_system'],
-						calc_time=False)
+		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph_nocalc'])
+		env = Environment(cfg.test_workflow_data['topcuoglu_graph_system'])
+		self.wf.add_environment(env)
 
 	# self.wf.load_attributes(cfg.test_heuristic_data['heft_attr'],calc_time=False)
 
@@ -58,9 +59,13 @@ class TestHeftMethods(unittest.TestCase):
 
 class TestHeftMethodCalcTime(unittest.TestCase):
 	def setUp(self):
-		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'],
-						cfg.test_heuristic_data['topcuoglu_graph_system'])
+		self.wf = Workflow(cfg.test_workflow_data['topcuoglu_graph'])
+		env = Environment(cfg.test_workflow_data['topcuoglu_graph_system'])
 
+		# self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'],
+						# cfg.test_heuristic_data['topcuoglu_graph_system'])
+
+		self.wf.add_environment(env)
 	# self.wf.load_attributes(cfg.test_heuristic_data['flops_test_attr'])
 
 	def test_schedule(self):
@@ -72,9 +77,10 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 class TestPHeftMethods(unittest.TestCase):
 
 	def setUp(self):
-		self.wf = Workflow(cfg.test_heuristic_data['pheft_graph'], cfg.test_heuristic_data['topcuoglu_graph_system'], calc_time=False)
+		self.wf = Workflow(cfg.test_heuristic_data['pheft_graph'])
 		# self.wf.load_attributes(cfg.test_heuristic_data['pheft_attr'], calc_time=False)
-
+		env = Environment(cfg.test_workflow_data['topcuoglu_graph_system'])
+		self.wf.add_environment(env)
 		self.up_oct_rank_values = [72, 41, 37, 43, 31, 41, 17, 20, 16, 0]
 		self.up_rank_values = [169, 114, 102, 110, 129, 119, 52, 92, 42, 20]
 

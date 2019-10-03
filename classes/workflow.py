@@ -36,8 +36,9 @@ class Workflow(object):
 		with open(wfdesc, 'r') as infile:
 			wfconfig = json.load(infile)
 		self.graph = nx.readwrite.json_graph.node_link_graph(wfconfig['graph'])
-		self.environment = None
+		self.env = None
 		# This lets us know when reading the graph if 'comp' attribute
+		self.machine_alloc = []
 		# in the Networkx graph is time or FLOPs based
 		self._time = wfconfig['header']['time']
 
@@ -56,13 +57,17 @@ class Workflow(object):
 	def add_environment(self, environment):
 		self.env = environment
 		# Go through environment flags and check what processing we can do to the workflow
+		self.machine_alloc = [[] for i in range(self.env.num_machines)]
 		if self._time:
 			# Check the number of computation values stored for each node so they match the
 			# nunber of machines in the system config
 			for node in self.graph.node:
-				if len(self.graph.node[node]['comp'])  is not self.env.num_machines:
-					sys.exit("Number of machines defined in environment is"
-						  "not equivalent to the number definited in the workflow graph")
+				if len(self.graph.node[node]['comp']) is not self.env.num_machines:
+					return -1
+					# sys.exit("Number of machines defined in environment is"
+					# 	  "not equivalent to the number definited in the workflow graph")
+				else:
+					return 0
 		if self.env.has_comp:
 			# Use compute provided by system values to calculate the time taken
 			provided_flops =  []
@@ -70,7 +75,16 @@ class Workflow(object):
 				provided_flops.append(self.env.machines[m]['flops'])
 			for node in self.graph.node:
 				# self.graph.node[node]['comp'] = np.round(np.divide(self.graph.node[node]['total_flop'], self.system['resource'])).astype(int)
-				self.graph.node[node]['comp'] = np.round(np.divide(self.graph[node][node]['comp'],provided_flops)).astype(int)
+				n = self.env.num_machines
+				comp = self.graph.node[node]['comp']
+				base_comp_matrix = np.array([comp for x in range(n)])
+				self.graph.node[node]['comp'] = np.round(np.divide(base_comp_matrix, provided_flops)).astype(int)
+			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
+			# for edge in self.graph.edges:
+			# 	pred, succ = edge[0], edge[1]
+			# 	self.graph.edges[pred, succ]['data_size'] = data_size[str(pred)][succ]
+
+			return 0
 
 
 	def top_sorts(self):

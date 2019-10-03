@@ -80,6 +80,9 @@ def generate_system_machines(config_path, num_machines, magnitude='giga', hetero
 		data_rates['cat{0}'.format(i)] = rnd - (rnd % multiplier)
 
 	system = {
+		"header": {
+			"time": 'false'
+		},
 		'system':
 			{
 				'resources': machine_categ,

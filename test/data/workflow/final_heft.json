@@ -1,90 +1,54 @@
 {
+    "header" : {
+        "time": false
+    },
     "graph": {
-        "directed": true,
+       "directed": true,
         "multigraph": false,
+        "calc": true,
         "graph": {
             "node_default": {},
             "edge_default": {}
         },
         "nodes": [
             {
-                "comp": [
-                    14,
-                    16,
-                    9
-                ],
+                "comp": 119,
                 "id": 0
             },
             {
-                "comp": [
-                    13,
-                    19,
-                    18
-                ],
+                "comp": 92,
                 "id": 1
             },
             {
-                "comp": [
-                    11,
-                    13,
-                    19
-                ],
+                "comp": 95,
                 "id": 2
             },
             {
-                "comp": [
-                    13,
-                    8,
-                    17
-                ],
+                "comp": 109,
                 "id": 3
             },
             {
-                "comp": [
-                    12,
-                    13,
-                    10
-                ],
+                "comp": 107,
                 "id": 4
             },
             {
-                "comp": [
-                    13,
-                    16,
-                    9
-                ],
+                "comp": 169,
                 "id": 5
             },
             {
-                "comp": [
-                    7,
-                    15,
-                    11
-                ],
+                "comp": 110,
                 "id": 6
             },
             {
-                "comp": [
-                    5,
-                    11,
-                    14
-                ],
+                "comp": 147,
                 "id": 7
             },
             {
-                "comp": [
-                    18,
-                    12,
-                    20
-                ],
+                "comp": 146,
                 "id": 8
             },
             {
-                "comp": [
-                    21,
-                    7,
-                    16
-                ],
+                "comp": 101,
                 "id": 9
             }
         ],
@@ -164,30 +128,6 @@
                 "source": 8,
                 "target": 9
             }
-        ]
-    },
-    "system": {
-        "resource": [
-            7,
-            6,
-            11
-        ],
-        "data_rate": [
-            [
-                0,
-                1,
-                1
-            ],
-            [
-                1,
-                0,
-                1
-            ],
-            [
-                1,
-                1,
-                0
-            ]
         ]
     }
 }

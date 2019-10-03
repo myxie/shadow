@@ -33,6 +33,7 @@ import numpy as np
 
 
 def heft(wf):
+
 	"""
 	Implementation of the original 1999 HEFT algorithm.
 
@@ -82,7 +83,7 @@ def upward_rank(wf):
 
 
 def upward_oct_rank(wf, oct_rank_matrix):
-	for val in range(len(wf.processors)):
+	for val in range(len(wf.machine_alloc)):
 		for node in sorted(list(wf.graph.nodes()), reverse=True):
 			rank_oct(wf, oct_rank_matrix, node, val)
 
@@ -92,7 +93,7 @@ def upward_oct_rank(wf, oct_rank_matrix):
 			if n is node:
 				ave += oct_rank_matrix[(n, p)]
 
-		wf.graph.nodes[node]['rank'] = ave / len(wf.processors)
+		wf.graph.nodes[node]['rank'] = ave / len(wf.machine_alloc)
 
 
 def sort_tasks(wf, sort_type):
@@ -173,7 +174,7 @@ def rank_oct(wf, oct_rank_matrix, node, pk):
 	max_successor = 0
 	for successor in wf.graph.successors(node):
 		min_processor = 1000
-		for processor in range(0, len(wf.processors)):
+		for processor in range(0, len(wf.machine_alloc)):
 			oct_val = 0
 			if (successor, processor) not in oct_rank_matrix.keys():
 				rank_oct(wf, oct_rank_matrix, successor, processor)
@@ -198,22 +199,24 @@ def ave_comm_cost(wf, task, successor):
 	:params node: Starting node
 	:params successor: Node with which the starting node is communicating
 	"""
+	# TODO sort out data rates in future release
+	# cost, zeros = 0, 0
+	# data_product_size = wf.graph.edges[task, successor]['data_size']
+	# for val in range(len(wf.system['data_rate'][0])):
+	# 	rate = wf.system['data_rate'][0][val]
+	# 	if rate != 0:
+	# 		cost += data_product_size / rate
+	# 	else:
+	# 		zeros += 1
+	# denominator = len(wf.system['data_rate'][0]) - zeros
+	#
+	# # if denominator is 0, the data rate between each machine is negligible.
+	# if denominator == 0:
+	# 	return 0
+	# else:
+	# 	return int(cost / denominator)
 
-	cost, zeros = 0, 0
-	data_product_size = wf.graph.edges[task, successor]['data_size']
-	for val in range(len(wf.system['data_rate'][0])):
-		rate = wf.system['data_rate'][0][val]
-		if rate != 0:
-			cost += data_product_size / rate
-		else:
-			zeros += 1
-	denominator = len(wf.system['data_rate'][0]) - zeros
-
-	# if denominator is 0, the data rate between each machine is negligible.
-	if denominator == 0:
-		return 0
-	else:
-		return int(cost / denominator)
+	return wf.graph.edges[task, successor]['data_size']
 
 
 def ave_comp_cost(wf, task):
@@ -243,9 +246,9 @@ def calc_est(wf, node, processor_num, task_list):
 			wf.graph.nodes[pretask]['processor'] = 0  # Default to 0
 		# If task isn't on the same processor, there is a transfer cost
 		pre_processor = wf.graph.nodes[pretask]['processor']
-		rate = wf.system['data_rate'][pre_processor][processor_num]
-		if pre_processor != processor_num and rate > 0:
-			comm_cost = int(wf.graph.edges[pretask, node]['data_size'] / rate)
+		# rate = wf.system['data_rate'][pre_processor][processor_num]
+		if pre_processor != processor_num:  # and rate > 0:
+			comm_cost = int(wf.graph.edges[pretask, node]['data_size']) #/ rate)
 		else:
 			comm_cost = 0
 
@@ -258,7 +261,7 @@ def calc_est(wf, node, processor_num, task_list):
 			est = tmp
 
 	# Now we find the time it fits in on the processor
-	processor = wf.processors[processor_num]  # return the list of allocated tasks
+	processor = wf.machine_alloc[processor_num]  # return the list of allocated tasks
 	available_slots = []
 	if len(processor) == 0:
 		return est  # Nothing in the time slots yet
@@ -314,14 +317,14 @@ def insertion_policy(wf):
 			wf.graph.nodes[task]['processor'] = p
 			wf.graph.nodes[task]['ast'] = 0
 			wf.graph.nodes[task]['aft'] = w
-			wf.processors[p].append((
+			wf.machine_alloc[p].append((
 				wf.graph.nodes[task]['ast'],
 				wf.graph.nodes[task]['aft'],
 				str(task)))
 		else:
 			aft = -1  # Finish time for the current task
 			p = 0
-			for processor in range(len(wf.processors)):
+			for processor in range(len(wf.machine_alloc)):
 				# tasks in self.rank_sort are being updated, not wf.graph;
 				est = calc_est(wf, task, processor, tasks)
 				if aft == -1:  # assign initial value of aft for this task
@@ -336,33 +339,33 @@ def insertion_policy(wf):
 			wf.graph.nodes[task]['ast'] = aft - wf.graph.nodes[task]['comp'][p]
 			wf.graph.nodes[task]['aft'] = aft
 
-			# Calculate Throughput
-			for pred in wf.graph.predecessors(task):
-				timeslot = (
-					wf.graph.nodes[pred]['aft'],
-					wf.graph.nodes[task]['aft'])
-				load = wf.graph.edges[pred, task]['data_size']
-				if len(wf.data_load) == 0:
-					wf.data_load = np.zeros(timeslot[1])
-					wf.data_load[timeslot[0]:timeslot[1]] = load
-				elif len(wf.data_load) < timeslot[1]:
-					diff = timeslot[1] - len(wf.data_load)
-					newload = np.zeros(len(wf.data_load) + diff)
-					newload[0:len(wf.data_load)] += wf.data_load
-					newload[timeslot[0]:timeslot[1]] += load
-					wf.data_load = np.zeros(len(newload))
-					wf.data_load += newload  # saves us from using copy()
-				else:
-					wf.data_load[timeslot[0]:timeslot[1]] += load
+			# Calculate Throughput Temporarily removed
+			# for pred in wf.graph.predecessors(task):
+			# 	timeslot = (
+			# 		wf.graph.nodes[pred]['aft'],
+			# 		wf.graph.nodes[task]['aft'])
+			# 	load = wf.graph.edges[pred, task]['data_size']
+			# 	if len(wf.data_load) == 0:
+			# 		wf.data_load = np.zeros(timeslot[1])
+			# 		wf.data_load[timeslot[0]:timeslot[1]] = load
+			# 	elif len(wf.data_load) < timeslot[1]:
+			# 		diff = timeslot[1] - len(wf.data_load)
+			# 		newload = np.zeros(len(wf.data_load) + diff)
+			# 		newload[0:len(wf.data_load)] += wf.data_load
+			# 		newload[timeslot[0]:timeslot[1]] += load
+			# 		wf.data_load = np.zeros(len(newload))
+			# 		wf.data_load += newload  # saves us from using copy()
+			# 	else:
+			# 		wf.data_load[timeslot[0]:timeslot[1]] += load
 
 			# Makespan
 			if wf.graph.nodes[task]['aft'] >= makespan:
 				makespan = wf.graph.nodes[task]['aft']
-			wf.processors[p].append((
+			wf.machine_alloc[p].append((
 				wf.graph.nodes[task]['ast'],
 				wf.graph.nodes[task]['aft'],
 				str(task)))
-			wf.processors[p].sort(key=lambda x: x[0])
+			wf.machine_alloc[p].sort(key=lambda x: x[0])
 
 	wf.makespan = makespan
 	return makespan
@@ -385,7 +388,7 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 		if task == tasks[0]:
 			wf.graph.nodes[task]['ast'] = 0
 			min_oeft = -1
-			for processor in range(len(wf.processors)):
+			for processor in range(len(wf.machine_alloc)):
 				eft_matrix[(task, processor)] = wf.graph.nodes[task]['comp'][processor]
 				oeft_matrix[(task, processor)] = \
 					eft_matrix[(task, processor)] + oct_rank_matrix[(task, processor)]
@@ -395,14 +398,14 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 					p = processor
 			wf.graph.nodes[task]['aft'] = wf.graph.nodes[task]['comp'][p]
 			wf.graph.nodes[task]['processor'] = p
-			wf.processors[p].append((
+			wf.machine_alloc[p].append((
 				wf.graph.nodes[task]['ast'],
 				wf.graph.nodes[task]['aft'],
 				str(task)))
 
 		else:
 			min_oeft = -1
-			for processor in range(len(wf.processors)):
+			for processor in range(len(wf.machine_alloc)):
 				if wf.graph.predecessors(task):
 					est = calc_est(wf, task, processor, tasks)
 				else:
@@ -427,11 +430,11 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 			if wf.graph.nodes[task]['aft'] >= makespan:
 				makespan = wf.graph.nodes[task]['aft']
 
-			wf.processors[p].append((
+			wf.machine_alloc[p].append((
 				wf.graph.nodes[task]['ast'],
 				wf.graph.nodes[task]['aft'],
 				str(task)))
-			wf.processors[p].sort(key=lambda x: x[0])
+			wf.machine_alloc[p].sort(key=lambda x: x[0])
 
 	wf.makespan = makespan
 	return makespan

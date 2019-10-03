@@ -35,6 +35,11 @@ class Environment(object):
 
 		# machines -> categories -> machines -> compute
 		self.machines = self.env['system']['resources']
+		# TODO Use rates in system config; for time being rates are taken from graph
+		self.rates = self.env['system']['rates']
+		if self.rates:
+			self.has_rates = True
+
 
 
 	def _check_comp(self, res_dict):
