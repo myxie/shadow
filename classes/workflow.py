@@ -32,7 +32,6 @@ class Workflow(object):
 	def __init__(self, wfdesc):
 		"""
 		"""
-
 		with open(wfdesc, 'r') as infile:
 			wfconfig = json.load(infile)
 		self.graph = nx.readwrite.json_graph.node_link_graph(wfconfig['graph'])
@@ -70,7 +69,7 @@ class Workflow(object):
 					return 0
 		if self.env.has_comp:
 			# Use compute provided by system values to calculate the time taken
-			provided_flops =  []
+			provided_flops = []
 			for m in self.env.machines:
 				provided_flops.append(self.env.machines[m]['flops'])
 			for node in self.graph.node:

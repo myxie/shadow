@@ -70,6 +70,7 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 
 	def test_schedule(self):
 		retval = heft(self.wf)
+		print(self.wf.machine_alloc)
 		self.assertTrue(retval == 98)
 
 
