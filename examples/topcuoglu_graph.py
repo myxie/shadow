@@ -1,7 +1,7 @@
 # import config as cfg
 
-from algorithms.heuristic import heft
-from classes.workflow import Workflow
+from shadow.algorithms.heuristic import heft
+from shadow.classes.workflow import Workflow
 
 # This workflow calculates the task time for each resource based on the demand
 # and supply vectors provided in the 'flop_rep_test.json' fsile. 

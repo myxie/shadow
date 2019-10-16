@@ -17,13 +17,13 @@
 import unittest
 
 import config as cfg
-from algorithms.metaheuristic import generate_population,\
+from shadow.algorithms.metaheuristic import generate_population,\
                                      generate_allocations,\
                                      non_dom_sort
 
 
 
-from classes.workflow import Workflow
+from shadow.classes.workflow import Workflow
 
 class TestPopulationGeneration(unittest.TestCase):
     """

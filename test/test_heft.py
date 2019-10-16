@@ -25,7 +25,7 @@ import unittest
 # import sys
 # sys.path.append('../')
 
-from algorithms.heft import Heft
+from shadow.algorithms.heft import Heft
 
 
 # from algorithms.utils import read_matrix

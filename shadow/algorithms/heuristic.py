@@ -25,6 +25,7 @@ algorithms. Currently, this file implements the following algorithms:
 from random import randint
 import networkx as nx
 import numpy as np
+from shadow.classes.workflow import Workflow
 
 
 #############################################################################
@@ -32,16 +33,16 @@ import numpy as np
 #############################################################################
 
 
-def heft(wf):
-
+def heft(workflow):
 	"""
 	Implementation of the original 1999 HEFT algorithm.
 
 	:params wf: The workflow object to schedule
 	:returns: The makespan of the resulting schedule
 	"""
-	upward_rank(wf)
-	makespan = insertion_policy(wf)
+	upward_rank(workflow)
+	workflow.execution_order = sort_tasks(workflow, 'rank')
+	makespan = insertion_policy(workflow)
 	return makespan
 
 
@@ -248,7 +249,7 @@ def calc_est(wf, node, processor_num, task_list):
 		pre_processor = wf.graph.nodes[pretask]['processor']
 		# rate = wf.system['data_rate'][pre_processor][processor_num]
 		if pre_processor != processor_num:  # and rate > 0:
-			comm_cost = int(wf.graph.edges[pretask, node]['data_size']) #/ rate)
+			comm_cost = int(wf.graph.edges[pretask, node]['data_size'])  # / rate)
 		else:
 			comm_cost = 0
 
@@ -260,8 +261,10 @@ def calc_est(wf, node, processor_num, task_list):
 		if tmp >= est:
 			est = tmp
 
+	machine_str = list(wf.machine_alloc.keys())[processor_num]
+	processor = wf.machine_alloc[machine_str]
 	# Now we find the time it fits in on the processor
-	processor = wf.machine_alloc[processor_num]  # return the list of allocated tasks
+	# processor = wf.machine_alloc[processor_num]  # return the list of allocated tasks
 	available_slots = []
 	if len(processor) == 0:
 		return est  # Nothing in the time slots yet
@@ -285,8 +288,8 @@ def calc_est(wf, node, processor_num, task_list):
 				wf.graph.node[node]['comp'][processor_num] <= slot[1]:
 			return slot[0]
 		if (est >= slot[0]) and \
-			(est +
-				wf.graph.node[node]['comp'][processor_num] <= slot[1]):
+				(est +
+				 wf.graph.node[node]['comp'][processor_num] <= slot[1]):
 			return est
 		# At the 'end' of available slots
 		if (est >= slot[0]) and (slot[1] < 0):
@@ -305,19 +308,18 @@ def insertion_policy(wf):
 	Allocate tasks to machines following the insertion based policy outline
 	in Tocuoglu et al.(2002)
 	"""
-	# TODO The tasks below are from a list, not the global graph; so we do
-	# a lot of checking of both the list and the graph to get information.
-	# Need to figure out a cleaner way of dealing with this.
 	makespan = 0
 	tasks = sort_tasks(wf, 'rank')
 	for task in tasks:
 		if task == tasks[0]:
 			w = min(wf.graph.nodes[task]['comp'])
 			p = list(wf.graph.nodes[task]['comp']).index(w)
+			# 'p' is the index of machine_alloc.keys() we want
 			wf.graph.nodes[task]['processor'] = p
 			wf.graph.nodes[task]['ast'] = 0
 			wf.graph.nodes[task]['aft'] = w
-			wf.machine_alloc[p].append((
+			machine_str = list(wf.machine_alloc.keys())[p]
+			wf.machine_alloc[machine_str].append((
 				wf.graph.nodes[task]['ast'],
 				wf.graph.nodes[task]['aft'],
 				str(task)))
@@ -361,11 +363,12 @@ def insertion_policy(wf):
 			# Makespan
 			if wf.graph.nodes[task]['aft'] >= makespan:
 				makespan = wf.graph.nodes[task]['aft']
-			wf.machine_alloc[p].append((
+			machine_str = list(wf.machine_alloc.keys())[p]
+			wf.machine_alloc[machine_str].append((
 				wf.graph.nodes[task]['ast'],
 				wf.graph.nodes[task]['aft'],
 				str(task)))
-			wf.machine_alloc[p].sort(key=lambda x: x[0])
+			wf.machine_alloc[machine_str].sort(key=lambda x: x[0])
 
 	wf.makespan = makespan
 	return makespan

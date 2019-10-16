@@ -1,15 +1,15 @@
 # Copyright (C) 2018 RW Bunney
-
+# 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+# 
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+# 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import json
@@ -147,7 +147,7 @@ def generate_graph_costs(dot_path, json_path, ccr, mean, uniform_range, magnitud
 
 	for node in dotgraph:
 		rnd = int(random.uniform(comp_min, comp_max))
-		dotgraph.node[node]['total_flop'] = rnd - (rnd % multiplier)
+		dotgraph.node[node]['comp'] = rnd - (rnd % multiplier)
 
 	# Generate data loads between edges and data-link transfer rates
 	comm_mean = int(mean * ccr)
@@ -157,7 +157,12 @@ def generate_graph_costs(dot_path, json_path, ccr, mean, uniform_range, magnitud
 		rnd = int(random.uniform(comm_min, comm_max))
 		dotgraph.edges[edge]['data_size'] = rnd - (rnd % multiplier)
 
-	jgraph = {'graph': nx.readwrite.node_link_data(dotgraph)}
+	jgraph = {
+		"header": {
+			"time": False
+		},
+		'graph': nx.readwrite.node_link_data(dotgraph)
+	}
 	# Generate place holder system values (resources/data_rate) for compatibility with shadow library format
 
 	if not json_path:
@@ -188,11 +193,14 @@ if __name__ == '__main__':
 				subprocess.run(['ggen', '-o', '{0}'.format(outfile), 'dataflow-graph', 'denselu', str(x)])
 	else:
 		print('Generating json')
-		for path in sorted(os.listdir('test/')):
+		for path in sorted(os.listdir("/home/rwb/Dropbox/PhD/writeups/observation_graph-model")):
 			if 'dot' in path:
-				print(os.listdir('test/.'))
-				print('Generating json for test/{0}'.format(path))
-				generate_graph_costs('test/{0}'.format(path), 'test/json/{0}.json'.format(path[:-4]),
-									 1, 100, 50, 'giga')
-				generate_system_machines('test/json/{}_sys.json'.format(path[:-4]),
-										 4, 'giga', [0.5, 0.5], [(10, 20), (5, 10)])
+				print(os.listdir("/home/rwb/Dropbox/PhD/writeups/observation_graph-model"))
+				print('Generating json for {0}'.format(path))
+				generate_graph_costs('/home/rwb/Dropbox/PhD/writeups/observation_graph-model/{0}'.format(path),
+									 '/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/{0}.json'.format(
+										 path[:-4]),
+									 0.5, 100, 50, 'giga')
+				generate_system_machines(
+					'/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/{0}_sys.json'.format(path[:-4]),
+					20, 'giga', [0.5, 0.5], [(10, 20), (10, 20)])

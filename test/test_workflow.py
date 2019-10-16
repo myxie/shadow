@@ -19,8 +19,8 @@ import unittest
 
 import config as cfg
 
-from classes.workflow import Workflow
-from classes.environment import Environment
+from shadow.classes.workflow import Workflow
+from shadow.classes.environment import Environment
 
 
 # TODO Need to test workflow class initialisation on a number of graph types

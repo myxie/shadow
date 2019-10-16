@@ -1,4 +1,7 @@
 {
+  "header": {
+    "time": true
+  },
   "graph": {
     "directed": true,
     "multigraph": false,
@@ -808,30 +811,6 @@
         "source": 57,
         "target": 58
       }
-    ]
-  },
-  "system": {
-    "resource": [
-      16,
-      3,
-      8
-    ],
-    "data_rate": [
-      [
-        0,
-        1,
-        1
-      ],
-      [
-        1,
-        0,
-        1
-      ],
-      [
-        1,
-        1,
-        0
-      ]
     ]
   }
 }

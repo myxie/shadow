@@ -19,8 +19,9 @@
 import argparse, unittest
 
 import test.test_workflow, test.test_heuristic 
-from algorithms.heuristic import heft
-from classes.workflow import Workflow
+from shadow.algorithms.heuristic import heft
+from shadow.classes.workflow import Workflow
+from shadow.classes.environment import Environment
 
 testcases = {  # Tests for the test runner
 	"workflow": test.test_workflow,
@@ -61,11 +62,19 @@ def run_shadow():
 
 def run_algorithm(arg, parser):
 	if arg['algorithm'] == 'heft':
-		wf = Workflow(arg['graph'])
-		calc_time = (arg['calc_time'] == 'True')
-		wf.load_attributes(arg['attr'], calc_time)
-		heft(wf)
-		wf.pretty_print_allocation()
+		pass
+		wf = Workflow(arg['workflow'])
+		env = Environment(arg['environment'])
+		wf.add_environment(env)
+		print(heft(wf))
+		print(wf.machine_alloc)
+
+
+# wf = Workflow(arg['graph'])
+		# calc_time = (arg['calc_time'] == 'True')
+		# wf.load_attributes(arg['attr'], calc_time)
+		# heft(wf)
+		# wf.pretty_print_allocation()
 
 
 if __name__ == "__main__":
@@ -90,9 +99,8 @@ if __name__ == "__main__":
 	algorithm_parser = subparsers.add_parser('algorithm', help='Run a single algorithm on a given data file')
 	algorithm_parser.set_defaults(func=run_algorithm)
 	algorithm_parser.add_argument('algorithm', help='Name of algorithm')
-	algorithm_parser.add_argument('graph', help='Location of graphml file')
-	algorithm_parser.add_argument('attr', help='Location of attributes file')
-	algorithm_parser.add_argument('--calc_time', help='Set calc_time True/False', choices=['True', 'False'])
+	algorithm_parser.add_argument('workflow', help='Location of workflow config')
+	algorithm_parser.add_argument('environment', help='Location of the environment config')
 
 	args = parser.parse_args()
 	if not args.command:

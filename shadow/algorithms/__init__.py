@@ -1,4 +1,4 @@
-# Copyright (C) 2019 RW Bunney
+# Copyright (C) 16/10/19 RW Bunney
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,26 +12,3 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import unittest
-from config import test_environment_data
-import os
-from shadow.classes.environment import Environment
-# Tests for /algorithms/heuristic.py
-
-
-# Testing heft algorithms in heuristics.py
-
-class TestEnvironmentInit(unittest.TestCase):
-	def setUp(self) -> None:
-		print(os.listdir('.'))
-		self.env = Environment(test_environment_data['environment_sys'])
-		pass
-
-	def test_init(self):
-		self.assertTrue(self.env.has_comp)
-
-
-
-	def tearDown(self) -> None:
-		pass
-

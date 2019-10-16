@@ -23,7 +23,7 @@ import networkx as nx
 from random import randint
 from queue import Queue
 
-from algorithms.utils import read_matrix
+from shadow.algorithms.utils import read_matrix
 # from algorithms.workflow import Workflow
 
 
@@ -338,9 +338,6 @@ class Heft(object):
         Allocate tasks to machines following the insertion based policy outline
         in Tocuoglu et al.(2002)
         """
-        # TODO The tasks below are from a list, not the global graph; so we do
-        # a lot of checking of both the list and the graph to get information. 
-        # Need to figure out a cleaner way of dealing with this. 
         makespan = 0
         for task in self.rank_sort:
             if task == self.rank_sort[0]: 

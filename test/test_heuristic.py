@@ -18,10 +18,10 @@ import unittest
 import networkx as nx
 
 import config as cfg
-from algorithms.heuristic import upward_rank, upward_oct_rank, \
+from shadow.algorithms.heuristic import upward_rank, upward_oct_rank, \
 	sort_tasks, heft, pheft
-from classes.workflow import Workflow
-from classes.environment import Environment
+from shadow.classes.workflow import Workflow
+from shadow.classes.environment import Environment
 
 
 # Tests for /algorithms/heuristic.py
@@ -62,7 +62,7 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 		self.wf = Workflow(cfg.test_workflow_data['topcuoglu_graph'])
 		env = Environment(cfg.test_workflow_data['topcuoglu_graph_system'])
 
-		# self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'],
+		# self.wf = Workfow(cfg.test_heuristic_data['topcuoglu_graph'],
 						# cfg.test_heuristic_data['topcuoglu_graph_system'])
 
 		self.wf.add_environment(env)
@@ -114,6 +114,7 @@ class TestPHeftMethods(unittest.TestCase):
 		self.assertTrue(retval == 122)
 
 
+@unittest.SkipTest
 class TestDALiuGEGraph(unittest.TestCase):
 
 	def setUp(self):

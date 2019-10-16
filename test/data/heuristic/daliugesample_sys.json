@@ -1,17 +1,17 @@
 {
-  "system": {
-    "resources": {
+  "system":    {
+   "resources": {
       "cat0_m0": {
-        "flops": 7.0
+        "flops": 16.0
       },
       "cat1_m1": {
-        "flops": 6.0
+        "flops": 36.0
       },
       "cat2_m2": {
-        "flops": 11.0
+        "flops": 8.0
       }
     },
-    "rates": {
+    "rates":{
       "cat0": 1.0,
       "cat1": 1.0,
       "cat2": 1.0
