@@ -1,0 +1,3 @@
+The *shadow* scheduling model
+=============================
+
