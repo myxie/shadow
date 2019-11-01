@@ -20,9 +20,7 @@ algorithm developers may test and benchmark their own efforts.
 
 .. toctree::
     :hidden:
-    :glob:
 
-    .. *
     example
     configuration
     zroadmap
