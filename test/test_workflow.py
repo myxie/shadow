@@ -38,5 +38,5 @@ class TestWorkflowClass(unittest.TestCase):
 		# retval = wf.load_attributes('test/data/flop_rep_test.json')
 
 		self.assertEqual(retval, 0)
-		self.assertEqual(28, wf.graph.node[5]['comp'][1])
+		self.assertEqual(28, wf.graph.nodes[5]['comp'][1])
 		self.assertEqual(wf.graph.edges[3, 7]['data_size'], 27)

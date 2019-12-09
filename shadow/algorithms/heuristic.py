@@ -180,7 +180,7 @@ def rank_oct(wf, oct_rank_matrix, node, pk):
 			if (successor, processor) not in oct_rank_matrix.keys():
 				rank_oct(wf, oct_rank_matrix, successor, processor)
 			comm_cost = 0
-			comp_cost = wf.graph.node[successor]['comp'][processor]
+			comp_cost = wf.graph.nodes[successor]['comp'][processor]
 			if processor is not pk:
 				comm_cost = ave_comm_cost(wf, node, successor)
 			oct_val = oct_rank_matrix[(successor, processor)] + \
@@ -221,17 +221,17 @@ def ave_comm_cost(wf, task, successor):
 
 
 def ave_comp_cost(wf, task):
-	comp = wf.graph.node[task]['comp']
+	comp = wf.graph.nodes[task]['comp']
 	return sum(comp) / len(comp)
 
 
 def max_comp_cost(wf, task):
-	comp = wf.graph.node[task]['comp']
+	comp = wf.graph.nodes[task]['comp']
 	return max(comp)
 
 
 def min_comp_cost(wf, task):
-	comp = wf.graph.node[task]['comp']
+	comp = wf.graph.nodes[task]['comp']
 	return min(comp)
 
 
@@ -286,11 +286,11 @@ def calc_est(wf, node, processor_num, task_list):
 
 	for slot in available_slots:
 		if est < slot[0] and slot[0] + \
-				wf.graph.node[node]['comp'][processor_num] <= slot[1]:
+				wf.graph.nodes[node]['comp'][processor_num] <= slot[1]:
 			return slot[0]
 		if (est >= slot[0]) and \
 				(est +
-				 wf.graph.node[node]['comp'][processor_num] <= slot[1]):
+				 wf.graph.nodes[node]['comp'][processor_num] <= slot[1]):
 			return est
 		# At the 'end' of available slots
 		if (est >= slot[0]) and (slot[1] < 0):
