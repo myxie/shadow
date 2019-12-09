@@ -51,8 +51,8 @@ class Workflow(object):
 		if self._time:
 			# Check the number of computation values stored for each node so they match the
 			# nunber of machines in the system config
-			for node in self.graph.node:
-				if len(self.graph.node[node]['comp']) is not self.env.num_machines:
+			for node in self.graph.nodes:
+				if len(self.graph.nodes[node]['comp']) is not self.env.num_machines:
 					return -1
 				# sys.exit("Number of machines defined in environment is"
 				# 	  "not equivalent to the number definited in the workflow graph")
@@ -63,13 +63,13 @@ class Workflow(object):
 			provided_flops = []
 			for m in self.env.machines:
 				provided_flops.append(self.env.machines[m]['flops'])
-			for node in self.graph.node:
+			for node in self.graph.nodes:
 				# self.graph.node[node]['comp'] = np.round(np.divide(self.graph.node[node]['total_flop'],
 				# self.system['resource'])).astype(int)
 				n = self.env.num_machines
-				comp = self.graph.node[node]['comp']
+				comp = self.graph.nodes[node]['comp']
 				base_comp_matrix = np.array([comp for x in range(n)])
-				self.graph.node[node]['comp'] = np.round(np.divide(base_comp_matrix, provided_flops)).astype(int)
+				self.graph.nodes[node]['comp'] = np.round(np.divide(base_comp_matrix, provided_flops)).astype(int)
 			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
 
 			return 0
