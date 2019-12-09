@@ -1,5 +1,6 @@
 # _shadow_
 [![Build Status](https://travis-ci.com/myxie/shadow.svg?branch=master)](https://travis-ci.com/myxie/shadow)
+[![Coverage Status](https://coveralls.io/repos/github/myxie/shadow/badge.svg?branch=master)](https://coveralls.io/github/myxie/shadow?branch=master)
 
 ScHeduling Algorithms for Data-intensive Workflows (_shadow_)
 
