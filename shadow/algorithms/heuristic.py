@@ -244,7 +244,7 @@ def calc_est(wf, node, processor_num, task_list):
 	predecessors = wf.graph.predecessors(node)
 	for pretask in predecessors:
 		if 'processor' not in wf.graph.nodes[pretask]:
-			wf.graph.nodes[pretask]['processor'] = 0  # Default to 0
+			wf.graph.nodes[pretask]['processor'] = None # Default to 0
 		# If task isn't on the same processor, there is a transfer cost
 		pre_processor = wf.graph.nodes[pretask]['processor']
 		# rate = wf.system['data_rate'][pre_processor][processor_num]
@@ -255,8 +255,9 @@ def calc_est(wf, node, processor_num, task_list):
 
 		# wf.graph.predecessors is not being updated in insertion_policy;
 		# need to use the tasks that are being updated to get the right results
-		index = task_list.index(pretask)
-		aft = wf.graph.nodes[task_list[index]]['aft']
+		# index = task_list.index(pretask)
+		# print(pretask)
+		aft = wf.graph.nodes[pretask]['aft']
 		tmp = aft + comm_cost
 		if tmp >= est:
 			est = tmp
@@ -401,7 +402,8 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 					p = processor
 			wf.graph.nodes[task]['aft'] = wf.graph.nodes[task]['comp'][p]
 			wf.graph.nodes[task]['processor'] = p
-			wf.machine_alloc[p].append((
+			machine_str = list(wf.machine_alloc.keys())[p]
+			wf.machine_alloc[machine_str].append((
 				wf.graph.nodes[task]['ast'],
 				wf.graph.nodes[task]['aft'],
 				str(task)))
@@ -433,11 +435,12 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 			if wf.graph.nodes[task]['aft'] >= makespan:
 				makespan = wf.graph.nodes[task]['aft']
 
-			wf.machine_alloc[p].append((
+			machine_str = list(wf.machine_alloc.keys())[p]
+			wf.machine_alloc[machine_str].append((
 				wf.graph.nodes[task]['ast'],
 				wf.graph.nodes[task]['aft'],
 				str(task)))
-			wf.machine_alloc[p].sort(key=lambda x: x[0])
+			wf.machine_alloc[machine_str].sort(key=lambda x: x[0])
 
 	wf.makespan = makespan
 	return makespan

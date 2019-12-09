@@ -16,8 +16,9 @@
 ########################################################################
 import unittest
 import networkx as nx
+import os
 
-import config as cfg
+import test_config as cfg
 from shadow.algorithms.heuristic import upward_rank, upward_oct_rank, \
 	sort_tasks, heft, pheft
 from shadow.classes.workflow import Workflow
@@ -29,6 +30,7 @@ from shadow.classes.environment import Environment
 
 # Testing heft algorithms in heuristics.py 
 
+current_dir = os.path.abspath('.')
 class TestHeftMethods(unittest.TestCase):
 	"""
 	This class test HEFT on the same example graph presented by
@@ -36,8 +38,8 @@ class TestHeftMethods(unittest.TestCase):
 	"""
 
 	def setUp(self):
-		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph_nocalc'])
-		env = Environment(cfg.test_workflow_data['topcuoglu_graph_system'])
+		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_heuristic_data['topcuoglu_graph_nocalc']))
+		env = Environment("{0}/{1}".format(current_dir,cfg.test_workflow_data['topcuoglu_graph_system']))
 		self.wf.add_environment(env)
 
 	# self.wf.load_attributes(cfg.test_heuristic_data['heft_attr'],calc_time=False)
@@ -59,8 +61,8 @@ class TestHeftMethods(unittest.TestCase):
 
 class TestHeftMethodCalcTime(unittest.TestCase):
 	def setUp(self):
-		self.wf = Workflow(cfg.test_workflow_data['topcuoglu_graph'])
-		env = Environment(cfg.test_workflow_data['topcuoglu_graph_system'])
+		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph']))
+		env = Environment("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph_system']))
 
 		# self.wf = Workfow(cfg.test_heuristic_data['topcuoglu_graph'],
 						# cfg.test_heuristic_data['topcuoglu_graph_system'])
@@ -73,6 +75,18 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 		print(self.wf.machine_alloc)
 		self.assertTrue(retval == 98)
 
+@unittest.SkipTest
+class TestHeftMethodLargeGraph(unittest.TestCase):
+
+	def test_large_workflow(self):
+		self.wf = Workflow(
+		"/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/3000Node.json"
+		)
+		env = Environment(
+		"/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/3000Node_sys.json"
+		)
+		self.wf.add_environment(env)
+		heft(self.wf)
 
 # @unittest.skip('For now')
 class TestPHeftMethods(unittest.TestCase):

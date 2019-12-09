@@ -37,7 +37,7 @@ class Workflow(object):
 		self.graph = nx.readwrite.json_graph.node_link_graph(wfconfig['graph'])
 		self.env = None
 		# This lets us know when reading the graph if 'comp' attribute
-		self.machine_alloc = []
+		self.machine_alloc = {}
 		self.machine_ids = {}
 		# in the Networkx graph is time or FLOPs based
 		self.execution_order = []
@@ -64,7 +64,8 @@ class Workflow(object):
 			for m in self.env.machines:
 				provided_flops.append(self.env.machines[m]['flops'])
 			for node in self.graph.node:
-				# self.graph.node[node]['comp'] = np.round(np.divide(self.graph.node[node]['total_flop'], self.system['resource'])).astype(int)
+				# self.graph.node[node]['comp'] = np.round(np.divide(self.graph.node[node]['total_flop'],
+				# self.system['resource'])).astype(int)
 				n = self.env.num_machines
 				comp = self.graph.node[node]['comp']
 				base_comp_matrix = np.array([comp for x in range(n)])
@@ -72,6 +73,12 @@ class Workflow(object):
 			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
 
 			return 0
+
+
+	"""
+	TODO clean up allocation and ranking; reduce direct access to the graph, and instead only interact
+	with workflow tasks, not graph nodes
+	"""
 
 	def add_rank(self, node, rank):
 		pass

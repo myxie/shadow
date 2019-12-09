@@ -24,22 +24,22 @@
 # test_dir = 'test/data'
 
 test_heuristic_data = {  # Tests that use the Topcuoglu paper graph
-	'topcuoglu_graph': 'data/final_heft.json',
-	'topcuoglu_graph_nocalc': 'data/heuristic/heft_nocalc.json',
-	'flops_test_attr': 'data/flop_rep_test.json',
-	"topcuoglu_graph_system": 'data/heuristic/final_heft_sys.json',
+	'topcuoglu_graph': 'test/data/final_heft.json',
+	'topcuoglu_graph_nocalc': 'test/data/heuristic/heft_nocalc.json',
+	'flops_test_attr': 'test/data/flop_rep_test.json',
+	"topcuoglu_graph_system": 'test/data/heuristic/final_heft_sys.json',
 	# Tests that use the PHEFT paper graph
-	'pheft_graph': 'data/heuristic/pheft_nocalc.json',
+	'pheft_graph': 'test/data/heuristic/pheft_nocalc.json',
 	# 'pheft_attr': 'test/data/pheft_attr.json',
 	# 'pheft_ccost':'test/data/oct_comm.txt',
 }
 test_workflow_data = {  # Tests that use the Topcuoglu paper graph
-	'topcuoglu_graph': 'data/workflow/final_heft.json',
-	'topcuoglu_graph_nocalc': 'data/workflow/heft_nocalc.json',
-	'flops_test_attr': 'data/flop_rep_test.json',
-	"topcuoglu_graph_system": 'data/workflow/final_heft_sys.json',
+	'topcuoglu_graph': 'test/data/workflow/final_heft.json',
+	'topcuoglu_graph_nocalc': 'test/data/workflow/heft_nocalc.json',
+	'flops_test_attr': 'test/data/flop_rep_test.json',
+	"topcuoglu_graph_system": 'test/data/workflow/final_heft_sys.json',
 	# Tests that use the PHEFT paper graph
-	'pheft_graph': 'data/pheft_nocalc.json',
+	'pheft_graph': 'test/data/pheft_nocalc.json',
 	# 'pheft_attr': 'test/data/pheft_attr.json',
 	# 'pheft_ccost':'test/data/oct_comm.txt',
 }
@@ -53,6 +53,6 @@ test_generator_data = {
 }
 
 test_environment_data = {
-	'environment_sys': 'data/environment/ggen_out_2-denselu_sys.json'
+	'environment_sys': 'test/data/environment/ggen_out_2-denselu_sys.json'
 }
 

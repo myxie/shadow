@@ -27,7 +27,7 @@ workflow is based on the example presented in the HEFT paper [1]_.
    
 
 The computation costs for tasks, along with the graph attributes, are stored
-in a JSON file separate to the machine specifications. In *shadow*, We first
+in a JSON file separate to the machine specifications. In *shadow*, we first
 initialise a ``Workflow`` object, and then add an environment to it; this
 environment is constructed from our machine specification. The
 structure of the specification files are described in more detail in

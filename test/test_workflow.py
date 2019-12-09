@@ -16,8 +16,9 @@
 # Test workflow class and functions
 
 import unittest
+import os
 
-import config as cfg
+import test_config as cfg
 
 from shadow.classes.workflow import Workflow
 from shadow.classes.environment import Environment
@@ -26,15 +27,16 @@ from shadow.classes.environment import Environment
 # TODO Need to test workflow class initialisation on a number of graph types
 #  and system specifications.
 
+current_dir = os.path.abspath('.')
 class TestWorkflowClass(unittest.TestCase):
 
 	def test_add_environment(self):
-		wf = Workflow(cfg.test_workflow_data['topcuoglu_graph'])
-		env = Environment(cfg.test_workflow_data['topcuoglu_graph_system'])
+		wf = Workflow("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph']))
+		env = Environment("{0}/{1}".format(current_dir,cfg.test_workflow_data['topcuoglu_graph_system']))
 		retval = wf.add_environment(env)
 
 		# retval = wf.load_attributes('test/data/flop_rep_test.json')
 
 		self.assertEqual(retval, 0)
-		self.assertEqual(wf.graph.node[5]['comp'][1], 28)
+		self.assertEqual(28, wf.graph.node[5]['comp'][1])
 		self.assertEqual(wf.graph.edges[3, 7]['data_size'], 27)
