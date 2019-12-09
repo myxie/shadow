@@ -1,0 +1,73 @@
+{
+  "graph": {
+    "directed": true,
+    "multigraph": false,
+    "graph": {
+      "name": "dag"
+    },
+    "nodes": [
+      {
+        "kernel": "lu",
+        "total_flop": 147,
+        "id": 0
+      },
+      {
+        "kernel": "fwd",
+        "total_flop": 135,
+        "id": 1
+      },
+      {
+        "kernel": "bdiv",
+        "total_flop": 88,
+        "id": 2
+      },
+      {
+        "kernel": "bmod",
+        "total_flop": 134,
+        "id": 3
+      },
+      {
+        "kernel": "lu",
+        "total_flop": 91,
+        "id": 4
+      }
+    ],
+    "links": [
+      {
+        "x": "0",
+        "y": "0",
+        "data_size": 57,
+        "source": 0,
+        "target": 1
+      },
+      {
+        "x": "0",
+        "y": "0",
+        "data_size": 93,
+        "source": 0,
+        "target": 2
+      },
+      {
+        "x": "0",
+        "y": "1",
+        "data_size": 55,
+        "source": 1,
+        "target": 3
+      },
+      {
+        "x": "1",
+        "y": "0",
+        "data_size": 133,
+        "source": 2,
+        "target": 3
+      },
+      {
+        "x": "1",
+        "y": "1",
+        "data_size": 90,
+        "source": 3,
+        "target": 4
+      }
+    ]
+  }
+}
