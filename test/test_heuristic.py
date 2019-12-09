@@ -106,7 +106,7 @@ class TestPHeftMethods(unittest.TestCase):
 		upward_rank(self.wf)
 		sorted_tasks = sort_tasks(self.wf, 'rank')
 		for node in sorted_tasks:
-			self.assertTrue(int(self.wf.graph.node[node]['rank']) ==
+			self.assertTrue(int(self.wf.graph.nodes[node]['rank']) ==
 							self.up_rank_values[node])
 
 	def test_oct_rank(self):
@@ -114,7 +114,7 @@ class TestPHeftMethods(unittest.TestCase):
 		upward_oct_rank(self.wf, oct_rank_matrix)
 		sorted_tasks = sort_tasks(self.wf, 'rank')
 		for node in sorted_tasks:
-			self.assertTrue(int(self.wf.graph.node[node]['rank']) ==
+			self.assertTrue(int(self.wf.graph.nodes[node]['rank']) ==
 							self.up_oct_rank_values[node])
 
 	def test_heft_schedule(self):
