@@ -1,0 +1,2 @@
+panguage: python
+script: python3 shadow.py test --all
