@@ -1,4 +1,4 @@
 panguage: python
-script: python3 shadow.py test --all
+script: coverage run shadow.py test --all
 after_success: coveralls
 
