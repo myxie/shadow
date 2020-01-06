@@ -84,7 +84,7 @@ def spea2(wf, seed):
 def generate_population(wf, size, seed, skip_limit):
 	"""
 	task_assign[0] is the resource to which Task0 is assigned
-	exec_order[0] is the task that will be executed first
+	task_order[0] is the task that will be executed first
 
 	each 'solution' should be a tuple of a task-assign and exec-order solution
 

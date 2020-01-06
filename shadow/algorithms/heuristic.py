@@ -273,16 +273,16 @@ def calc_est(wf, node, processor_num, task_list):
 		for x in range(len(processor)):
 			# For each start/finish time tuple that exists in the processor
 			if x == 0:
-				if processor[0][0] != 0:  # If the start time of the first tuple is not 0
+				if processor[0][2] != 0:  # If the start time of the first tuple is not 0
 					available_slots.append((0, processor[0][0]))  # add a 0-current_start time tuple
 				else:
 					continue
 			else:
 				# Append the finish time of the previous slot and the start time of this slot
-				available_slots.append((processor[x - 1][1], processor[x][0]))
+				available_slots.append((processor[x - 1][2], processor[x][1]))
 
 		# Add a very large number to the final time slot available, so we have a gap after
-		available_slots.append((processor[len(processor) - 1][1], -1))
+		available_slots.append((processor[len(processor) - 1][2], -1))
 
 	for slot in available_slots:
 		if est < slot[0] and slot[0] + \
@@ -321,9 +321,10 @@ def insertion_policy(wf):
 			wf.graph.nodes[task]['aft'] = w
 			machine_str = list(wf.machine_alloc.keys())[p]
 			wf.machine_alloc[machine_str].append((
+				(task),
 				wf.graph.nodes[task]['ast'],
-				wf.graph.nodes[task]['aft'],
-				str(task)))
+				wf.graph.nodes[task]['aft']
+				))
 		else:
 			aft = -1  # Finish time for the current task
 			p = 0
@@ -366,10 +367,11 @@ def insertion_policy(wf):
 				makespan = wf.graph.nodes[task]['aft']
 			machine_str = list(wf.machine_alloc.keys())[p]
 			wf.machine_alloc[machine_str].append((
+				(task),
 				wf.graph.nodes[task]['ast'],
 				wf.graph.nodes[task]['aft'],
-				str(task)))
-			wf.machine_alloc[machine_str].sort(key=lambda x: x[0])
+				))
+			wf.machine_alloc[machine_str].sort(key=lambda x: x[1])
 
 	wf.makespan = makespan
 	return makespan
@@ -404,9 +406,10 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 			wf.graph.nodes[task]['processor'] = p
 			machine_str = list(wf.machine_alloc.keys())[p]
 			wf.machine_alloc[machine_str].append((
+				(task),
 				wf.graph.nodes[task]['ast'],
-				wf.graph.nodes[task]['aft'],
-				str(task)))
+				wf.graph.nodes[task]['aft']
+				))
 
 		else:
 			min_oeft = -1
@@ -437,10 +440,11 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 
 			machine_str = list(wf.machine_alloc.keys())[p]
 			wf.machine_alloc[machine_str].append((
+				(task),
 				wf.graph.nodes[task]['ast'],
-				wf.graph.nodes[task]['aft'],
-				str(task)))
-			wf.machine_alloc[machine_str].sort(key=lambda x: x[0])
+				wf.graph.nodes[task]['aft']
+				))
+			wf.machine_alloc[machine_str].sort(key=lambda x: x[1])
 
 	wf.makespan = makespan
 	return makespan

@@ -38,7 +38,7 @@ class TestPopulationGeneration(unittest.TestCase):
         seed = 10
         a= generate_population(self.wf,10,seed,2)
         # for x in a: 
-        #     print(x.exec_order)
+        #     print(x.task_order)
         b= generate_population(self.wf,10,seed,2)
 
         self.assertTrue(a==a)
