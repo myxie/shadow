@@ -68,6 +68,7 @@ class Workflow(object):
 				# self.system['resource'])).astype(int)
 				n = self.env.num_machines
 				comp = self.graph.nodes[node]['comp']
+				self.graph.nodes[node]['flops'] = self.graph.nodes[node]['comp']
 				base_comp_matrix = np.array([comp for x in range(n)])
 				self.graph.nodes[node]['comp'] = np.round(np.divide(base_comp_matrix, provided_flops)).astype(int)
 			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
