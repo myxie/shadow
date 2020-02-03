@@ -21,9 +21,15 @@ import subprocess
 import numpy as np
 import networkx as nx
 
-def generate_system_machines(config_path, num_machines, magnitude='giga', heterogeneity=[1.0], specrange=[(10, 20)]):
+
+def generate_system_machines(config_path,
+							num_machines,
+							magnitude='giga',
+							heterogeneity=[1.0],
+							specrange=[(10, 20)]):
 	# TODO move the necessary information from generate_graph_costs here for system configuration
 	"""
+	:param config_path:
 	:param num_machines:
 	:param magnitude:
 	:param heterogeneity:
@@ -198,7 +204,7 @@ if __name__ == '__main__':
 				print('Generating json for {0}'.format(path))
 				generate_graph_costs('/home/rwb/Dropbox/PhD/writeups/observation_graph-model/{0}'.format(path),
 									'/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/{0}.json'.format(
-									path[:-4]), 0.5, 500, 100, 'giga')
+									path[:-4]), 0.5, 5000, 500, 'giga')
 				generate_system_machines(
 					'/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/{0}_sys.json'.format(path[:-4]),
-					512, 'giga', [0.9375, 0.0625], [(100, 150), (1000, 1100)])
+					512, 'giga', [0.9375, 0.0625], [(100, 150), (400, 500)])
