@@ -18,7 +18,7 @@
 import unittest
 import os
 
-import test_config as cfg
+from test import test_config as cfg
 
 from shadow.classes.workflow import Workflow
 from shadow.classes.environment import Environment

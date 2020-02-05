@@ -25,10 +25,12 @@ import networkx as nx
 def generate_system_machines(config_path,
 							num_machines,
 							magnitude='giga',
-							heterogeneity=[1.0],
-							specrange=[(10, 20)]):
+							heterogeneity=(10, 20),
+							specrange=None,
+							seed=20):
 	# TODO move the necessary information from generate_graph_costs here for system configuration
 	"""
+	:param seed: 
 	:param config_path:
 	:param num_machines:
 	:param magnitude:
@@ -37,6 +39,9 @@ def generate_system_machines(config_path,
 	relative to specified magnitude
 	:return:
 	"""
+	if heterogeneity is None:
+		heterogeneity = [1.0]
+	random.seed(seed)
 	multiplier = 1  # default is Giga flops
 	max_data_rate = 10  # (10 Gigabytes/sec)
 	if magnitude is 'giga':
@@ -109,8 +114,9 @@ def generate_system_machines(config_path,
 # 		  'data_rate': data_rate_matrix}
 # jgraph['system'] = system
 
-def generate_graph_costs(dot_path, json_path, ccr, mean, uniform_range, magnitude='giga'):
+def generate_graph_costs(dot_path, json_path, ccr, mean, uniform_range, magnitude='giga', seed=20):
 	"""
+	:param seed: 
 	:param heterogeneity:
 	:param magnitude:
 	:param dot_path: The path of the dot file for which we are generating cost values
@@ -121,6 +127,7 @@ def generate_graph_costs(dot_path, json_path, ccr, mean, uniform_range, magnitud
 	:param json_path: If specified, use this path as output for json
 	:return: None
 	"""
+	random.seed(seed)
 	os.listdir('.')
 	print(dot_path)
 	multiplier = 1  # default is Giga flops
@@ -174,37 +181,3 @@ def generate_graph_costs(dot_path, json_path, ccr, mean, uniform_range, magnitud
 		json_path = '{0}.json'.format(dot_path[:-4])
 	with open(json_path, 'w') as jfile:
 		json.dump(jgraph, jfile, indent=2)
-
-
-if __name__ == '__main__':
-	args = sys.argv
-	print(args)
-	if len(args) > 1:
-		if args[1] == 'ggen':
-			print("Using Ggen graph generating library")
-
-			'''
-			Here, we loop through the range provided on the command line
-			'''
-			increment = 2
-			min = int(args[2])
-			max = int(args[3])
-			# prob = float(args[4])
-			# increment = int(args[5])
-
-			for x in range(min, max, increment):
-				outfile = 'dots/ggen_out_{0}-denselu.dot'.format(x)
-				print('Generating file: {0}'.format(outfile))
-				subprocess.run(['ggen', '-o', '{0}'.format(outfile), 'dataflow-graph', 'denselu', str(x)])
-	else:
-		print('Generating json')
-		for path in sorted(os.listdir("/home/rwb/Dropbox/PhD/writeups/observation_graph-model")):
-			if 'dot' in path:
-				print(os.listdir("/home/rwb/Dropbox/PhD/writeups/observation_graph-model"))
-				print('Generating json for {0}'.format(path))
-				generate_graph_costs('/home/rwb/Dropbox/PhD/writeups/observation_graph-model/{0}'.format(path),
-									'/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/{0}.json'.format(
-									path[:-4]), 0.5, 5000, 500, 'giga')
-				generate_system_machines(
-					'/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/{0}_sys.json'.format(path[:-4]),
-					512, 'giga', [0.9375, 0.0625], [(100, 150), (400, 500)])

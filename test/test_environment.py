@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import unittest
-from test_config import test_environment_data
+from test.test_config import test_environment_data
 import os
 from shadow.classes.environment import Environment
 # Tests for /algorithms/heuristic.py

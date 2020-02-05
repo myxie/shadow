@@ -22,13 +22,20 @@ shadowgen will convert, translate, and generate workflow and environemnt files
 import subprocess
 import os
 
-CURR_DIR = "/home/rwb/Dropbox/PhD/writeups/observation_graph-model"
-# TARGET_DIR = '/home/rwb/Dropbox/PhD/writeups/observation_graph-model/'
-JSON_DIR = '/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/'
+import sys
+import datetime
 
-from sample_generator import generate_graph_costs , generate_system_machines
+from shadowgen_config import CURR_DIR, JSON_DIR, DOTS_DIR
+from sample_generator import generate_graph_costs, generate_system_machines
 
-def dotgen(min,max,increment):
+print(os.getcwd())
+
+GGEN_OUTFILE = 'ggen_out'
+DATAFLOW = 'dataflow-graph'
+GFORMAT = 'denselu'
+
+
+def dotgen(minx, maxx, increment):
 	print("Using Ggen graph generating library")
 
 	'''
@@ -37,19 +44,30 @@ def dotgen(min,max,increment):
 	# prob = float(args[4])
 	# increment = int(args[5])
 
-	for x in range(min, max, increment):
-		outfile = 'dots/ggen_out_{0}-denselu.dot'.format(x)
+	for x in range(minx, maxx, increment):
+		today_dir = datetime.date.today().strftime("%Y-%m-%d")
+		dots_path = "{0}/{1}".format(DOTS_DIR, today_dir)
+		if not os.path.exists(dots_path):
+			os.mkdir(dots_path)
+		outfile = '{0}/{1}_{2}.dot'.format(dots_path, GFORMAT, x)
 		print('Generating file: {0}'.format(outfile))
-		subprocess.run(['ggen', '-o', '{0}'.format(outfile), 'dataflow-graph', 'denselu', str(x)])
-	
+		subprocess.run(['ggen', '-o', '{0}'.format(outfile), DATAFLOW, GFORMAT, str(x)])
+
+
 def genjson():
 	for path in sorted(os.listdir(CURR_DIR)):
 		if 'dot' in path:
-			print(os.listdir(CURR_DIR))
 			print('Generating json for {0}'.format(path))
-			generate_graph_costs('{0}/{1}'.format(CURR_DIR,path),
-								 '/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/{0}.json'.format(
-									 path[:-4]), 0.5, 5000, 500, 'giga')
+			today_dir = datetime.date.today().strftime("%Y-%m-%d")
+			json_path = "{0}/{1}".format(JSON_DIR, today_dir)
+			generate_graph_costs('{0}/{1}'.format(CURR_DIR, path),
+								'{0}/{1}.json'.format(json_path, path[:-4]),
+								0.5, 5000, 500, 'giga')
 			generate_system_machines(
-				'/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/{0}_sys.json'.format(path[:-4]),
+				'{0}/{1}_sys.json'.format(json_path, path[:-4]),
 				512, 'giga', [0.9375, 0.0625], [(100, 150), (400, 500)])
+
+
+if __name__ == '__main__':
+	dotgen(10, 100, 20)
+	genjson()

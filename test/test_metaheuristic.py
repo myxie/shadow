@@ -16,7 +16,7 @@
 
 import unittest
 
-import test_config as cfg
+from test import test_config as cfg
 from shadow.algorithms.metaheuristic import generate_population,\
                                      generate_allocations,\
                                      non_dom_sort

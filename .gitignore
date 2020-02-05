@@ -4,3 +4,5 @@
 *.pydev*
 *docs/build
 venv/
+utils/shadowgen/shadowgen_config.py
+.coverage

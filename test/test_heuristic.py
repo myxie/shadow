@@ -18,7 +18,7 @@ import unittest
 import networkx as nx
 import os
 
-import test_config as cfg
+from test import test_config as cfg
 from shadow.algorithms.heuristic import upward_rank, upward_oct_rank, \
 	sort_tasks, heft, pheft
 from shadow.classes.workflow import Workflow
