@@ -16,9 +16,18 @@
 import json
 import os
 import subprocess
+import networkx as nx
+import random
+
 EAGLE_GRAPH = 'daliuge_graphs/TestAskapCont.graph'
 CHANNELS = 10 
+SEED = 20
+MEAN = 5000
+UNIFORM_RANGE = 500
+MULTIPLIER = 1
+CCR = 0.5
 
+random.seed(SEED)
 # EDIT THE EAGLE GRAPH TO CHANGE THE NUMBER OF CHANNELS
 f = open(EAGLE_GRAPH, 'r')
 jdict = json.load(f)
@@ -39,3 +48,92 @@ if os.path.exists(ngraph):
 		subprocess.call(cmd_list, stdout=f)
 else:
 	print("Failure to find path {0}".format(ngraph))
+location = 'daliuge_json/'
+graphs = dict()
+
+
+path = jgraph_path 
+print("'Path is:" + path + "'")
+# READ IN UNROLLED GRAPH AND ADD THE COMPUTATION VALUES
+if os.path.exists(path) and (os.stat(path).st_size != 0):
+	
+	graphdict = dict()
+	with open(path) as f:
+		graphdict = json.load(f)
+
+	G = nx.DiGraph()
+
+	for val in graphdict:
+		G.add_node(val['oid'])
+		G.nodes[val['oid']]['nm'] = val['nm']
+
+	for val in graphdict:
+		if 'outputs' in val:
+			for item in val['outputs']:
+				G.add_edge(val['oid'], item)
+		elif 'consumers' in val:
+			for item in val['consumers']:
+				G.add_edge(val['oid'], item)
+
+	for node in G.nodes():
+		G.nodes[node]['label'] = str(node)
+
+	translate = {}
+	count = 0
+
+	for node in nx.topological_sort(G):
+		translate[node] = count
+		count = count + 1
+
+	for key, val in translate.items():
+		print(str(key) + ' :' + str(val))
+
+	translated_graph = nx.DiGraph()
+
+	for key in translate:
+		translated_graph.add_node(translate[key])
+
+	for edge in G.edges():
+		translated_graph.add_edge(translate[edge[0]], translate[edge[1]])
+
+	for node in translated_graph.nodes():
+		translated_graph.nodes[node]['label'] = str(node)
+		
+	comp_min = (MEAN - UNIFORM_RANGE) * MULTIPLIER
+	comp_max = (MEAN + UNIFORM_RANGE) * MULTIPLIER
+
+	# check heterogeneity sum is 100 (this list represents the percentage of the total cluster
+	# is made of a particular machine type, where 'type' --> machine of particular FLOPS
+	# total = 0
+	# for x in range(num_machines):
+	# 	total += heterogeneity[(x % len(heterogeneity))]
+	# Generate machine cost values
+
+	for node in translated_graph:
+		rnd = int(random.uniform(comp_min, comp_max))
+		translated_graph.nodes[node]['comp'] = rnd - (rnd % MULTIPLIER)
+
+	# Generate data loads between edges and data-link transfer rates
+	comm_mean = int(MEAN * CCR)
+	comm_min = (comm_mean - (UNIFORM_RANGE * CCR)) * MULTIPLIER
+	comm_max = (comm_mean + (UNIFORM_RANGE * CCR)) * MULTIPLIER
+	for edge in translated_graph.edges:
+		rnd = int(random.uniform(comm_min, comm_max))
+		translated_graph.edges[edge]['data_size'] = rnd - (rnd % MULTIPLIER)
+
+	jgraph = {
+		"header": {
+			"time": False
+		},
+		'graph': nx.readwrite.node_link_data(translated_graph)
+	}
+	# Generate place holder system values (resources/data_rate) for compatibility with shadow library format
+
+	# if not json_path:
+	# 	json_path = '{0}.json'.format(dot_path[:-4])
+	# with open(json_path, 'w') as jfile:
+	# 	json.dump(jgraph, jfile, indent=2)
+	
+	save = "{0}_shadow.json".format(path[:-5])
+	with open("{0}.json".format(save), 'w') as jfile:
+		json.dump(jgraph, jfile, indent=2)

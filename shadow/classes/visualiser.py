@@ -1,3 +1,20 @@
+# Copyright (C) 6/2/20 RW Bunney
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+import numpy as np
+import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 from matplotlib import colors
@@ -72,3 +89,17 @@ ax[2].set_aspect('auto')
 ax[0].set(ylabel='machine2')
 
 plt.show()
+
+
+class AllocationPlots(object):
+	"""
+	This is created when we want to generate an allocation plot for the results of a scheduled 
+	workflow
+	"""
+	def __init__(self, workflow):
+		pass
+	
+
+class StatPlots(object):
+	def __init__(self):
+		pass

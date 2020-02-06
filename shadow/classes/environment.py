@@ -17,7 +17,6 @@ import numpy as np
 import sys
 import json
 
-
 class Environment(object):
 
 	def __init__(self, config):
@@ -39,8 +38,6 @@ class Environment(object):
 		self.rates = self.env['system']['rates']
 		if self.rates:
 			self.has_rates = True
-
-
 
 	def _check_comp(self, res_dict):
 		"""
@@ -67,10 +64,7 @@ class Environment(object):
 					return retval
 		return retval
 
-
-
-
-	# self.env = environ['system']
+	# self.en nviron['system']
 	#
 	#
 	# self.machines = [[] for x in range(len(self.env['resource']))]

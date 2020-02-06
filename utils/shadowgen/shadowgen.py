@@ -67,7 +67,12 @@ def genjson():
 				'{0}/{1}_sys.json'.format(json_path, path[:-4]),
 				512, 'giga', [0.9375, 0.0625], [(100, 150), (400, 500)])
 
+def daliugeimport():
+	"""
+	Daliuge import will use 
+	:return:
+	"""
 
 if __name__ == '__main__':
-	dotgen(10, 100, 20)
+	dotgen(10, 50, 20)
 	genjson()

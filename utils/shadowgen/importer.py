@@ -32,17 +32,17 @@ for key in graphs:
 	print("'Path is:" + path + "'")
 	if os.path.exists(path) and (os.stat(path).st_size != 0):
 
-		graph = dict()
+		graphdict = None
 		with open(path) as f:
-			graph = json.load(f)
+			graphdict = json.load(f)
 
 		G = nx.DiGraph()
 
-		for val in graph:
+		for val in graphdict:
 			G.add_node(val['oid'])
 			G.node[val['oid']]['nm'] = val['nm']
 
-		for val in graph:
+		for val in graphdict:
 			if 'outputs' in val:
 				for item in val['outputs']:
 					G.add_edge(val['oid'], item)
@@ -50,21 +50,11 @@ for key in graphs:
 				for item in val['consumers']:
 					G.add_edge(val['oid'], item)
 
-
-
 		for node in G.nodes():
 			G.node[node]['label'] = str(node)
 
-		nx.topological_sort(G)
-
-		variable = 'daliuge_json'
-		#        if os.path.exits(variable):
 		title = key.split('.')[0]
-		save = variable + title
-		# fname = open('{0}.graphml'.format(save),'w+')
-		nx.write_graphml(G, '{0}_untranslated.graphml'.format(save))
-
-		translate = dict()
+		translate = {}
 		count = 0
 
 		for node in nx.topological_sort(G):
@@ -86,5 +76,8 @@ for key in graphs:
 			translated_graph.node[node]['label'] = str(node)
 
 		variable = 'daliuge_json'
+		
 		save = variable + title
-		nx.write_graphml(translated_graph, '{0}.graphml'.format(save))
+		with open("{0}.json".format(save), 'w') as jfile:
+			json.dump(translated_graph, jfile, indent=2)
+

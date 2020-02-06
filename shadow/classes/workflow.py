@@ -20,6 +20,7 @@ import sys
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
+from shadow.classes.environment import Environment
 
 
 class Workflow(object):
@@ -45,6 +46,9 @@ class Workflow(object):
 
 	def add_environment(self, environment):
 		self.env = environment
+
+
+
 		# Go through environment flags and check what processing we can do to the workflow
 		self.machine_alloc = {m: [] for m in self.env.machines.keys()}
 		self.machine_id_map = {i:m for i, m in enumerate(self.env.machines.keys())}
