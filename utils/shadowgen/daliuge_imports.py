@@ -18,7 +18,7 @@ import os
 import subprocess
 import networkx as nx
 import random
-
+from networkx.drawing.nx_pydot import write_dot
 EAGLE_GRAPH = 'daliuge_graphs/TestAskapCont.graph'
 CHANNELS = 10 
 SEED = 20
@@ -57,17 +57,22 @@ print("'Path is:" + path + "'")
 # READ IN UNROLLED GRAPH AND ADD THE COMPUTATION VALUES
 if os.path.exists(path) and (os.stat(path).st_size != 0):
 	
-	graphdict = dict()
 	with open(path) as f:
 		graphdict = json.load(f)
 
 	G = nx.DiGraph()
 
 	for val in graphdict:
+		if 'app' in val.keys():
+			if val['app'] == "dlg.apps.simple.SleepApp":
+				continue
 		G.add_node(val['oid'])
 		G.nodes[val['oid']]['nm'] = val['nm']
 
 	for val in graphdict:
+		if 'app' in val.keys():
+			if val['app'] == "dlg.apps.simple.SleepApp":
+				continue
 		if 'outputs' in val:
 			for item in val['outputs']:
 				G.add_edge(val['oid'], item)
@@ -88,16 +93,16 @@ if os.path.exists(path) and (os.stat(path).st_size != 0):
 	for key, val in translate.items():
 		print(str(key) + ' :' + str(val))
 
-	translated_graph = nx.DiGraph()
+	translated_graph = G # nx.DiGraph()
 
-	for key in translate:
-		translated_graph.add_node(translate[key])
-
-	for edge in G.edges():
-		translated_graph.add_edge(translate[edge[0]], translate[edge[1]])
-
-	for node in translated_graph.nodes():
-		translated_graph.nodes[node]['label'] = str(node)
+	# for key in translate:
+	# 	translated_graph.add_node(translate[key])
+	#
+	# for edge in G.edges():
+	# 	translated_graph.add_edge(translate[edge[0]], translate[edge[1]])
+	#
+	# for node in translated_graph.nodes():
+	# 	translated_graph.nodes[node]['label'] = str(node)
 		
 	comp_min = (MEAN - UNIFORM_RANGE) * MULTIPLIER
 	comp_max = (MEAN + UNIFORM_RANGE) * MULTIPLIER
@@ -128,7 +133,7 @@ if os.path.exists(path) and (os.stat(path).st_size != 0):
 		'graph': nx.readwrite.node_link_data(translated_graph)
 	}
 	# Generate place holder system values (resources/data_rate) for compatibility with shadow library format
-
+	write_dot(translated_graph, "dot.dot")
 	# if not json_path:
 	# 	json_path = '{0}.json'.format(dot_path[:-4])
 	# with open(json_path, 'w') as jfile:
