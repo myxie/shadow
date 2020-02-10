@@ -37,18 +37,16 @@ class Workflow(object):
 			wfconfig = json.load(infile)
 		self.graph = nx.readwrite.json_graph.node_link_graph(wfconfig['graph'])
 		self.env = None
-		# This lets us know when reading the graph if 'comp' attribute
 		self.machine_alloc = {}
 		self.machine_ids = {}
-		# in the Networkx graph is time or FLOPs based
+		self.machine_id_map = {}
 		self.execution_order = []
+		# This lets us know when reading the graph if 'comp' attribute
+		# in the Networkx graph is time or FLOPs based
 		self._time = wfconfig['header']['time']
 
 	def add_environment(self, environment):
 		self.env = environment
-
-
-
 		# Go through environment flags and check what processing we can do to the workflow
 		self.machine_alloc = {m: [] for m in self.env.machines.keys()}
 		self.machine_id_map = {i:m for i, m in enumerate(self.env.machines.keys())}
@@ -68,8 +66,6 @@ class Workflow(object):
 			for m in self.env.machines:
 				provided_flops.append(self.env.machines[m]['flops'])
 			for node in self.graph.nodes:
-				# self.graph.node[node]['comp'] = np.round(np.divide(self.graph.node[node]['total_flop'],
-				# self.system['resource'])).astype(int)
 				n = self.env.num_machines
 				comp = self.graph.nodes[node]['comp']
 				self.graph.nodes[node]['flops'] = self.graph.nodes[node]['comp']
@@ -77,18 +73,20 @@ class Workflow(object):
 				self.graph.nodes[node]['comp'] = np.round(np.divide(base_comp_matrix, provided_flops)).astype(int)
 			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
 
-			return 0
+		return 0
 
-
-	"""
-	TODO clean up allocation and ranking; reduce direct access to the graph, and instead only interact
-	with workflow tasks, not graph nodes
-	"""
+	# TODO clean up allocation and ranking;
+	#  reduce direct access to the graph,
+	#  instead, only interact with
+	#  workflow tasks, not graph nodes
 
 	def add_rank(self, node, rank):
 		pass
 
 	def allocate_task(self, task, machine_id):
+		pass
+
+	def pretty_print_allocation(self):
 		pass
 
 

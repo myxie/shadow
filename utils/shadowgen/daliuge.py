@@ -1,4 +1,4 @@
-# Copyright (C) 3/2/20 RW Bunney
+# Copyright (C) 10/2/20 RW Bunney
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,13 +12,6 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-
-"""
-shadowgen is a utility that allows us to generate different testing scripts for shadow expeiriments
-
-shadowgen will convert, translate, and generate workflow and environemnt files
-"""
 import subprocess
 import os
 import json
@@ -29,8 +22,8 @@ from shadowgen_config import CURR_DIR, JSON_DIR, DOTS_DIR
 from generator import generate_graph_costs, generate_system_machines
 import random
 
-print(os.getcwd())
 
+## DALIUGE TRANSLATION
 GGEN_OUTFILE = 'ggen_out'
 DATAFLOW = 'dataflow-graph'
 GFORMAT = 'denselu'
@@ -43,47 +36,6 @@ MEAN = 5000
 UNIFORM_RANGE = 500
 MULTIPLIER = 1
 CCR = 0.5
-
-
-# DAX FILE TRANSLATION
-# TODO
-
-# SAMPLE WORKFLOW GENERATION USING GGEN
-def dotgen(minx, maxx, increment):
-	print("Using Ggen graph generating library")
-
-	'''
-	Here, we loop through the range provided on the command line
-	'''
-	# prob = float(args[4])
-	# increment = int(args[5])
-
-	for x in range(minx, maxx, increment):
-		today_dir = datetime.date.today().strftime("%Y-%m-%d")
-		dots_path = "{0}/{1}".format(DOTS_DIR, today_dir)
-		if not os.path.exists(dots_path):
-			os.mkdir(dots_path)
-		outfile = '{0}/{1}_{2}.dot'.format(dots_path, GFORMAT, x)
-		print('Generating file: {0}'.format(outfile))
-		if not os.path.exists(outfile):
-			subprocess.run(['ggen', '-o', '{0}'.format(outfile), DATAFLOW, GFORMAT, str(x)])
-
-
-def genjson():
-	for path in sorted(os.listdir(CURR_DIR)):
-		if 'dot' in path:
-			print('Generating json for {0}'.format(path))
-			today_dir = datetime.date.today().strftime("%Y-%m-%d")
-			json_path = "{0}/{1}".format(JSON_DIR, today_dir)
-			generate_graph_costs('{0}/{1}'.format(CURR_DIR, path),
-								'{0}/{1}.json'.format(json_path, path[:-4]),
-								0.5, 5000, 500, 'giga')
-			generate_system_machines(
-				'{0}/{1}_sys.json'.format(json_path, path[:-4]),
-				512, 'giga', [0.9375, 0.0625], [(100, 150), (400, 500)])
-
-
-## DALIUGE TRANSLATION
 
 def edit_channels(graph_name, suffix, extension):
 	f = open(EAGLE_GRAPH, 'r')
@@ -132,7 +84,7 @@ def daliugeimport(graph,
 				  ccr,
 				  seed=20):
 	"""
-	Daliuge import will use 
+	Daliuge import will use
 	:return:
 	"""
 	random.seed(seed)
@@ -210,11 +162,3 @@ def daliugeimport(graph,
 		save = "{0}_shadow.json".format(graph[:-5])
 		with open("{0}".format(save), 'w') as jfile:
 			json.dump(jgraph, jfile, indent=2)
-
-
-if __name__ == '__main__':
-	dotgen(10, 50, 20)
-	# genjson()
-	edited_graph = edit_channels(EAGLE_GRAPH, CHANNEL_SUFFIX, EAGLE_EXT)
-	unrolled_graph = unroll_graph(edited_graph)
-	daliugeimport(unrolled_graph, MEAN, UNIFORM_RANGE, MULTIPLIER, CCR)

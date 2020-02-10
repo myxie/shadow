@@ -17,6 +17,7 @@ import numpy as np
 import sys
 import json
 
+
 class Environment(object):
 
 	def __init__(self, config):
