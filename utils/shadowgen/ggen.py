@@ -21,7 +21,10 @@ import networkx as nx
 from shadowgen_config import CURR_DIR, JSON_DIR, DOTS_DIR
 from generator import generate_graph_costs, generate_system_machines
 import random
-
+## DALIUGE TRANSLATION
+# GGEN_OUTFILE = 'ggen_out'
+# DATAFLOW = 'dataflow-graph'
+# GFORMAT = 'denselu'
 def dotgen(minx, maxx, increment):
 	print("Using Ggen graph generating library")
 

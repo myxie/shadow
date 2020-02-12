@@ -23,10 +23,7 @@ from generator import generate_graph_costs, generate_system_machines
 import random
 
 
-## DALIUGE TRANSLATION
-GGEN_OUTFILE = 'ggen_out'
-DATAFLOW = 'dataflow-graph'
-GFORMAT = 'denselu'
+
 EAGLE_EXT = ".graph"
 EAGLE_GRAPH = 'daliuge_graphs/TestAskapCont.graph'
 CHANNELS = 10
@@ -37,8 +34,9 @@ UNIFORM_RANGE = 500
 MULTIPLIER = 1
 CCR = 0.5
 
+
 def edit_channels(graph_name, suffix, extension):
-	f = open(EAGLE_GRAPH, 'r')
+	f = open(graph_name, 'r')
 	jdict = json.load(f)
 	f.close()
 	# TODO make this less hard-coded?
@@ -162,3 +160,9 @@ def daliugeimport(graph,
 		save = "{0}_shadow.json".format(graph[:-5])
 		with open("{0}".format(save), 'w') as jfile:
 			json.dump(jgraph, jfile, indent=2)
+
+
+if __name__ == '__main__':
+	edited_graph = edit_channels(EAGLE_GRAPH, CHANNEL_SUFFIX, EAGLE_EXT)
+	unrolled_graph = unroll_graph(edited_graph)
+	daliugeimport(unrolled_graph, MEAN, UNIFORM_RANGE, MULTIPLIER, CCR)
