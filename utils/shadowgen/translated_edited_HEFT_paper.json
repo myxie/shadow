@@ -1,0 +1,454 @@
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "comp": "14",
+            "id": "ID00001"
+        },
+        {
+            "comp": "13",
+            "id": "ID00002"
+        },
+        {
+            "comp": "11",
+            "id": "ID00003"
+        },
+        {
+            "comp": "13",
+            "id": "ID00004"
+        },
+        {
+            "comp": "12",
+            "id": "ID00005"
+        },
+        {
+            "comp": "13",
+            "id": "ID00006"
+        },
+        {
+            "comp": "7",
+            "id": "ID00007"
+        },
+        {
+            "comp": "5",
+            "id": "ID00008"
+        },
+        {
+            "comp": "18",
+            "id": "ID00009"
+        },
+        {
+            "comp": "21",
+            "id": "ID00010"
+        }
+    ],
+    "links": [
+        {
+            "data_size": "1625",
+            "source": "ID00001",
+            "target": "ID00002"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00001",
+            "target": "ID00003"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00001",
+            "target": "ID00004"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00001",
+            "target": "ID00005"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00001",
+            "target": "ID00006"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00001",
+            "target": "ID00007"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00001",
+            "target": "ID00008"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00001",
+            "target": "ID00009"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00001",
+            "target": "ID00010"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00002",
+            "target": "ID00002"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00002",
+            "target": "ID00003"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00002",
+            "target": "ID00004"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00002",
+            "target": "ID00005"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00002",
+            "target": "ID00006"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00002",
+            "target": "ID00007"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00002",
+            "target": "ID00008"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00002",
+            "target": "ID00009"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00002",
+            "target": "ID00010"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00003",
+            "target": "ID00002"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00003",
+            "target": "ID00003"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00003",
+            "target": "ID00004"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00003",
+            "target": "ID00005"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00003",
+            "target": "ID00006"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00003",
+            "target": "ID00007"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00003",
+            "target": "ID00008"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00003",
+            "target": "ID00009"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00003",
+            "target": "ID00010"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00004",
+            "target": "ID00002"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00004",
+            "target": "ID00003"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00004",
+            "target": "ID00004"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00004",
+            "target": "ID00005"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00004",
+            "target": "ID00006"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00004",
+            "target": "ID00007"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00004",
+            "target": "ID00008"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00004",
+            "target": "ID00009"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00004",
+            "target": "ID00010"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00005",
+            "target": "ID00002"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00005",
+            "target": "ID00003"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00005",
+            "target": "ID00004"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00005",
+            "target": "ID00005"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00005",
+            "target": "ID00006"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00005",
+            "target": "ID00007"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00005",
+            "target": "ID00008"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00005",
+            "target": "ID00009"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00005",
+            "target": "ID00010"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00006",
+            "target": "ID00002"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00006",
+            "target": "ID00003"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00006",
+            "target": "ID00004"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00006",
+            "target": "ID00005"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00006",
+            "target": "ID00006"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00006",
+            "target": "ID00007"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00006",
+            "target": "ID00008"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00006",
+            "target": "ID00009"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00006",
+            "target": "ID00010"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00007",
+            "target": "ID00002"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00007",
+            "target": "ID00003"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00007",
+            "target": "ID00004"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00007",
+            "target": "ID00005"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00007",
+            "target": "ID00006"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00007",
+            "target": "ID00007"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00007",
+            "target": "ID00008"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00007",
+            "target": "ID00009"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00007",
+            "target": "ID00010"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00008",
+            "target": "ID00002"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00008",
+            "target": "ID00003"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00008",
+            "target": "ID00004"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00008",
+            "target": "ID00005"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00008",
+            "target": "ID00006"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00008",
+            "target": "ID00007"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00008",
+            "target": "ID00008"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00008",
+            "target": "ID00009"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00008",
+            "target": "ID00010"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00009",
+            "target": "ID00002"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00009",
+            "target": "ID00003"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00009",
+            "target": "ID00004"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00009",
+            "target": "ID00005"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00009",
+            "target": "ID00006"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00009",
+            "target": "ID00007"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00009",
+            "target": "ID00008"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00009",
+            "target": "ID00009"
+        },
+        {
+            "data_size": "1625",
+            "source": "ID00009",
+            "target": "ID00010"
+        }
+    ]
+}

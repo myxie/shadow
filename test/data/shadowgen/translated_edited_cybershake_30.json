@@ -1,0 +1,389 @@
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "comp": 0.8,
+            "id": "ID00006"
+        },
+        {
+            "comp": 0.07,
+            "id": "ID00000"
+        },
+        {
+            "comp": 0.63,
+            "id": "ID00004"
+        },
+        {
+            "comp": 0.73,
+            "id": "ID00008"
+        },
+        {
+            "comp": 1.42,
+            "id": "ID00012"
+        },
+        {
+            "comp": 1.36,
+            "id": "ID00021"
+        },
+        {
+            "comp": 0.74,
+            "id": "ID00010"
+        },
+        {
+            "comp": 1.43,
+            "id": "ID00023"
+        },
+        {
+            "comp": 0.78,
+            "id": "ID00025"
+        },
+        {
+            "comp": 1.53,
+            "id": "ID00017"
+        },
+        {
+            "comp": 1.1,
+            "id": "ID00027"
+        },
+        {
+            "comp": 1.53,
+            "id": "ID00015"
+        },
+        {
+            "comp": 0.85,
+            "id": "ID00029"
+        },
+        {
+            "comp": 1.36,
+            "id": "ID00019"
+        },
+        {
+            "comp": 38.49,
+            "id": "ID00005"
+        },
+        {
+            "comp": 0.19,
+            "id": "ID00001"
+        },
+        {
+            "comp": 39.06,
+            "id": "ID00003"
+        },
+        {
+            "comp": 32.29,
+            "id": "ID00009"
+        },
+        {
+            "comp": 36.27,
+            "id": "ID00007"
+        },
+        {
+            "comp": 24.56,
+            "id": "ID00020"
+        },
+        {
+            "comp": 31.05,
+            "id": "ID00022"
+        },
+        {
+            "comp": 62.25,
+            "id": "ID00011"
+        },
+        {
+            "comp": 54.87,
+            "id": "ID00024"
+        },
+        {
+            "comp": 45.6,
+            "id": "ID00016"
+        },
+        {
+            "comp": 23.99,
+            "id": "ID00026"
+        },
+        {
+            "comp": 47.44,
+            "id": "ID00014"
+        },
+        {
+            "comp": 26.46,
+            "id": "ID00028"
+        },
+        {
+            "comp": 28.67,
+            "id": "ID00018"
+        },
+        {
+            "comp": 158.1,
+            "id": "ID00002"
+        },
+        {
+            "comp": 96.91,
+            "id": "ID00013"
+        }
+    ],
+    "links": [
+        {
+            "size": 0.0,
+            "source": "ID00006",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00004",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00008",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00012",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00021",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00010",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00023",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00025",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00017",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00027",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00015",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00029",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00019",
+            "target": "ID00000"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00005",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00005",
+            "target": "ID00006"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00003",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00003",
+            "target": "ID00004"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00009",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00009",
+            "target": "ID00010"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00007",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00007",
+            "target": "ID00008"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00020",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00020",
+            "target": "ID00021"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00022",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00022",
+            "target": "ID00023"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00011",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00011",
+            "target": "ID00012"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00024",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00024",
+            "target": "ID00025"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00016",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00016",
+            "target": "ID00017"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00026",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00026",
+            "target": "ID00027"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00014",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00014",
+            "target": "ID00015"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00028",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00028",
+            "target": "ID00029"
+        },
+        {
+            "size": 0.0,
+            "source": "ID00018",
+            "target": "ID00001"
+        },
+        {
+            "size": 24000.0,
+            "source": "ID00018",
+            "target": "ID00019"
+        },
+        {
+            "size": 621785320.0,
+            "source": "ID00002",
+            "target": "ID00003"
+        },
+        {
+            "size": 621785320.0,
+            "source": "ID00002",
+            "target": "ID00005"
+        },
+        {
+            "size": 621785320.0,
+            "source": "ID00002",
+            "target": "ID00007"
+        },
+        {
+            "size": 621785320.0,
+            "source": "ID00002",
+            "target": "ID00009"
+        },
+        {
+            "size": 621785320.0,
+            "source": "ID00002",
+            "target": "ID00011"
+        },
+        {
+            "size": 547930278.0,
+            "source": "ID00013",
+            "target": "ID00014"
+        },
+        {
+            "size": 547930278.0,
+            "source": "ID00013",
+            "target": "ID00016"
+        },
+        {
+            "size": 547930278.0,
+            "source": "ID00013",
+            "target": "ID00018"
+        },
+        {
+            "size": 547930278.0,
+            "source": "ID00013",
+            "target": "ID00020"
+        },
+        {
+            "size": 547930278.0,
+            "source": "ID00013",
+            "target": "ID00022"
+        },
+        {
+            "size": 547930278.0,
+            "source": "ID00013",
+            "target": "ID00024"
+        },
+        {
+            "size": 547930278.0,
+            "source": "ID00013",
+            "target": "ID00026"
+        },
+        {
+            "size": 547930278.0,
+            "source": "ID00013",
+            "target": "ID00028"
+        }
+    ]
+}

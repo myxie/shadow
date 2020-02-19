@@ -1,0 +1,124 @@
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "comp": 14,
+            "id": "ID00001"
+        },
+        {
+            "comp": 13,
+            "id": "ID00002"
+        },
+        {
+            "comp": 11,
+            "id": "ID00003"
+        },
+        {
+            "comp": 13,
+            "id": "ID00004"
+        },
+        {
+            "comp": 12,
+            "id": "ID00005"
+        },
+        {
+            "comp": 13,
+            "id": "ID00006"
+        },
+        {
+            "comp": 7,
+            "id": "ID00007"
+        },
+        {
+            "comp": 5,
+            "id": "ID00008"
+        },
+        {
+            "comp": 18,
+            "id": "ID00009"
+        },
+        {
+            "comp": 21,
+            "id": "ID00010"
+        }
+    ],
+    "links": [
+        {
+            "size": "2250",
+            "source": "ID00001",
+            "target": "ID00002"
+        },
+        {
+            "size": "1500",
+            "source": "ID00001",
+            "target": "ID00003"
+        },
+        {
+            "size": "1125",
+            "source": "ID00001",
+            "target": "ID00004"
+        },
+        {
+            "size": "1375",
+            "source": "ID00001",
+            "target": "ID00005"
+        },
+        {
+            "size": "1750",
+            "source": "ID00001",
+            "target": "ID00006"
+        },
+        {
+            "size": "2375",
+            "source": "ID00002",
+            "target": "ID00008"
+        },
+        {
+            "size": "2000",
+            "source": "ID00002",
+            "target": "ID00009"
+        },
+        {
+            "size": "2500",
+            "source": "ID00003",
+            "target": "ID00007"
+        },
+        {
+            "size": "3375",
+            "source": "ID00004",
+            "target": "ID00008"
+        },
+        {
+            "size": "2875",
+            "source": "ID00004",
+            "target": "ID00009"
+        },
+        {
+            "size": "1625",
+            "source": "ID00005",
+            "target": "ID00009"
+        },
+        {
+            "size": "1875",
+            "source": "ID00006",
+            "target": "ID00008"
+        },
+        {
+            "size": "2125",
+            "source": "ID00007",
+            "target": "ID00010"
+        },
+        {
+            "size": "1375",
+            "source": "ID00008",
+            "target": "ID00010"
+        },
+        {
+            "size": "1625",
+            "source": "ID00009",
+            "target": "ID00010"
+        }
+    ]
+}

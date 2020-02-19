@@ -78,11 +78,11 @@ def generate_dot_from_networkx_graph(graph, output):
 
 
 def daliugeimport(graph,
-				  mean,
-				  uniform_range,
-				  multiplier,
-				  ccr,
-				  seed=20):
+				mean,
+				uniform_range,
+				multiplier,
+				ccr,
+				seed=20):
 	"""
 	Daliuge import will use
 	:return:
