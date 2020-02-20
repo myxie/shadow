@@ -47,7 +47,6 @@ def edit_channels(graph_name, suffix, extension):
 	f.close()
 	return ngraph
 
-
 def unroll_graph(graph):
 	if os.path.exists(graph):
 		print(graph)
@@ -76,11 +75,11 @@ def generate_dot_from_networkx_graph(graph, output):
 
 
 def daliugeimport(graph,
-				  mean,
-				  uniform_range,
-				  multiplier,
-				  ccr,
-				  seed=20):
+				mean,
+				uniform_range,
+				multiplier,
+				ccr,
+				seed=20):
 	"""
 	Daliuge import will use
 	:return:
@@ -125,7 +124,7 @@ def daliugeimport(graph,
 		for key, val in translate.items():
 			print(str(key) + ' :' + str(val))
 
-		translated_graph =  nx.DiGraph()
+		translated_graph = nx.DiGraph()
 		for key in translate:
 			translated_graph.add_node(translate[key])
 

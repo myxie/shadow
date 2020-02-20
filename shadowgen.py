@@ -13,7 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import argparse
-from utils.shadowgen.shadowgen import unroll_graph, dotgen,generate_dot_from_networkx_graph
+from utils.shadowgen.daliuge import unroll_graph, generate_dot_from_networkx_graph
+from utils.shadowgen.ggen import genjson, dotgen
+# from utils.shadowgen.dax import
 def run_daliuge_translator():
 	pass
 
@@ -39,14 +41,14 @@ if __name__ == '__main__':
 
 	daliuge_parser.set_defaults(func=run_daliuge_translator)
 
-	ggen_parser = subparsers.add_parser('ggen', help=' Generate dataflow graphs using ggen')
+	ggen_parser = subparsers.add_parser('ggen', help=' Generate sample dataflow graphs using ggen')
 	ggen_parser.set_defaults(func=ggen_generation)
 	ggen_parser.add_argument('algorithm', help='Name of algorithm')
 	ggen_parser.add_argument('workflow', help='Location of workflow config')
 	ggen_parser.add_argument('environment', help='Location of the environment config')
 
 	# TODO DAX parser
-	dax_parser = subparsers.add_parser('dax', help='')
+	dax_parser = subparsers.add_parser('dax', help='Translate DAX files to shadow format')
 
 
 	args = parser.parse_args()

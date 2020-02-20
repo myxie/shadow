@@ -1,0 +1,518 @@
+[
+  {
+    "oid": "1_-4_0/0",
+    "type": "plain",
+    "storage": "memory",
+    "loop_cxt": null,
+    "dw": 5,
+    "iid": "0/0",
+    "lg_key": -4,
+    "dt": "memory",
+    "nm": "Solved Model",
+    "producers": [
+      "1_-16_0/0"
+    ],
+    "consumers": [
+      "1_-9_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-4_0/1",
+    "type": "plain",
+    "storage": "memory",
+    "loop_cxt": null,
+    "dw": 5,
+    "iid": "0/1",
+    "lg_key": -4,
+    "dt": "memory",
+    "nm": "Solved Model",
+    "producers": [
+      "1_-16_0/1"
+    ],
+    "consumers": [
+      "1_-9_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-4_0/2",
+    "type": "plain",
+    "storage": "memory",
+    "loop_cxt": null,
+    "dw": 5,
+    "iid": "0/2",
+    "lg_key": -4,
+    "dt": "memory",
+    "nm": "Solved Model",
+    "producers": [
+      "1_-16_0/2"
+    ],
+    "consumers": [
+      "1_-9_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-4_0/3",
+    "type": "plain",
+    "storage": "memory",
+    "loop_cxt": null,
+    "dw": 5,
+    "iid": "0/3",
+    "lg_key": -4,
+    "dt": "memory",
+    "nm": "Solved Model",
+    "producers": [
+      "1_-16_0/3"
+    ],
+    "consumers": [
+      "1_-9_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-4_0/4",
+    "type": "plain",
+    "storage": "memory",
+    "loop_cxt": null,
+    "dw": 5,
+    "iid": "0/4",
+    "lg_key": -4,
+    "dt": "memory",
+    "nm": "Solved Model",
+    "producers": [
+      "1_-16_0/4"
+    ],
+    "consumers": [
+      "1_-9_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-4_0/5",
+    "type": "plain",
+    "storage": "memory",
+    "loop_cxt": null,
+    "dw": 5,
+    "iid": "0/5",
+    "lg_key": -4,
+    "dt": "memory",
+    "nm": "Solved Model",
+    "producers": [
+      "1_-16_0/5"
+    ],
+    "consumers": [
+      "1_-9_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-4_0/6",
+    "type": "plain",
+    "storage": "memory",
+    "loop_cxt": null,
+    "dw": 5,
+    "iid": "0/6",
+    "lg_key": -4,
+    "dt": "memory",
+    "nm": "Solved Model",
+    "producers": [
+      "1_-16_0/6"
+    ],
+    "consumers": [
+      "1_-9_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-4_0/7",
+    "type": "plain",
+    "storage": "memory",
+    "loop_cxt": null,
+    "dw": 5,
+    "iid": "0/7",
+    "lg_key": -4,
+    "dt": "memory",
+    "nm": "Solved Model",
+    "producers": [
+      "1_-16_0/7"
+    ],
+    "consumers": [
+      "1_-9_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-4_0/8",
+    "type": "plain",
+    "storage": "memory",
+    "loop_cxt": null,
+    "dw": 5,
+    "iid": "0/8",
+    "lg_key": -4,
+    "dt": "memory",
+    "nm": "Solved Model",
+    "producers": [
+      "1_-16_0/8"
+    ],
+    "consumers": [
+      "1_-9_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-4_0/9",
+    "type": "plain",
+    "storage": "memory",
+    "loop_cxt": null,
+    "dw": 5,
+    "iid": "0/9",
+    "lg_key": -4,
+    "dt": "memory",
+    "nm": "Solved Model",
+    "producers": [
+      "1_-16_0/9"
+    ],
+    "consumers": [
+      "1_-9_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-16_0/0",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0/0",
+    "lg_key": -16,
+    "dt": "DynlibApp",
+    "nm": "SolveNE",
+    "outputs": [
+      "1_-4_0/0"
+    ],
+    "inputs": [
+      "1_-10_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-16_0/1",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0/1",
+    "lg_key": -16,
+    "dt": "DynlibApp",
+    "nm": "SolveNE",
+    "outputs": [
+      "1_-4_0/1"
+    ],
+    "inputs": [
+      "1_-10_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-16_0/2",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0/2",
+    "lg_key": -16,
+    "dt": "DynlibApp",
+    "nm": "SolveNE",
+    "outputs": [
+      "1_-4_0/2"
+    ],
+    "inputs": [
+      "1_-10_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-16_0/3",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0/3",
+    "lg_key": -16,
+    "dt": "DynlibApp",
+    "nm": "SolveNE",
+    "outputs": [
+      "1_-4_0/3"
+    ],
+    "inputs": [
+      "1_-10_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-16_0/4",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0/4",
+    "lg_key": -16,
+    "dt": "DynlibApp",
+    "nm": "SolveNE",
+    "outputs": [
+      "1_-4_0/4"
+    ],
+    "inputs": [
+      "1_-10_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-16_0/5",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0/5",
+    "lg_key": -16,
+    "dt": "DynlibApp",
+    "nm": "SolveNE",
+    "outputs": [
+      "1_-4_0/5"
+    ],
+    "inputs": [
+      "1_-10_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-16_0/6",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0/6",
+    "lg_key": -16,
+    "dt": "DynlibApp",
+    "nm": "SolveNE",
+    "outputs": [
+      "1_-4_0/6"
+    ],
+    "inputs": [
+      "1_-10_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-16_0/7",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0/7",
+    "lg_key": -16,
+    "dt": "DynlibApp",
+    "nm": "SolveNE",
+    "outputs": [
+      "1_-4_0/7"
+    ],
+    "inputs": [
+      "1_-10_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-16_0/8",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0/8",
+    "lg_key": -16,
+    "dt": "DynlibApp",
+    "nm": "SolveNE",
+    "outputs": [
+      "1_-4_0/8"
+    ],
+    "inputs": [
+      "1_-10_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-16_0/9",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0/9",
+    "lg_key": -16,
+    "dt": "DynlibApp",
+    "nm": "SolveNE",
+    "outputs": [
+      "1_-4_0/9"
+    ],
+    "inputs": [
+      "1_-10_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-13_0",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0",
+    "lg_key": -13,
+    "dt": "DynlibApp",
+    "nm": "Load Visibilities",
+    "inputs": [
+      "1_-5_0"
+    ],
+    "outputs": [
+      "1_-10_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-5_0",
+    "type": "plain",
+    "storage": "file",
+    "loop_cxt": null,
+    "dw": 5,
+    "check_filepath_exists": true,
+    "iid": "0",
+    "lg_key": -5,
+    "dt": "file",
+    "nm": "Config",
+    "consumers": [
+      "1_-13_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-9_0",
+    "type": "app",
+    "app": "dlg.apps.dynlib.DynlibApp",
+    "loop_cxt": null,
+    "lib": "test/",
+    "tw": 5,
+    "iid": "0",
+    "lg_key": -9,
+    "dt": "DynlibApp",
+    "nm": "Spectral Imaging",
+    "inputs": [
+      "1_-4_0/0",
+      "1_-4_0/1",
+      "1_-4_0/2",
+      "1_-4_0/3",
+      "1_-4_0/4",
+      "1_-4_0/5",
+      "1_-4_0/6",
+      "1_-4_0/7",
+      "1_-4_0/8",
+      "1_-4_0/9"
+    ],
+    "outputs": [
+      "1_-8_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-8_0",
+    "type": "plain",
+    "storage": "file",
+    "loop_cxt": null,
+    "dw": 5,
+    "check_filepath_exists": true,
+    "iid": "0",
+    "lg_key": -8,
+    "dt": "file",
+    "nm": "Cube",
+    "producers": [
+      "1_-9_0"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-10_0",
+    "type": "plain",
+    "storage": "memory",
+    "loop_cxt": null,
+    "dw": 5,
+    "iid": "0",
+    "lg_key": -10,
+    "dt": "memory",
+    "nm": "Normals",
+    "producers": [
+      "1_-13_0"
+    ],
+    "consumers": [
+      "1_-16_0/0",
+      "1_-16_0/1",
+      "1_-16_0/2",
+      "1_-16_0/3",
+      "1_-16_0/4",
+      "1_-16_0/5",
+      "1_-16_0/6",
+      "1_-16_0/7",
+      "1_-16_0/8",
+      "1_-16_0/9"
+    ],
+    "node": "#0",
+    "island": "#0"
+  },
+  {
+    "oid": "1_-14_0",
+    "type": "app",
+    "app": "dlg.apps.simple.SleepApp",
+    "loop_cxt": null,
+    "sleepTime": 5,
+    "tw": 5,
+    "num_cpus": 1,
+    "iid": "0",
+    "lg_key": -14,
+    "dt": "Component",
+    "nm": "SolveNEScatter",
+    "node": "#0",
+    "island": "#0"
+  }
+]
