@@ -73,12 +73,28 @@ def build_dag(xml):
 	return building_dag
 
 
+def generate_shadow_json(nxdag, path):
+	"""
+	Takes the provided networkx graph
+	:param nxdag:
+	:param path:
+	:return:
+	"""
+	jgraph = {
+		"header": {
+			"time": False
+		},
+		'graph': nx.readwrite.node_link_data(nxdag)
+	}
+	with open(path, "w") as wfile:
+		json.dump(json_graph.node_link_data(finished_dag), wfile, indent=4)
+
 if __name__ == '__main__':
 	# reoves the unnecessary string (passed as parameter and outputs an edited file)
-	clean_xml('test/data/shadowgen/cybershake_30.xml', 'test/data/shadowgen/edit_cybershake_30.xml', 'xmlns',
-			  '<adag version="2.1" count="1" index="0" name="test" jobCount="25" fileCount="0" childCount="20">\n')
+	clean_xml('test/data/shadowgen/Epigenomics_24.xml', 'test/data/shadowgen/edit_Epigenomics_24.xml', 'xmlns',
+			'<adag version="2.1" count="1" index="0" name="test" jobCount="25" fileCount="0" childCount="20">\n')
 	# moves edited xml to the nx DiGraph object
-	finished_dag = build_dag('test/data/shadowgen/edit_cybershake_30.xml')
+	finished_dag = build_dag('test/data/shadowgen/edit_Epigenomics_24.xml')
+
 	# dumps the complete DAG from nx into json, now translated and ready for use
-	with open("test/data/shadowgen/translated_edited_cybershake_30.json", "w") as wfile:
-		dumped_graph = json.dump(json_graph.node_link_data(finished_dag), wfile, indent=4)
+	generate_shadow_json(finished_dag,"test/data/shadowgen/translated_edit_Epigenomics_24.json")

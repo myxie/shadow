@@ -30,8 +30,6 @@ class TestEnvironmentInit(unittest.TestCase):
 	def test_init(self):
 		self.assertTrue(self.env.has_comp)
 
-
-
 	def tearDown(self) -> None:
 		pass
 

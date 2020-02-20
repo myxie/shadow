@@ -37,6 +37,7 @@ UNIFORM_RANGE = 500
 MULTIPLIER = 1
 CCR = 0.5
 
+
 def edit_channels(graph_name, suffix, extension):
 	f = open(EAGLE_GRAPH, 'r')
 	jdict = json.load(f)
@@ -48,7 +49,6 @@ def edit_channels(graph_name, suffix, extension):
 	json.dump(jdict, f, indent=2)
 	f.close()
 	return ngraph
-
 
 def unroll_graph(graph):
 	if os.path.exists(graph):
@@ -127,7 +127,7 @@ def daliugeimport(graph,
 		for key, val in translate.items():
 			print(str(key) + ' :' + str(val))
 
-		translated_graph =  nx.DiGraph()
+		translated_graph = nx.DiGraph()
 		for key in translate:
 			translated_graph.add_node(translate[key])
 
