@@ -82,12 +82,12 @@ def generate_shadow_json(nxdag, path):
 	"""
 	jgraph = {
 		"header": {
-			"time": False
+			"time": True,
 		},
 		'graph': nx.readwrite.node_link_data(nxdag)
 	}
 	with open(path, "w") as wfile:
-		json.dump(json_graph.node_link_data(finished_dag), wfile, indent=4)
+		json.dump(jgraph, wfile, indent=2)
 
 if __name__ == '__main__':
 	# reoves the unnecessary string (passed as parameter and outputs an edited file)

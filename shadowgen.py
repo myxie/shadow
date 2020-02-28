@@ -13,14 +13,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import argparse
+import logging
+
 from utils.shadowgen.daliuge import unroll_graph, generate_dot_from_networkx_graph
 from utils.shadowgen.ggen import genjson, dotgen
+
 # from utils.shadowgen.dax import
-def run_daliuge_translator():
+
+logger = logging.getLogger(__name__)
+
+
+def run_daliuge_translator(arg):
+	print(arg)
+	if arg['nc']:
+		logger.info('Editing number of channels')
 	pass
 
-def ggen_generation():
+
+def ggen_generation(arg):
+	print(arg)
 	pass
+
+
+def dax_translator(arg):
+	print(arg)
+	pass
+
 
 if __name__ == '__main__':
 
@@ -36,25 +54,24 @@ if __name__ == '__main__':
 	# 	"metaheuristic": test.test_metaheuristic}
 
 	daliuge_parser = subparsers.add_parser('daliuge', help='Unroll and Translate DALiuGE Logical Graph')
-	daliuge_parser.add_argument('--all', action='store_true', help='Run all test')
-	daliuge_parser.add_argument('--case', nargs='+', choices=list([]), help='Run the following test cases')
-
+	# This is what we get get when we do func(vars(args)...
+	daliuge_parser.add_argument('lg', help='The logical graph that needs translating')
+	daliuge_parser.add_argument('--nc', help='Edit the number of channels')
+	daliuge_parser.add_argument('--log', help='Log-level for logger (default is warning)')
 	daliuge_parser.set_defaults(func=run_daliuge_translator)
 
 	ggen_parser = subparsers.add_parser('ggen', help=' Generate sample dataflow graphs using ggen')
 	ggen_parser.set_defaults(func=ggen_generation)
-	ggen_parser.add_argument('algorithm', help='Name of algorithm')
-	ggen_parser.add_argument('workflow', help='Location of workflow config')
-	ggen_parser.add_argument('environment', help='Location of the environment config')
 
-	# TODO DAX parser
 	dax_parser = subparsers.add_parser('dax', help='Translate DAX files to shadow format')
-
+	dax_parser.set_defaults(func=dax_translator)
 
 	args = parser.parse_args()
 	if not args.command:
 		parser.print_help()
-	if args.command == 'algorithm':
-		args.func(vars(args), ggen_parser)
-	if args.command == 'test':
-		args.func(vars(args),  daliuge_parser)
+	if args.command == 'daliuge':
+		args.func(vars(args))
+	if args.command == 'ggen':
+		args.func(vars(args))
+	if args.command == 'dax':
+		args.func(vars(args))

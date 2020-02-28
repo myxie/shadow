@@ -51,6 +51,8 @@ def dotgen(minx, maxx, increment):
 		if not os.path.exists(outfile):
 			subprocess.run(['ggen', '-o', '{0}'.format(outfile), DATAFLOW, GFORMAT, str(x)])
 
+def generate_image_from_dot(dotpath, pdfpath):
+	pass
 
 def genjson():
 	for path in sorted(os.listdir(CURR_DIR)):
