@@ -17,6 +17,8 @@
 import unittest
 import networkx as nx
 import os
+import logging
+
 
 from test import test_config as cfg
 from shadow.algorithms.heuristic import upward_rank, upward_oct_rank, \
@@ -24,7 +26,8 @@ from shadow.algorithms.heuristic import upward_rank, upward_oct_rank, \
 from shadow.classes.workflow import Workflow
 from shadow.classes.environment import Environment
 
-
+# CHANGE THIS TO GET DEBUG VALUES FROM LOGS
+logging.basicConfig(level='WARNING')
 # Tests for /algorithms/heuristic.py
 
 
@@ -50,13 +53,13 @@ class TestHeftMethods(unittest.TestCase):
 		sorted_tasks = sort_tasks(self.wf, 'rank')
 		json = nx.readwrite.json_graph.node_link_data(self.wf.graph)
 
-		print(json)
 		for node in sorted_tasks:
 			self.assertTrue(rank_values[node] == int(self.wf.graph.nodes[node]['rank']))
 
 	def test_schedule(self):
 		retval = heft(self.wf)
 		self.assertTrue(retval == 80)
+		self.wf.pretty_print_allocation()
 
 
 class TestHeftMethodCalcTime(unittest.TestCase):

@@ -22,6 +22,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from shadow.classes.environment import Environment
 
+# TODO clean up allocation and ranking;
+#  reduce direct access to the graph,
+#  instead, only interact with
+#  workflow tasks, not graph nodes
+
 
 class Workflow(object):
 	"""
@@ -75,11 +80,6 @@ class Workflow(object):
 
 		return 0
 
-	# TODO clean up allocation and ranking;
-	#  reduce direct access to the graph,
-	#  instead, only interact with
-	#  workflow tasks, not graph nodes
-
 	def add_rank(self, node, rank):
 		pass
 
@@ -87,6 +87,6 @@ class Workflow(object):
 		pass
 
 	def pretty_print_allocation(self):
-		pass
+		print(json.dumps(self.machine_alloc, indent=2))
 
 

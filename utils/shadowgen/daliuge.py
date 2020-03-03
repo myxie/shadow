@@ -40,7 +40,7 @@ def edit_channels(graph_name, suffix, extension):
 	jdict = json.load(f)
 	f.close()
 	# TODO make this less hard-coded?
-	jdict['nodeDataArray'][0]['fields'][0]['value'] = CHANNELS
+	jdict['nodeDataArra'][0]['fields'][0]['value'] = CHANNELS
 	ngraph = graph_name[:-6] + suffix + extension
 	f = open(ngraph, 'w')
 	json.dump(jdict, f, indent=2)

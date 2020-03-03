@@ -16,6 +16,9 @@
 import numpy as np
 import sys
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Environment(object):
@@ -39,6 +42,17 @@ class Environment(object):
 		self.rates = self.env['system']['rates']
 		if self.rates:
 			self.has_rates = True
+
+		logger.debug("Environment config:\n \
+					has_comp:{0}\n \
+					has_mem:{1}\n \
+					has_cost:{2}\n \
+					has_rates:{3}\n \
+					num_machines:{4}\n \
+					has_comp:{5}\n \
+					has_rates:{6}\n"
+		)
+
 
 	def _check_comp(self, res_dict):
 		"""

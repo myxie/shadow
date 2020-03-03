@@ -124,7 +124,7 @@ def rank_up(wf, task):
 	Ranks individual tasks and then allocates this final value to the attribute of the workflow graph
 
 	:param wf - Subject workflow
-	:param task -  A task node in an DAG that is being ranked
+	:param task -  A task task in an DAG that is being ranked
 	"""
 	longest_rank = 0
 	for successor in wf.graph.successors(task):
@@ -197,8 +197,8 @@ def ave_comm_cost(wf, task, successor):
 	the cost in the matrix. Not sure how the ave. in the
 	original paper was calculate or represented...
 
-	:params node: Starting node
-	:params successor: Node with which the starting node is communicating
+	:params task: Starting task
+	:params successor: Node with which the starting task is communicating
 	"""
 	# TODO sort out data rates in future release
 	# cost, zeros = 0, 0
@@ -235,21 +235,21 @@ def min_comp_cost(wf, task):
 	return min(comp)
 
 
-def calc_est(wf, node, processor_num, task_list):
+def calc_est(wf, task, machine):
 	"""
-	Calculate the Estimated Start Time of a node on a given processor
+	Calculate the Estimated Start Time of a task on a given processor
 	"""
 
 	est = 0
-	predecessors = wf.graph.predecessors(node)
+	predecessors = wf.graph.predecessors(task)
 	for pretask in predecessors:
 		if 'processor' not in wf.graph.nodes[pretask]:
 			wf.graph.nodes[pretask]['processor'] = None # Default to 0
 		# If task isn't on the same processor, there is a transfer cost
 		pre_processor = wf.graph.nodes[pretask]['processor']
-		# rate = wf.system['data_rate'][pre_processor][processor_num]
-		if pre_processor != processor_num:  # and rate > 0:
-			comm_cost = int(wf.graph.edges[pretask, node]['data_size'])  # / rate)
+		# rate = wf.system['data_rate'][pre_processor][machine]
+		if pre_processor != machine:  # and rate > 0:
+			comm_cost = int(wf.graph.edges[pretask, task]['data_size'])  # / rate)
 		else:
 			comm_cost = 0
 
@@ -262,15 +262,16 @@ def calc_est(wf, node, processor_num, task_list):
 		if tmp >= est:
 			est = tmp
 
-	machine_str = list(wf.machine_alloc.keys())[processor_num]
+	machine_str = list(wf.machine_alloc.keys())[machine]
 	processor = wf.machine_alloc[machine_str]
 	# Now we find the time it fits in on the processor
-	# processor = wf.machine_alloc[processor_num]  # return the list of allocated tasks
+	# processor = wf.machine_alloc[machine]  # return the list of allocated tasks
 	available_slots = []
+	prev = None
 	if len(processor) == 0:
 		return est  # Nothing in the time slots yet
 	else:
-		for x in range(len(processor)):
+		for x in processor:
 			# For each start/finish time tuple that exists in the processor
 			if x == 0:
 				if processor[0][2] != 0:  # If the start time of the first tuple is not 0
@@ -286,11 +287,11 @@ def calc_est(wf, node, processor_num, task_list):
 
 	for slot in available_slots:
 		if est < slot[0] and slot[0] + \
-				wf.graph.nodes[node]['comp'][processor_num] <= slot[1]:
+				wf.graph.nodes[task]['comp'][machine] <= slot[1]:
 			return slot[0]
 		if (est >= slot[0]) and \
 				(est +
-				 wf.graph.nodes[node]['comp'][processor_num] <= slot[1]):
+				 wf.graph.nodes[task]['comp'][machine] <= slot[1]):
 			return est
 		# At the 'end' of available slots
 		if (est >= slot[0]) and (slot[1] < 0):

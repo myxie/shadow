@@ -15,7 +15,7 @@
 import argparse
 import logging
 
-from utils.shadowgen.daliuge import unroll_graph, generate_dot_from_networkx_graph
+from utils.shadowgen.daliuge import edit_channels, unroll_graph, generate_dot_from_networkx_graph
 from utils.shadowgen.ggen import genjson, dotgen
 
 # from utils.shadowgen.dax import
@@ -24,10 +24,23 @@ logger = logging.getLogger(__name__)
 
 
 def run_daliuge_translator(arg):
-	print(arg)
+	logger.debug(arg)
+	graph_file = arg['lg'].split('.', maxsplit=1)[0]
 	if arg['nc']:
 		logger.info('Editing number of channels')
-	pass
+		channel_suffix = '_channels-{0}'.format(arg['nc'])
+		extension = 'graph'
+		edit_channels(
+			graph_name=graph_file,
+			suffix=channel_suffix,
+			extension=extension
+		)
+		unroll_graph(graph_file+channel_suffix+extension)
+		if arg['vis']:
+			generate_dot_from_networkx_graph(
+				graph_file+channel_suffix+extension,
+				graph_file+channel_suffix+'.dot'
+			)
 
 
 def ggen_generation(arg):
@@ -43,6 +56,7 @@ def dax_translator(arg):
 if __name__ == '__main__':
 
 	parser = argparse.ArgumentParser(description='ScHeduling Algorithms for Data-Intensive			 Workflows')
+	parser.add_argument('--log', help='Log-level for logger (default is 3 [Warning])')
 
 	subparsers = parser.add_subparsers(help='Command', dest='command')
 
@@ -57,7 +71,6 @@ if __name__ == '__main__':
 	# This is what we get get when we do func(vars(args)...
 	daliuge_parser.add_argument('lg', help='The logical graph that needs translating')
 	daliuge_parser.add_argument('--nc', help='Edit the number of channels')
-	daliuge_parser.add_argument('--log', help='Log-level for logger (default is warning)')
 	daliuge_parser.set_defaults(func=run_daliuge_translator)
 
 	ggen_parser = subparsers.add_parser('ggen', help=' Generate sample dataflow graphs using ggen')
@@ -69,6 +82,10 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 	if not args.command:
 		parser.print_help()
+	if args.log:
+		# Levels in logger are multiples of 10, so we multiply by 10 so people use the logical 1/2/3/4
+		loglevel = int(args.log) * 10
+		logging.basicConfig(level=loglevel)
 	if args.command == 'daliuge':
 		args.func(vars(args))
 	if args.command == 'ggen':
