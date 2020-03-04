@@ -16,9 +16,9 @@
 # Mosws.py is the entry point for running test and experiments from the command line
 
 
-import argparse, unittest
+import argparse, unittest, logging
 
-import test.test_workflow, test.test_heuristic 
+import test.test_workflow, test.test_heuristic
 from shadow.algorithms.heuristic import heft
 from shadow.classes.workflow import Workflow
 from shadow.classes.environment import Environment
@@ -49,6 +49,7 @@ def run_tests(arg, tests, curr_parser):
 	else:
 		curr_parser.print_help()
 
+
 def run_shadow():
 	"""
 	env = Environment(environment_config)
@@ -59,6 +60,7 @@ def run_shadow():
 	:return:
 	"""
 	pass
+
 
 def run_algorithm(arg, parser):
 	if arg['algorithm'] == 'heft':
@@ -71,15 +73,16 @@ def run_algorithm(arg, parser):
 
 
 # wf = Workflow(arg['graph'])
-		# calc_time = (arg['calc_time'] == 'True')
-		# wf.load_attributes(arg['attr'], calc_time)
-		# heft(wf)
-		# wf.pretty_print_allocation()
+# calc_time = (arg['calc_time'] == 'True')
+# wf.load_attributes(arg['attr'], calc_time)
+# heft(wf)
+# wf.pretty_print_allocation()
 
 
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='ScHeduling Algorithms for Data-Intensive			 Workflows')
+	parser.add_argument('--log', help='Log-level for logger (default is 3 [Warning])')
 
 	subparsers = parser.add_subparsers(help='Command', dest='command')
 
@@ -105,6 +108,10 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 	if not args.command:
 		parser.print_help()
+	if args.log:
+		# Levels in logger are multiples of 10, so we multiply by 10 so people use the logical 1/2/3/4
+		loglevel = int(args.log) * 10
+		logging.basicConfig(level=loglevel)
 	if args.command == 'algorithm':
 		args.func(vars(args), algorithm_parser)
 	if args.command == 'test':

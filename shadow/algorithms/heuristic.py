@@ -264,6 +264,8 @@ def calc_est(wf, task, machine):
 
 	machine_str = list(wf.machine_alloc.keys())[machine]
 	processor = wf.machine_alloc[machine_str]
+	# Structure of our processor allocation is
+	# [{id:, ast:, aft:},{id:, ast:, aft:}]
 	# Now we find the time it fits in on the processor
 	# processor = wf.machine_alloc[machine]  # return the list of allocated tasks
 	available_slots = []
@@ -271,16 +273,16 @@ def calc_est(wf, task, machine):
 	if len(processor) == 0:
 		return est  # Nothing in the time slots yet
 	else:
-		for x in processor:
+		for i in len(processor):
 			# For each start/finish time tuple that exists in the processor
-			if x == 0:
+			if processor[i]['id'] == 0:
 				if processor[0][2] != 0:  # If the start time of the first tuple is not 0
-					available_slots.append((0, processor[0][0]))  # add a 0-current_start time tuple
+					available_slots.append((0, processor[x]['ast']))  # add a 0-current_start time tuple
 				else:
 					continue
 			else:
 				# Append the finish time of the previous slot and the start time of this slot
-				available_slots.append((processor[x - 1][2], processor[x][1]))
+				available_slots.append((processor[x['id'] - 1]['aft'], processor[x['id']]['ast']))
 
 		# Add a very large number to the final time slot available, so we have a gap after
 		available_slots.append((processor[len(processor) - 1][2], -1))
@@ -321,17 +323,17 @@ def insertion_policy(wf):
 			wf.graph.nodes[task]['ast'] = 0
 			wf.graph.nodes[task]['aft'] = w
 			machine_str = list(wf.machine_alloc.keys())[p]
-			wf.machine_alloc[machine_str].append((
-				(task),
-				wf.graph.nodes[task]['ast'],
-				wf.graph.nodes[task]['aft']
-				))
+			wf.machine_alloc[machine_str].append({
+				"id":task,
+				"ast":wf.graph.nodes[task]['ast'],
+				"aft": wf.graph.nodes[task]['aft']
+				})
 		else:
 			aft = -1  # Finish time for the current task
 			p = 0
 			for processor in range(len(wf.machine_alloc)):
 				# tasks in self.rank_sort are being updated, not wf.graph;
-				est = calc_est(wf, task, processor, tasks)
+				est = calc_est(wf, task, processor)
 				if aft == -1:  # assign initial value of aft for this task
 					aft = est + wf.graph.nodes[task]['comp'][processor]
 					p = processor
@@ -367,12 +369,12 @@ def insertion_policy(wf):
 			if wf.graph.nodes[task]['aft'] >= makespan:
 				makespan = wf.graph.nodes[task]['aft']
 			machine_str = list(wf.machine_alloc.keys())[p]
-			wf.machine_alloc[machine_str].append((
-				(task),
-				wf.graph.nodes[task]['ast'],
-				wf.graph.nodes[task]['aft'],
-				))
-			wf.machine_alloc[machine_str].sort(key=lambda x: x[1])
+			wf.machine_alloc[machine_str].append({
+				"id":task,
+				"ast": wf.graph.nodes[task]['ast'],
+				"aft": wf.graph.nodes[task]['aft'],
+				})
+			wf.machine_alloc[machine_str].sort(key=lambda x: x['ast'])
 
 	wf.makespan = makespan
 	return makespan
@@ -416,7 +418,7 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 			min_oeft = -1
 			for processor in range(len(wf.machine_alloc)):
 				if wf.graph.predecessors(task):
-					est = calc_est(wf, task, processor, tasks)
+					est = calc_est(wf, task, processor)
 				else:
 					est = 0
 				eft = est + wf.graph.nodes[task]['comp'][processor]
