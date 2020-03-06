@@ -27,6 +27,7 @@ import networkx as nx
 import numpy as np
 from shadow.classes.workflow import Workflow
 
+RANDMAX = 1000
 
 #############################################################################
 ############################# HUERISTICS  ###################################
@@ -79,22 +80,22 @@ def upward_rank(wf):
 	then sorted according to the rank. Returns a sorted list of tasks in
 	order of rank.
 	"""
-	for task in sorted(list(wf.graph.nodes)):
+	for task in sorted(list(wf.tasks)):
 		rank_up(wf, task)
 
 
 def upward_oct_rank(wf, oct_rank_matrix):
 	for val in range(len(wf.machine_alloc)):
-		for node in sorted(list(wf.graph.nodes()), reverse=True):
+		for node in sorted(list(wf.tasks()), reverse=True):
 			rank_oct(wf, oct_rank_matrix, node, val)
 
-	for node in list(wf.graph.nodes()):
+	for node in list(wf.tasks()):
 		ave = 0
 		for (n, p) in oct_rank_matrix:
 			if n is node:
 				ave += oct_rank_matrix[(n, p)]
 
-		wf.graph.nodes[node]['rank'] = ave / len(wf.machine_alloc)
+		wf.tasks[node]['rank'] = ave / len(wf.machine_alloc)
 
 
 def sort_tasks(wf, sort_type):
@@ -106,8 +107,8 @@ def sort_tasks(wf, sort_type):
 	"""
 
 	if sort_type == 'rank':
-		return sorted(wf.graph.nodes, key=lambda x: \
-			wf.graph.nodes[x]['rank'], reverse=True)
+		return sorted(wf.tasks, key=lambda x: \
+			wf.tasks[x]['rank'], reverse=True)
 
 	if sort_type == 'topological':
 		return nx.topological_sort(wf)
@@ -133,10 +134,10 @@ def rank_up(wf, task):
 
 		longest_rank = max(
 			longest_rank, ave_comm_cost(wf, task, successor)
-						  + wf.graph.nodes[successor]['rank'])
+						+ wf.tasks[successor]['rank'])
 
 	ave_comp = ave_comp_cost(wf, task)
-	wf.graph.nodes[task]['rank'] = ave_comp + longest_rank
+	wf.tasks[task]['rank'] = ave_comp + longest_rank
 
 
 def rank_up_random(wf, task):
@@ -147,15 +148,15 @@ def rank_up_random(wf, task):
 
 	longest_rank = 0
 	for successor in wf.successors(task):
-		if 'rank' not in wf.graph.nodes[successor]:
+		if 'rank' not in wf.tasks[successor]:
 			# if we have not assigned a rank
 			rank_up(wf, successor)
 
 		longest_rank = max(
 			longest_rank, ave_comm_cost(wf, task, successor)
-						  + wf.graph.nodes[successor]['rank'])
+						+ wf.tasks[successor]['rank'])
 
-	randval = randint(0, 1000) % 3
+	randval = randint(0, RANDMAX) % 3
 	ave_comp = 0
 	if randval is 0:
 		ave_comp = ave_comp_cost(wf, task)
@@ -164,7 +165,7 @@ def rank_up_random(wf, task):
 	elif randval is 2:
 		ave_comp = max_comp_cost(wf, task)
 
-	wf.graph.nodes[task]['rank'] = ave_comp + longest_rank
+	wf.tasks[task]['rank'] = ave_comp + longest_rank
 
 
 def rank_oct(wf, oct_rank_matrix, node, pk):
@@ -180,7 +181,7 @@ def rank_oct(wf, oct_rank_matrix, node, pk):
 			if (successor, processor) not in oct_rank_matrix.keys():
 				rank_oct(wf, oct_rank_matrix, successor, processor)
 			comm_cost = 0
-			comp_cost = wf.graph.nodes[successor]['comp'][processor]
+			comp_cost = wf.tasks[successor]['comp'][processor]
 			if processor is not pk:
 				comm_cost = ave_comm_cost(wf, node, successor)
 			oct_val = oct_rank_matrix[(successor, processor)] + \
@@ -221,17 +222,17 @@ def ave_comm_cost(wf, task, successor):
 
 
 def ave_comp_cost(wf, task):
-	comp = wf.graph.nodes[task]['comp']
+	comp = wf.tasks[task]['comp']
 	return sum(comp) / len(comp)
 
 
 def max_comp_cost(wf, task):
-	comp = wf.graph.nodes[task]['comp']
+	comp = wf.tasks[task]['comp']
 	return max(comp)
 
 
 def min_comp_cost(wf, task):
-	comp = wf.graph.nodes[task]['comp']
+	comp = wf.tasks[task]['comp']
 	return min(comp)
 
 
@@ -243,10 +244,10 @@ def calc_est(wf, task, machine):
 	est = 0
 	predecessors = wf.graph.predecessors(task)
 	for pretask in predecessors:
-		if 'processor' not in wf.graph.nodes[pretask]:
-			wf.graph.nodes[pretask]['processor'] = None # Default to 0
+		if 'processor' not in wf.tasks[pretask]:
+			wf.tasks[pretask]['processor'] = None  # Default to 0
 		# If task isn't on the same processor, there is a transfer cost
-		pre_processor = wf.graph.nodes[pretask]['processor']
+		pre_processor = wf.tasks[pretask]['processor']
 		# rate = wf.system['data_rate'][pre_processor][machine]
 		if pre_processor != machine:  # and rate > 0:
 			comm_cost = int(wf.graph.edges[pretask, task]['data_size'])  # / rate)
@@ -257,43 +258,45 @@ def calc_est(wf, task, machine):
 		# need to use the tasks that are being updated to get the right results
 		# index = task_list.index(pretask)
 		# print(pretask)
-		aft = wf.graph.nodes[pretask]['aft']
+		aft = wf.tasks[pretask]['aft']
 		tmp = aft + comm_cost
 		if tmp >= est:
 			est = tmp
 
 	machine_str = list(wf.machine_alloc.keys())[machine]
-	processor = wf.machine_alloc[machine_str]
+	machine_allocs = wf.machine_alloc[machine_str]
 	# Structure of our processor allocation is
 	# [{id:, ast:, aft:},{id:, ast:, aft:}]
 	# Now we find the time it fits in on the processor
 	# processor = wf.machine_alloc[machine]  # return the list of allocated tasks
 	available_slots = []
 	prev = None
-	if len(processor) == 0:
+	if len(machine_allocs) == 0:
 		return est  # Nothing in the time slots yet
 	else:
-		for i in len(processor):
+		for i in range(len(machine_allocs)):
 			# For each start/finish time tuple that exists in the processor
-			if processor[i]['id'] == 0:
-				if processor[0][2] != 0:  # If the start time of the first tuple is not 0
-					available_slots.append((0, processor[x]['ast']))  # add a 0-current_start time tuple
+			if i == 0:
+				if machine_allocs[i]['ast'] != 0:  # If the start time of the first tuple is not 0
+					available_slots.append((0, machine_allocs[i]['ast']))  # add a 0-current_start time tuple
 				else:
 					continue
 			else:
-				# Append the finish time of the previous slot and the start time of this slot
-				available_slots.append((processor[x['id'] - 1]['aft'], processor[x['id']]['ast']))
+				# Append the finish time of the previous slot and the ostart time of this slot
+				prev_allocation = machine_allocs[i - 1]
+				available_slots.append((machine_allocs[i - 1]['aft'], machine_allocs[i]['ast']))
 
-		# Add a very large number to the final time slot available, so we have a gap after
-		available_slots.append((processor[len(processor) - 1][2], -1))
+		# Add a -1 to the final time slot available, so we have a 'gap' after
+		final_alloc = machine_allocs[len(machine_allocs) - 1]
+		available_slots.append((final_alloc['aft'], -1))
 
 	for slot in available_slots:
 		if est < slot[0] and slot[0] + \
-				wf.graph.nodes[task]['comp'][machine] <= slot[1]:
+				wf.tasks[task]['comp'][machine] <= slot[1]:
 			return slot[0]
 		if (est >= slot[0]) and \
 				(est +
-				 wf.graph.nodes[task]['comp'][machine] <= slot[1]):
+				 wf.tasks[task]['comp'][machine] <= slot[1]):
 			return est
 		# At the 'end' of available slots
 		if (est >= slot[0]) and (slot[1] < 0):
@@ -316,18 +319,18 @@ def insertion_policy(wf):
 	tasks = sort_tasks(wf, 'rank')
 	for task in tasks:
 		if task == tasks[0]:
-			w = min(wf.graph.nodes[task]['comp'])
-			p = list(wf.graph.nodes[task]['comp']).index(w)
+			w = min(wf.tasks[task]['comp'])
+			p = list(wf.tasks[task]['comp']).index(w)
 			# 'p' is the index of machine_alloc.keys() we want
-			wf.graph.nodes[task]['processor'] = p
-			wf.graph.nodes[task]['ast'] = 0
-			wf.graph.nodes[task]['aft'] = w
+			wf.tasks[task]['processor'] = p
+			wf.tasks[task]['ast'] = 0
+			wf.tasks[task]['aft'] = w
 			machine_str = list(wf.machine_alloc.keys())[p]
 			wf.machine_alloc[machine_str].append({
-				"id":task,
-				"ast":wf.graph.nodes[task]['ast'],
-				"aft": wf.graph.nodes[task]['aft']
-				})
+				"id": task,
+				"ast": wf.tasks[task]['ast'],
+				"aft": wf.tasks[task]['aft']
+			})
 		else:
 			aft = -1  # Finish time for the current task
 			p = 0
@@ -335,45 +338,25 @@ def insertion_policy(wf):
 				# tasks in self.rank_sort are being updated, not wf.graph;
 				est = calc_est(wf, task, processor)
 				if aft == -1:  # assign initial value of aft for this task
-					aft = est + wf.graph.nodes[task]['comp'][processor]
+					aft = est + wf.tasks[task]['comp'][processor]
 					p = processor
 				# see if the next processor gives us an earlier finish time
-				elif est + wf.graph.nodes[task]['comp'][processor] < aft:
-					aft = est + wf.graph.nodes[task]['comp'][processor]
+				elif est + wf.tasks[task]['comp'][processor] < aft:
+					aft = est + wf.tasks[task]['comp'][processor]
 					p = processor
 
-			wf.graph.nodes[task]['processor'] = p
-			wf.graph.nodes[task]['ast'] = aft - wf.graph.nodes[task]['comp'][p]
-			wf.graph.nodes[task]['aft'] = aft
+			wf.tasks[task]['processor'] = p
+			wf.tasks[task]['ast'] = aft - wf.tasks[task]['comp'][p]
+			wf.tasks[task]['aft'] = aft
 
-			# Calculate Throughput Temporarily removed
-			# for pred in wf.graph.predecessors(task):
-			# 	timeslot = (
-			# 		wf.graph.nodes[pred]['aft'],
-			# 		wf.graph.nodes[task]['aft'])
-			# 	load = wf.graph.edges[pred, task]['data_size']
-			# 	if len(wf.data_load) == 0:
-			# 		wf.data_load = np.zeros(timeslot[1])
-			# 		wf.data_load[timeslot[0]:timeslot[1]] = load
-			# 	elif len(wf.data_load) < timeslot[1]:
-			# 		diff = timeslot[1] - len(wf.data_load)
-			# 		newload = np.zeros(len(wf.data_load) + diff)
-			# 		newload[0:len(wf.data_load)] += wf.data_load
-			# 		newload[timeslot[0]:timeslot[1]] += load
-			# 		wf.data_load = np.zeros(len(newload))
-			# 		wf.data_load += newload  # saves us from using copy()
-			# 	else:
-			# 		wf.data_load[timeslot[0]:timeslot[1]] += load
-
-			# Makespan
-			if wf.graph.nodes[task]['aft'] >= makespan:
-				makespan = wf.graph.nodes[task]['aft']
+			if wf.tasks[task]['aft'] >= makespan:
+				makespan = wf.tasks[task]['aft']
 			machine_str = list(wf.machine_alloc.keys())[p]
 			wf.machine_alloc[machine_str].append({
-				"id":task,
-				"ast": wf.graph.nodes[task]['ast'],
-				"aft": wf.graph.nodes[task]['aft'],
-				})
+				"id": task,
+				"ast": wf.tasks[task]['ast'],
+				"aft": wf.tasks[task]['aft'],
+			})
 			wf.machine_alloc[machine_str].sort(key=lambda x: x['ast'])
 
 	wf.makespan = makespan
@@ -395,24 +378,24 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 	tasks = sort_tasks(wf, 'rank')
 	for task in tasks:
 		if task == tasks[0]:
-			wf.graph.nodes[task]['ast'] = 0
+			wf.tasks[task]['ast'] = 0
 			min_oeft = -1
 			for processor in range(len(wf.machine_alloc)):
-				eft_matrix[(task, processor)] = wf.graph.nodes[task]['comp'][processor]
+				eft_matrix[(task, processor)] = wf.tasks[task]['comp'][processor]
 				oeft_matrix[(task, processor)] = \
 					eft_matrix[(task, processor)] + oct_rank_matrix[(task, processor)]
 				if (min_oeft == -1) or \
 						(oeft_matrix[(task, processor)] < min_oeft):
 					min_oeft = oeft_matrix[(task, processor)]
 					p = processor
-			wf.graph.nodes[task]['aft'] = wf.graph.nodes[task]['comp'][p]
-			wf.graph.nodes[task]['processor'] = p
+			wf.tasks[task]['aft'] = wf.tasks[task]['comp'][p]
+			wf.tasks[task]['processor'] = p
 			machine_str = list(wf.machine_alloc.keys())[p]
-			wf.machine_alloc[machine_str].append((
-				(task),
-				wf.graph.nodes[task]['ast'],
-				wf.graph.nodes[task]['aft']
-				))
+			wf.machine_alloc[machine_str].append({
+				"id": task,
+				"ast": wf.tasks[task]['ast'],
+				"aft": wf.tasks[task]['aft'],
+			})
 
 		else:
 			min_oeft = -1
@@ -421,7 +404,7 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 					est = calc_est(wf, task, processor)
 				else:
 					est = 0
-				eft = est + wf.graph.nodes[task]['comp'][processor]
+				eft = est + wf.tasks[task]['comp'][processor]
 				eft_matrix[(task, processor)] = eft
 				oeft_matrix[(task, processor)] = \
 					eft_matrix[(task, processor)] + oct_rank_matrix[(task, processor)]
@@ -430,24 +413,24 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 					min_oeft = oeft_matrix[(task, processor)]
 					p = processor
 
-			wf.graph.nodes[task]['aft'] = eft_matrix[(task, p)]
+			wf.tasks[task]['aft'] = eft_matrix[(task, p)]
 
-			wf.graph.nodes[task]['ast'] = \
-				wf.graph.nodes[task]['aft'] \
-				- wf.graph.nodes[task]['comp'][p]
+			wf.tasks[task]['ast'] = \
+				wf.tasks[task]['aft'] \
+				- wf.tasks[task]['comp'][p]
 
-			wf.graph.nodes[task]['processor'] = p
+			wf.tasks[task]['processor'] = p
 
-			if wf.graph.nodes[task]['aft'] >= makespan:
-				makespan = wf.graph.nodes[task]['aft']
+			if wf.tasks[task]['aft'] >= makespan:
+				makespan = wf.tasks[task]['aft']
 
 			machine_str = list(wf.machine_alloc.keys())[p]
-			wf.machine_alloc[machine_str].append((
-				(task),
-				wf.graph.nodes[task]['ast'],
-				wf.graph.nodes[task]['aft']
-				))
-			wf.machine_alloc[machine_str].sort(key=lambda x: x[1])
+			wf.machine_alloc[machine_str].append({
+				"id": task,
+				"ast": wf.tasks[task]['ast'],
+				"aft": wf.tasks[task]['aft'],
+			})
+			wf.machine_alloc[machine_str].sort(key=lambda x: x['ast'])
 
 	wf.makespan = makespan
 	return makespan

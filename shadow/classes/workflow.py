@@ -41,10 +41,11 @@ class Workflow(object):
 		with open(wfdesc, 'r') as infile:
 			wfconfig = json.load(infile)
 		self.graph = nx.readwrite.json_graph.node_link_graph(wfconfig['graph'])
+		# Take advantage of how pipelines
+		self.tasks = self.graph.nodes
+		self.edges = self.graph.edges
 		self.env = None
 		self.machine_alloc = {}
-		self.machine_ids = {}
-		self.machine_id_map = {}
 		self.execution_order = []
 		# This lets us know when reading the graph if 'comp' attribute
 		# in the Networkx graph is time or FLOPs based
@@ -54,12 +55,11 @@ class Workflow(object):
 		self.env = environment
 		# Go through environment flags and check what processing we can do to the workflow
 		self.machine_alloc = {m: [] for m in self.env.machines.keys()}
-		self.machine_id_map = {i:m for i, m in enumerate(self.env.machines.keys())}
 		if self._time:
 			# Check the number of computation values stored for each node so they match the
 			# nunber of machines in the system config
-			for node in self.graph.nodes:
-				if len(self.graph.nodes[node]['comp']) is not self.env.num_machines:
+			for node in self.tasks:
+				if len(self.tasks[node]['comp']) is not self.env.num_machines:
 					return -1
 				# sys.exit("Number of machines defined in environment is"
 				# 	  "not equivalent to the number definited in the workflow graph")
@@ -70,12 +70,13 @@ class Workflow(object):
 			provided_flops = []
 			for m in self.env.machines:
 				provided_flops.append(self.env.machines[m]['flops'])
-			for node in self.graph.nodes:
+			for node in self.tasks:
 				n = self.env.num_machines
-				comp = self.graph.nodes[node]['comp']
-				self.graph.nodes[node]['flops'] = self.graph.nodes[node]['comp']
+				comp = self.tasks[node]['comp']
+				self.tasks[node]['flops'] = self.tasks[node]['comp']
 				base_comp_matrix = np.array([comp for x in range(n)])
-				self.graph.nodes[node]['comp'] = np.round(np.divide(base_comp_matrix, provided_flops)).astype(int)
+				runtime_array = np.round(np.divide(base_comp_matrix, provided_flops)).astype(int)
+				# self.tasks[node]['comp']
 			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
 
 		return 0
