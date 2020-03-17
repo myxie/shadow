@@ -309,7 +309,7 @@ def calc_est(wf, task, machine):
 
 	return est
 
-
+more test
 def insertion_policy(wf):
 	"""
 	Allocate tasks to machines following the insertion based policy outline
