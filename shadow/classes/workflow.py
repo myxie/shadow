@@ -73,13 +73,13 @@ class Workflow(object):
 			for node in self.tasks:
 				n = self.env.num_machines
 				comp = self.tasks[node]['comp']
-				self.tasks[node]['flops'] = self.tasks[node]['comp']
 				base_comp_matrix = np.array([comp for x in range(n)])
-				runtime_array = np.round(np.divide(base_comp_matrix, provided_flops)).astype(int)
+				self.tasks[node]['comp'] = np.round(np.divide(base_comp_matrix, provided_flops)).astype(int)
+			
 				# self.tasks[node]['comp']
 			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
 
-		return 0
+		return 
 
 	def add_rank(self, node, rank):
 		pass

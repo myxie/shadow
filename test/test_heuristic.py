@@ -75,7 +75,7 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 
 	def test_schedule(self):
 		retval = heft(self.wf)
-		print(self.wf.machine_alloc)
+		(self.wf.pretty_print_allocation())
 		self.assertTrue(retval == 98)
 
 @unittest.SkipTest
