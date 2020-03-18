@@ -22,23 +22,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 from shadow.classes.environment import Environment
 
+
 # TODO clean up allocation and ranking;
-#  reduce direct access to the graph,
+#  reduce direct  to the graph,
 #  instead, only interact with
-#  workflow tasks, not graph nodes
+#  workflow tasks, naccessot graph nodes
 
 
 class Workflow(object):
 	"""
 	Workflow class acts as a wrapper for all things associated with a task
-	workflow. A workflow object is a struct to keep associated data
-	together.
+	workflow
+
+	:param config: JSON formatted file that stores the structural \
+	information of the underlying workflow graph. See utils.shadowgen for more \
+	information on producing shadow-compatible JSON files.
 	"""
 
-	def __init__(self, wfdesc):
+	def __init__(self, config):
 		"""
 		"""
-		with open(wfdesc, 'r') as infile:
+		with open(config, 'r') as infile:
 			wfconfig = json.load(infile)
 		self.graph = nx.readwrite.json_graph.node_link_graph(wfconfig['graph'])
 		# Take advantage of how pipelines
@@ -51,7 +55,19 @@ class Workflow(object):
 		# in the Networkx graph is time or FLOPs based
 		self._time = wfconfig['header']['time']
 
+	class Task(object):
+		"""
+		Task class designed to reduce the reliance on dictionary access in the workflow class
+		"""
+		def __init__(self, tid):
+			pass
+
 	def add_environment(self, environment):
+		"""
+		:param environment: An environment object using the Environment class. \
+		This should be created first, then added to the Workflow.
+		:return: Non-negative return value inidcates success.
+		"""
 		self.env = environment
 		# Go through environment flags and check what processing we can do to the workflow
 		self.machine_alloc = {m: [] for m in self.env.machines.keys()}
@@ -61,33 +77,60 @@ class Workflow(object):
 			for node in self.tasks:
 				if len(self.tasks[node]['comp']) is not self.env.num_machines:
 					return -1
-				# sys.exit("Number of machines defined in environment is"
-				# 	  "not equivalent to the number definited in the workflow graph")
-				else:
-					return 0
+				if 'calculated_runtime' not in self.tasks[node]:
+					self.tasks[node]['calculated_runtime'] = {}
+				machines = self.env.machines.keys()
+				runtime_list = self.tasks[node]['comp']
+				self.tasks[node]['calculated_runtime'] = dict(zip(machines, runtime_list))
+			# sys.exit("Number of machines defined in environment is"
+			# 	  "not equivalent to the number definited in the workflow graph")
+			return 0
 		if self.env.has_comp:
 			# Use compute provided by system values to calculate the time taken
 			provided_flops = []
 			for m in self.env.machines:
-				provided_flops.append(self.env.machines[m]['flops'])
-			for node in self.tasks:
-				n = self.env.num_machines
-				comp = self.tasks[node]['comp']
-				self.tasks[node]['flops'] = self.tasks[node]['comp']
-				base_comp_matrix = np.array([comp for x in range(n)])
-				runtime_array = np.round(np.divide(base_comp_matrix, provided_flops)).astype(int)
-				# self.tasks[node]['comp']
+				for node in self.tasks:
+					if 'calculated_runtime' not in self.tasks[node]:
+						self.tasks[node]['calculated_runtime'] = {}
+					comp = self.tasks[node]['comp']
+					self.tasks[node]['calculated_runtime'][m] = int(comp / self.env.machines[m]['flops'])
+			# self.tasks[node]['comp']
 			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
 
-		return 0
+			return 0
 
-	def add_rank(self, node, rank):
-		pass
+	def calc_ave_runtime(self, task):
+		runtime = self.tasks[task]['calculated_runtime'].values()
+		return sum(runtime)/len(runtime)
+
+	def update_task_rank(self, task, rank):
+		self.tasks[task]['rank'] = rank
 
 	def allocate_task(self, task, machine_id):
 		pass
 
+	pass
+
+
+	def sort_tasks(self, sort_type):
+		"""
+		Sorts task in a task wf based on a specified sort_type
+
+		:params task_wf - Wf that has tasks to be sorted
+		:params sort_type - How we sort the tasks (topological, task rank etc.)
+		"""
+
+		if sort_type == 'rank':
+			return sorted(self.tasks, key=lambda x: \
+				self.tasks[x]['rank'], reverse=True)
+
+		if sort_type == 'topological':
+			return nx.topological_sort(self)
+		else:
+			return None
+
 	def pretty_print_allocation(self):
 		print(json.dumps(self.machine_alloc, indent=2))
+
 
 

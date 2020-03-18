@@ -19,7 +19,6 @@ workflow scheduling heuristics and metaheuristics, as well as tool in which
 algorithm developers may test and benchmark their own efforts. 
 
 .. toctree::
-    :hidden:
 
     example
     configuration
@@ -30,9 +29,10 @@ algorithm developers may test and benchmark their own efforts.
 .. * :ref:`modindex`
 .. * :ref:`search`
 
-	example
-	model
-	configuration
-	algorithms
-	workflowgen
-	zroadmap
+      example
+      model
+      configuration
+      algorithms
+      classes
+      workflowgen
+      zroadmap

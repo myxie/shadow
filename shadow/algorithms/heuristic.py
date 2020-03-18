@@ -85,17 +85,19 @@ def upward_rank(wf):
 
 
 def upward_oct_rank(wf, oct_rank_matrix):
-	for val in range(len(wf.machine_alloc)):
+	for val in range(len(wf.env.machines)):
 		for node in sorted(list(wf.tasks()), reverse=True):
 			rank_oct(wf, oct_rank_matrix, node, val)
 
-	for node in list(wf.tasks()):
+	for task in wf.tasks:
 		ave = 0
-		for (n, p) in oct_rank_matrix:
-			if n is node:
-				ave += oct_rank_matrix[(n, p)]
+		for (t, p) in oct_rank_matrix:
+			if t is task:
+				ave += oct_rank_matrix[(t, p)]
 
-		wf.tasks[node]['rank'] = ave / len(wf.machine_alloc)
+		rank = ave / len(wf.env.machines)
+		wf.update_task_rank(task, rank)
+		# wf.tasks[node]['rank'] = ave / len(wf.machine_alloc)
 
 
 def sort_tasks(wf, sort_type):
@@ -136,8 +138,8 @@ def rank_up(wf, task):
 			longest_rank, ave_comm_cost(wf, task, successor)
 						+ wf.tasks[successor]['rank'])
 
-	ave_comp = ave_comp_cost(wf, task)
-	wf.tasks[task]['rank'] = ave_comp + longest_rank
+	rank = wf.calc_ave_runtime(task) + longest_rank
+	wf.update_task_rank(task, rank)
 
 
 def rank_up_random(wf, task):
@@ -224,6 +226,7 @@ def ave_comm_cost(wf, task, successor):
 def ave_comp_cost(wf, task):
 	comp = wf.tasks[task]['comp']
 	return sum(comp) / len(comp)
+
 
 
 def max_comp_cost(wf, task):

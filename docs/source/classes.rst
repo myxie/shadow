@@ -2,5 +2,5 @@
 Classes
 ========
 
-.. autoclass:: classes.workflow.Workflow
-	:members:
+.. autoclass:: shadow.classes.workflow.Workflow
+.. autoclass:: shadow.classes.environment.Environment
