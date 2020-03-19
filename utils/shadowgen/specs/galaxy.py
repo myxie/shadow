@@ -20,7 +20,7 @@ https://www.microway.com/knowledge-center-articles/detailed-specifications-intel
 Based on the above link, the Galaxy Ivy Bridge has 8FLOPs/Cycle
 """
 
-from constants import SI
+from utils.constants import SI
 
 
 class XeonIvyBridge:

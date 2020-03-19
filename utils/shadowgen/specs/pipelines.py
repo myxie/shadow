@@ -18,7 +18,7 @@ Parametric model results as derived in the Parametric model presented in
 SKA-TEL-SDP-0000013
 """
 
-from constants import SI
+from utils.constants import SI
 
 class PulsarSearch:
 	search_parameters = {

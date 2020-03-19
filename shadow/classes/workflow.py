@@ -19,7 +19,6 @@ import sys
 
 import networkx as nx
 import numpy as np
-import matplotlib.pyplot as plt
 from shadow.classes.environment import Environment
 
 
@@ -27,6 +26,56 @@ from shadow.classes.environment import Environment
 #  reduce direct  to the graph,
 #  instead, only interact with
 #  workflow tasks, naccessot graph nodes
+
+class Task(object):
+	"""
+	Helper class for the
+	"""
+
+	def __init__(self, tid, flops):
+		self.tid = int(tid)  # task id - this is unique
+		self.rank = -1  # This is updated during the 'Task Prioritisation' phase
+
+		# Resource usage
+		self.flops_demand = 0  # Will use the constants
+		# Following is {machine name, value} dictionary pairs
+		self.calculated_runtime = {}
+		self.calculated_io = {}
+		self.calculated_memory = {}
+
+		# allocations
+		self.machine = None
+		self.ast = 0  # actual start time
+		self.aft = 0  # actual finish time
+
+	def __repr__(self):
+		return str(self.tid)
+
+	# Node must be hashable for use with networkx
+	def __hash__(self):
+		return hash(self.tid)
+
+	def __eq__(self, task):
+		if isinstance(task, self.__class__):
+			return self.tid == task.tid
+
+	def __lt__(self, task):
+		if isinstance(task, self.__class__):
+			return self.tid < task.tid
+
+	def __le__(self, task):
+		if isinstance(task, self.__class__):
+			return self.tid <= task.tid
+
+	def calc_ave_runtime(self, task):
+		return sum(self.calculated_runtime)/len(self.calculated_runtime)
+
+	def update_task_rank(self, task, rank):
+		self.rank = rank
+
+	def allocate_task(self, machine_id):
+		self.machine = machine_id
+		pass
 
 
 class Workflow(object):
@@ -37,6 +86,8 @@ class Workflow(object):
 	:param config: JSON formatted file that stores the structural \
 	information of the underlying workflow graph. See utils.shadowgen for more \
 	information on producing shadow-compatible JSON files.
+
+	The workflow includes
 	"""
 
 	def __init__(self, config):
@@ -46,6 +97,11 @@ class Workflow(object):
 			wfconfig = json.load(infile)
 		self.graph = nx.readwrite.json_graph.node_link_graph(wfconfig['graph'])
 		# Take advantage of how pipelines
+		mapping = {}
+		for node in self.graph.nodes:
+			t = Task(node, self.graph.nodes[node]['comp'])
+			mapping[node] = t
+		nx.relabel_nodes(self.graph, mapping, copy=False)
 		self.tasks = self.graph.nodes
 		self.edges = self.graph.edges
 		self.env = None
@@ -54,13 +110,6 @@ class Workflow(object):
 		# This lets us know when reading the graph if 'comp' attribute
 		# in the Networkx graph is time or FLOPs based
 		self._time = wfconfig['header']['time']
-
-	class Task(object):
-		"""
-		Task class designed to reduce the reliance on dictionary access in the workflow class
-		"""
-		def __init__(self, tid):
-			pass
 
 	def add_environment(self, environment):
 		"""
@@ -74,14 +123,14 @@ class Workflow(object):
 		if self._time:
 			# Check the number of computation values stored for each node so they match the
 			# nunber of machines in the system config
-			for node in self.tasks:
-				if len(self.tasks[node]['comp']) is not self.env.num_machines:
+			for task in self.tasks:
+				if len(self.tasks[task]['comp']) is not self.env.num_machines:
 					return -1
-				if 'calculated_runtime' not in self.tasks[node]:
-					self.tasks[node]['calculated_runtime'] = {}
+				if 'calculated_runtime' not in self.tasks[task]:
+					self.tasks[task]['calculated_runtime'] = {}
 				machines = self.env.machines.keys()
-				runtime_list = self.tasks[node]['comp']
-				self.tasks[node]['calculated_runtime'] = dict(zip(machines, runtime_list))
+				runtime_list = self.tasks[task]['comp']
+				self.tasks[task]['calculated_runtime'] = dict(zip(machines, runtime_list))
 			# sys.exit("Number of machines defined in environment is"
 			# 	  "not equivalent to the number definited in the workflow graph")
 			return 0
@@ -89,28 +138,17 @@ class Workflow(object):
 			# Use compute provided by system values to calculate the time taken
 			provided_flops = []
 			for m in self.env.machines:
-				for node in self.tasks:
-					if 'calculated_runtime' not in self.tasks[node]:
-						self.tasks[node]['calculated_runtime'] = {}
-					comp = self.tasks[node]['comp']
-					self.tasks[node]['calculated_runtime'][m] = int(comp / self.env.machines[m]['flops'])
+				for task in self.tasks:
+					if 'calculated_runtime' not in self.tasks[task]:
+						self.tasks[task]['calculated_runtime'] = {}
+					comp = self.tasks[task]['comp']
+					self.tasks[task]['calculated_runtime'][m] = int(comp / self.env.machines[m]['flops'])
 			# self.tasks[node]['comp']
 			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
 
 			return 0
 
-	def calc_ave_runtime(self, task):
-		runtime = self.tasks[task]['calculated_runtime'].values()
-		return sum(runtime)/len(runtime)
-
-	def update_task_rank(self, task, rank):
-		self.tasks[task]['rank'] = rank
-
-	def allocate_task(self, task, machine_id):
-		pass
-
 	pass
-
 
 	def sort_tasks(self, sort_type):
 		"""
@@ -131,6 +169,3 @@ class Workflow(object):
 
 	def pretty_print_allocation(self):
 		print(json.dumps(self.machine_alloc, indent=2))
-
-
-

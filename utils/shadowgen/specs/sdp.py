@@ -18,7 +18,7 @@ Contains the specifications and details for the SDP hardware outlined in SKA­TE
 https://www.microway.com/knowledge-center-articles/detailed-specifications-intel-xeon-e5-2600v3-haswell-ep-processors/
 Based on the above link, the Galaxy Ivy Bridge has 8FLOPs/Cycle
 """
-from constants import SI
+from utils.constants import SI
 
 SKALOW_nodes = 896
 SKAMID_nodes = 786

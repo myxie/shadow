@@ -24,6 +24,7 @@ algorithms. Currently, this file implements the following algorithms:
 """
 from random import randint
 import networkx as nx
+import operator
 import numpy as np
 from shadow.classes.workflow import Workflow
 
@@ -97,7 +98,7 @@ def upward_oct_rank(wf, oct_rank_matrix):
 
 		rank = ave / len(wf.env.machines)
 		wf.update_task_rank(task, rank)
-		# wf.tasks[node]['rank'] = ave / len(wf.machine_alloc)
+		# wf.tasks[task]['rank'] = ave / len(wf.machine_alloc)
 
 
 def sort_tasks(wf, sort_type):
@@ -138,7 +139,7 @@ def rank_up(wf, task):
 			longest_rank, ave_comm_cost(wf, task, successor)
 						+ wf.tasks[successor]['rank'])
 
-	rank = wf.calc_ave_runtime(task) + longest_rank
+	rank = task.calculated_runtime + longest_rank
 	wf.update_task_rank(task, rank)
 
 
@@ -170,28 +171,28 @@ def rank_up_random(wf, task):
 	wf.tasks[task]['rank'] = ave_comp + longest_rank
 
 
-def rank_oct(wf, oct_rank_matrix, node, pk):
+def rank_oct(wf, oct_rank_matrix, task, pk):
 	"""
 	Optimistic cost table ranking heuristic outlined in
 	Arabnejad and Barbos (2014)
 	"""
 	max_successor = 0
-	for successor in wf.graph.successors(node):
-		min_processor = 1000
-		for processor in range(0, len(wf.machine_alloc)):
+	for successor in wf.graph.successors(task):
+		min_machine = 1000
+		for machine in range(0, len(wf.machine_alloc)):
 			oct_val = 0
-			if (successor, processor) not in oct_rank_matrix.keys():
-				rank_oct(wf, oct_rank_matrix, successor, processor)
+			if (successor, machine) not in oct_rank_matrix.keys():
+				rank_oct(wf, oct_rank_matrix, successor, machine)
 			comm_cost = 0
-			comp_cost = wf.tasks[successor]['comp'][processor]
-			if processor is not pk:
-				comm_cost = ave_comm_cost(wf, node, successor)
-			oct_val = oct_rank_matrix[(successor, processor)] + \
+			comp_cost = wf.tasks[successor]['comp'][machine]
+			if machine is not pk:
+				comm_cost = ave_comm_cost(wf, task, successor)
+			oct_val = oct_rank_matrix[(successor, machine)] + \
 					  comp_cost + comm_cost
-			min_processor = min(min_processor, oct_val)
-		max_successor = max(max_successor, min_processor)
+			min_machine = min(min_machine, oct_val)
+		max_successor = max(max_successor, min_machine)
 
-	oct_rank_matrix[(node, pk)] = max_successor
+	oct_rank_matrix[(task, pk)] = max_successor
 
 
 def ave_comm_cost(wf, task, successor):
@@ -226,7 +227,6 @@ def ave_comm_cost(wf, task, successor):
 def ave_comp_cost(wf, task):
 	comp = wf.tasks[task]['comp']
 	return sum(comp) / len(comp)
-
 
 
 def max_comp_cost(wf, task):
@@ -322,14 +322,16 @@ def insertion_policy(wf):
 	tasks = sort_tasks(wf, 'rank')
 	for task in tasks:
 		if task == tasks[0]:
-			w = min(wf.tasks[task]['comp'])
-			p = list(wf.tasks[task]['comp']).index(w)
+			m,w = min(wf.tasks[task]['calculated_runtime'].items(),
+				key=operator.itemgetter(1)
+			)
+			# w = min(wf.tasks[task]['comp'])
+			# p = list(wf.tasks[task]['comp']).index(w)
 			# 'p' is the index of machine_alloc.keys() we want
-			wf.tasks[task]['processor'] = p
+			wf.tasks[task]['processor'] = m
 			wf.tasks[task]['ast'] = 0
 			wf.tasks[task]['aft'] = w
-			machine_str = list(wf.machine_alloc.keys())[p]
-			wf.machine_alloc[machine_str].append({
+			wf.machine_alloc[m].append({
 				"id": task,
 				"ast": wf.tasks[task]['ast'],
 				"aft": wf.tasks[task]['aft']
@@ -337,7 +339,7 @@ def insertion_policy(wf):
 		else:
 			aft = -1  # Finish time for the current task
 			p = 0
-			for processor in range(len(wf.machine_alloc)):
+			for processor in wf.env.machines:
 				# tasks in self.rank_sort are being updated, not wf.graph;
 				est = calc_est(wf, task, processor)
 				if aft == -1:  # assign initial value of aft for this task

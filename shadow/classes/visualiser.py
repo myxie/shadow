@@ -15,10 +15,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import figure
-from matplotlib import colors
-from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
-							   AutoMinorLocator)
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter, AutoMinorLocator)
 
 # figure(num=None,figsize=(10,100))
 
@@ -28,8 +25,8 @@ x_axis_max_len = 105
 p1 = [(29, 42, '1'), (60, 81, '7'), (84, 98, '9')]
 p2 = [(22, 40, '4')]
 p3 = [(0, 11, '0'), (11, 21, '3'), (21, 30, '2'), (30, 45, '5'), (45, 55, '6'), (58, 71, '8')]
+fig, ax = plt.subplots(3, sharex='row', sharey='col', gridspec_kw={'hspace': 0})
 procs = [p1, p2, p3]
-fig, ax = matplotlib.pyplot.subplots(3, sharex='row', sharey='col', gridspec_kw={'hspace': 0})
 data = np.zeros((105, 3)).transpose()
 count = 0
 # print(data[count])
@@ -86,7 +83,7 @@ ax[2].set_yticks(np.arange(0, 0))
 ax[2].set_aspect('auto')
 ax[0].set(ylabel='machine2')
 
-matplotlib.pyplot.show()
+plt.show()
 
 
 class AllocationPlots(object):
