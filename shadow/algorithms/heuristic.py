@@ -185,13 +185,13 @@ def rank_oct(wf, oct_rank_matrix, node, pk):
 			if processor is not pk:
 				comm_cost = ave_comm_cost(wf, node, successor)
 			oct_val = oct_rank_matrix[(successor, processor)] + \
-					  comp_cost + comm_cost
+					comp_cost + comm_cost
 			min_processor = min(min_processor, oct_val)
 		max_successor = max(max_successor, min_processor)
 
 	oct_rank_matrix[(node, pk)] = max_successor
 
-
+this is an credits()
 def ave_comm_cost(wf, task, successor):
 	"""
 	Returns the 'average' communication cost, which is just
@@ -328,8 +328,8 @@ def insertion_policy(wf):
 			machine_str = list(wf.machine_alloc.keys())[p]
 			wf.machine_alloc[machine_str].append({
 				"id": task,
-				"ast": wf.tasks[task]['ast'],
-				"aft": wf.tasks[task]['aft']
+				"ast": int(wf.tasks[task]['ast']),
+				"aft": int(wf.tasks[task]['aft'])
 			})
 		else:
 			aft = -1  # Finish time for the current task
@@ -354,8 +354,8 @@ def insertion_policy(wf):
 			machine_str = list(wf.machine_alloc.keys())[p]
 			wf.machine_alloc[machine_str].append({
 				"id": task,
-				"ast": wf.tasks[task]['ast'],
-				"aft": wf.tasks[task]['aft'],
+				"ast": int(wf.tasks[task]['ast']),
+				"aft": int(wf.tasks[task]['aft']),
 			})
 			wf.machine_alloc[machine_str].sort(key=lambda x: x['ast'])
 
