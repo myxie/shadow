@@ -4,7 +4,7 @@ Algorithms
 
 Testing the Algorithms module
 
-.. automodule:: algorithms.heuristic
+.. automodule:: shadow.algorithms.heuristic
 
-.. autofunction:: algorithms.heuristic.heft
+.. autofunction:: shadow.algorithms.heuristic.heft
 
