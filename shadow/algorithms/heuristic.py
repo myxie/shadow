@@ -30,6 +30,7 @@ from shadow.classes.workflow import Workflow
 
 RANDMAX = 1000
 
+
 #############################################################################
 ############################# HUERISTICS  ###################################
 #############################################################################
@@ -43,7 +44,7 @@ def heft(workflow):
 	:returns: The makespan of the resulting schedule
 	"""
 	upward_rank(workflow)
-	workflow.execution_order = sort_tasks(workflow, 'rank')
+	workflow.sort_tasks('rank')
 	makespan = insertion_policy(workflow)
 	return makespan
 
@@ -86,7 +87,7 @@ def upward_rank(wf):
 
 
 def upward_oct_rank(wf, oct_rank_matrix):
-	for val in range(len(wf.env.machines)):
+	for val in wf.env.machines:
 		for node in sorted(list(wf.tasks()), reverse=True):
 			rank_oct(wf, oct_rank_matrix, node, val)
 
@@ -96,27 +97,8 @@ def upward_oct_rank(wf, oct_rank_matrix):
 			if t is task:
 				ave += oct_rank_matrix[(t, p)]
 
-		rank = ave / len(wf.env.machines)
-		wf.update_task_rank(task, rank)
-		# wf.tasks[task]['rank'] = ave / len(wf.machine_alloc)
-
-
-def sort_tasks(wf, sort_type):
-	"""
-	Sorts task in a task wf based on a specified sort_type
-
-	:params task_wf - Wf that has tasks to be sorted
-	:params sort_type - How we sort the tasks (topological, task rank etc.)
-	"""
-
-	if sort_type == 'rank':
-		return sorted(wf.tasks, key=lambda x: \
-			wf.tasks[x]['rank'], reverse=True)
-
-	if sort_type == 'topological':
-		return nx.topological_sort(wf)
-	else:
-		return None
+		rank = int(ave / len(wf.env.machines))
+		task.rank = rank
 
 
 def rank_up(wf, task):
@@ -125,22 +107,23 @@ def rank_up(wf, task):
 	Closely modelled off 'cal_up_rank' function at:
 	https://github.com/oyld/heft/blob/master/src/heft.py
 
-	Ranks individual tasks and then allocates this final value to the attribute of the workflow graph
+	Ranks individual tasks and then allocates this final value
+	to the attribute of the workflow graph
 
 	:param wf - Subject workflow
 	:param task -  A task task in an DAG that is being ranked
 	"""
 	longest_rank = 0
 	for successor in wf.graph.successors(task):
-		if 'rank' not in wf.graph[successor]:  # if we have not assigned a rank
+		if successor.rank == -1:  # if we have not assigned a rank
 			rank_up(wf, successor)
 
 		longest_rank = max(
 			longest_rank, ave_comm_cost(wf, task, successor)
-						+ wf.tasks[successor]['rank'])
+			+ successor.rank
+		)
 
-	rank = task.calculated_runtime + longest_rank
-	wf.update_task_rank(task, rank)
+	task.rank = task.calc_ave_runtime() + longest_rank
 
 
 def rank_up_random(wf, task):
@@ -179,16 +162,16 @@ def rank_oct(wf, oct_rank_matrix, task, pk):
 	max_successor = 0
 	for successor in wf.graph.successors(task):
 		min_machine = 1000
-		for machine in range(0, len(wf.machine_alloc)):
+		for machine in wf.machine_alloc:
 			oct_val = 0
 			if (successor, machine) not in oct_rank_matrix.keys():
 				rank_oct(wf, oct_rank_matrix, successor, machine)
 			comm_cost = 0
-			comp_cost = wf.tasks[successor]['comp'][machine]
+			comp_cost = successor.calculated_runtime[machine]
 			if machine is not pk:
 				comm_cost = ave_comm_cost(wf, task, successor)
 			oct_val = oct_rank_matrix[(successor, machine)] + \
-					  comp_cost + comm_cost
+					comp_cost + comm_cost
 			min_machine = min(min_machine, oct_val)
 		max_successor = max(max_successor, min_machine)
 
@@ -247,37 +230,34 @@ def calc_est(wf, task, machine):
 	est = 0
 	predecessors = wf.graph.predecessors(task)
 	for pretask in predecessors:
-		if 'processor' not in wf.tasks[pretask]:
-			wf.tasks[pretask]['processor'] = None  # Default to 0
 		# If task isn't on the same processor, there is a transfer cost
-		pre_processor = wf.tasks[pretask]['processor']
+		pre_machine = pretask.machine
 		# rate = wf.system['data_rate'][pre_processor][machine]
-		if pre_processor != machine:  # and rate > 0:
+		if pre_machine != machine:  # and rate > 0:
 			comm_cost = int(wf.graph.edges[pretask, task]['data_size'])  # / rate)
 		else:
 			comm_cost = 0
 
 		# wf.graph.predecessors is not being updated in insertion_policy;
 		# need to use the tasks that are being updated to get the right results
-		# index = task_list.index(pretask)
-		# print(pretask)
-		aft = wf.tasks[pretask]['aft']
+		aft = pretask.aft
 		tmp = aft + comm_cost
 		if tmp >= est:
 			est = tmp
 
-	machine_str = list(wf.machine_alloc.keys())[machine]
+	machine_str = machine
 	machine_allocs = wf.machine_alloc[machine_str]
 	# Structure of our processor allocation is
 	# [{id:, ast:, aft:},{id:, ast:, aft:}]
 	# Now we find the time it fits in on the processor
 	# processor = wf.machine_alloc[machine]  # return the list of allocated tasks
+	wf.machine_alloc[machine_str].sort(key=lambda x: x['ast'])
 	available_slots = []
 	prev = None
 	if len(machine_allocs) == 0:
 		return est  # Nothing in the time slots yet
 	else:
-		for i in range(len(machine_allocs)):
+		for i, m in enumerate(machine_allocs):
 			# For each start/finish time tuple that exists in the processor
 			if i == 0:
 				if machine_allocs[i]['ast'] != 0:  # If the start time of the first tuple is not 0
@@ -295,11 +275,9 @@ def calc_est(wf, task, machine):
 
 	for slot in available_slots:
 		if est < slot[0] and slot[0] + \
-				wf.tasks[task]['comp'][machine] <= slot[1]:
+				task.calculated_runtime[machine] <= slot[1]:
 			return slot[0]
-		if (est >= slot[0]) and \
-				(est +
-				 wf.tasks[task]['comp'][machine] <= slot[1]):
+		if (est >= slot[0]) and est + task.calculated_runtime[machine] <= slot[1]:
 			return est
 		# At the 'end' of available slots
 		if (est >= slot[0]) and (slot[1] < 0):
@@ -319,48 +297,49 @@ def insertion_policy(wf):
 	in Tocuoglu et al.(2002)
 	"""
 	makespan = 0
-	tasks = sort_tasks(wf, 'rank')
-	for task in tasks:
-		if task == tasks[0]:
-			m,w = min(wf.tasks[task]['calculated_runtime'].items(),
+	# tasks = sort_tasks(wf, 'rank')
+	sorted_tasks = wf.sort_tasks('rank')
+	# tmp = wf.tasks
+	for task in sorted_tasks:
+		# Treat the first task differently, as it's the easiest to get the lowest cost
+		if task == list(wf.tasks)[0]:  # Convert networkx NodeView to list
+			m, w = min(
+				task.calculated_runtime.items(),
 				key=operator.itemgetter(1)
 			)
-			# w = min(wf.tasks[task]['comp'])
-			# p = list(wf.tasks[task]['comp']).index(w)
-			# 'p' is the index of machine_alloc.keys() we want
-			wf.tasks[task]['processor'] = m
-			wf.tasks[task]['ast'] = 0
-			wf.tasks[task]['aft'] = w
+			task.machine = m
+			task.ast = 0
+			task.aft = w
 			wf.machine_alloc[m].append({
-				"id": task,
-				"ast": wf.tasks[task]['ast'],
-				"aft": wf.tasks[task]['aft']
+				"id": task.tid,
+				"ast": task.ast,
+				"aft": task.aft
 			})
 		else:
 			aft = -1  # Finish time for the current task
-			p = 0
-			for processor in wf.env.machines:
+			m = 0
+			for machine in wf.env.machines:
 				# tasks in self.rank_sort are being updated, not wf.graph;
-				est = calc_est(wf, task, processor)
+				est = calc_est(wf, task, machine)
 				if aft == -1:  # assign initial value of aft for this task
-					aft = est + wf.tasks[task]['comp'][processor]
-					p = processor
+					aft = est + task.calculated_runtime[machine]
+					m = machine
 				# see if the next processor gives us an earlier finish time
-				elif est + wf.tasks[task]['comp'][processor] < aft:
-					aft = est + wf.tasks[task]['comp'][processor]
-					p = processor
+				elif est + task.calculated_runtime[machine] < aft:
+					aft = est + task.calculated_runtime[machine]
+					m = machine
 
-			wf.tasks[task]['processor'] = p
-			wf.tasks[task]['ast'] = aft - wf.tasks[task]['comp'][p]
-			wf.tasks[task]['aft'] = aft
+			task.machine = m
+			task.ast = aft - task.calculated_runtime[m]
+			task.aft = aft
 
-			if wf.tasks[task]['aft'] >= makespan:
-				makespan = wf.tasks[task]['aft']
-			machine_str = list(wf.machine_alloc.keys())[p]
+			if task.ast >= makespan:
+				makespan = task.aft
+			machine_str = m
 			wf.machine_alloc[machine_str].append({
-				"id": task,
-				"ast": wf.tasks[task]['ast'],
-				"aft": wf.tasks[task]['aft'],
+				"id": task.tid,
+				"ast": task.ast,
+				"aft": task.aft,
 			})
 			wf.machine_alloc[machine_str].sort(key=lambda x: x['ast'])
 
@@ -379,61 +358,61 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 		upward_oct_rank(wf, oct_rank_matrix)
 	eft_matrix = dict()
 	oeft_matrix = dict()
-	p = 0
-	tasks = sort_tasks(wf, 'rank')
-	for task in tasks:
-		if task == tasks[0]:
-			wf.tasks[task]['ast'] = 0
+	m = None
+	sorted_tasks = wf.sort_tasks('rank')
+	for task in sorted_tasks:
+		if task == list(wf.tasks)[0]:
+			task.ast = 0
 			min_oeft = -1
-			for processor in range(len(wf.machine_alloc)):
-				eft_matrix[(task, processor)] = wf.tasks[task]['comp'][processor]
-				oeft_matrix[(task, processor)] = \
-					eft_matrix[(task, processor)] + oct_rank_matrix[(task, processor)]
+			for machine in wf.machine_alloc:
+				eft_matrix[(task, machine)] = task.calculated_runtime[machine] 
+				oeft_matrix[(task, machine)] = \
+					eft_matrix[(task, machine)] + oct_rank_matrix[(task, machine)]
 				if (min_oeft == -1) or \
-						(oeft_matrix[(task, processor)] < min_oeft):
-					min_oeft = oeft_matrix[(task, processor)]
-					p = processor
-			wf.tasks[task]['aft'] = wf.tasks[task]['comp'][p]
-			wf.tasks[task]['processor'] = p
-			machine_str = list(wf.machine_alloc.keys())[p]
+						(oeft_matrix[(task, machine)] < min_oeft):
+					min_oeft = oeft_matrix[(task, machine)]
+					m = machine
+			task.aft = task.calculated_runtime[m]
+			task.machine = m
+			machine_str = m
 			wf.machine_alloc[machine_str].append({
-				"id": task,
-				"ast": wf.tasks[task]['ast'],
-				"aft": wf.tasks[task]['aft'],
+				"id": task.tid,
+				"ast": task.ast,
+				"aft": task.aft,
 			})
 
 		else:
 			min_oeft = -1
-			for processor in range(len(wf.machine_alloc)):
+			for machine in wf.machine_alloc:
 				if wf.graph.predecessors(task):
-					est = calc_est(wf, task, processor)
+					est = calc_est(wf, task, machine)
 				else:
 					est = 0
-				eft = est + wf.tasks[task]['comp'][processor]
-				eft_matrix[(task, processor)] = eft
-				oeft_matrix[(task, processor)] = \
-					eft_matrix[(task, processor)] + oct_rank_matrix[(task, processor)]
+				eft = est + task.calculated_runtime[machine]
+				eft_matrix[(task, machine)] = eft
+				oeft_matrix[(task, machine)] = \
+					eft_matrix[(task, machine)] + oct_rank_matrix[(task, machine)]
 				if (min_oeft == -1) or \
-						(oeft_matrix[(task, processor)] < min_oeft):
-					min_oeft = oeft_matrix[(task, processor)]
-					p = processor
+						(oeft_matrix[(task, machine)] < min_oeft):
+					min_oeft = oeft_matrix[(task, machine)]
+					m = machine
 
-			wf.tasks[task]['aft'] = eft_matrix[(task, p)]
+			task.aft = eft_matrix[(task, m)]
 
-			wf.tasks[task]['ast'] = \
-				wf.tasks[task]['aft'] \
-				- wf.tasks[task]['comp'][p]
+			task.ast = \
+				task.aft \
+				- task.calculated_runtime[m]
 
-			wf.tasks[task]['processor'] = p
+			task.machine = m
 
-			if wf.tasks[task]['aft'] >= makespan:
-				makespan = wf.tasks[task]['aft']
+			if task.aft >= makespan:
+				makespan = task.aft
 
-			machine_str = list(wf.machine_alloc.keys())[p]
+			machine_str = m
 			wf.machine_alloc[machine_str].append({
-				"id": task,
-				"ast": wf.tasks[task]['ast'],
-				"aft": wf.tasks[task]['aft'],
+				"id": task.tid,
+				"ast": task.ast,
+				"aft": task.aft,
 			})
 			wf.machine_alloc[machine_str].sort(key=lambda x: x['ast'])
 

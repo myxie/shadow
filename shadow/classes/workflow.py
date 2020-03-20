@@ -33,11 +33,11 @@ class Task(object):
 	"""
 
 	def __init__(self, tid, flops):
-		self.tid = int(tid)  # task id - this is unique
+		self.tid = tid  # task id - this is unique
 		self.rank = -1  # This is updated during the 'Task Prioritisation' phase
 
 		# Resource usage
-		self.flops_demand = 0  # Will use the constants
+		self.flops_demand = flops  # Will use the constants
 		# Following is {machine name, value} dictionary pairs
 		self.calculated_runtime = {}
 		self.calculated_io = {}
@@ -50,7 +50,7 @@ class Task(object):
 
 	def __repr__(self):
 		return str(self.tid)
-
+	#
 	# Node must be hashable for use with networkx
 	def __hash__(self):
 		return hash(self.tid)
@@ -67,10 +67,10 @@ class Task(object):
 		if isinstance(task, self.__class__):
 			return self.tid <= task.tid
 
-	def calc_ave_runtime(self, task):
-		return sum(self.calculated_runtime)/len(self.calculated_runtime)
+	def calc_ave_runtime(self):
+		return sum(self.calculated_runtime.values()) / len(self.calculated_runtime)
 
-	def update_task_rank(self, task, rank):
+	def update_task_rank(self, rank):
 		self.rank = rank
 
 	def allocate_task(self, machine_id):
@@ -101,7 +101,7 @@ class Workflow(object):
 		for node in self.graph.nodes:
 			t = Task(node, self.graph.nodes[node]['comp'])
 			mapping[node] = t
-		nx.relabel_nodes(self.graph, mapping, copy=False)
+		self.graph = nx.relabel_nodes(self.graph, mapping, copy=False)
 		self.tasks = self.graph.nodes
 		self.edges = self.graph.edges
 		self.env = None
@@ -126,11 +126,11 @@ class Workflow(object):
 			for task in self.tasks:
 				if len(self.tasks[task]['comp']) is not self.env.num_machines:
 					return -1
-				if 'calculated_runtime' not in self.tasks[task]:
-					self.tasks[task]['calculated_runtime'] = {}
+				# if 'calculated_runtime' not in self.tasks[task]:
+				# 	self.tasks[task]['calculated_runtime'] = {}
 				machines = self.env.machines.keys()
 				runtime_list = self.tasks[task]['comp']
-				self.tasks[task]['calculated_runtime'] = dict(zip(machines, runtime_list))
+				task.calculated_runtime = dict(zip(machines, runtime_list))
 			# sys.exit("Number of machines defined in environment is"
 			# 	  "not equivalent to the number definited in the workflow graph")
 			return 0
@@ -139,10 +139,10 @@ class Workflow(object):
 			provided_flops = []
 			for m in self.env.machines:
 				for task in self.tasks:
-					if 'calculated_runtime' not in self.tasks[task]:
-						self.tasks[task]['calculated_runtime'] = {}
-					comp = self.tasks[task]['comp']
-					self.tasks[task]['calculated_runtime'][m] = int(comp / self.env.machines[m]['flops'])
+					# if 'calculated_runtime' not in self.tasks[task]:
+					# 	self.tasks[task]['calculated_runtime'] = {}
+					comp = task.flops_demand
+					task.calculated_runtime[m] = int(np.round(comp / self.env.machines[m]['flops']))
 			# self.tasks[node]['comp']
 			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
 
@@ -160,7 +160,7 @@ class Workflow(object):
 
 		if sort_type == 'rank':
 			return sorted(self.tasks, key=lambda x: \
-				self.tasks[x]['rank'], reverse=True)
+				x.rank, reverse=True)
 
 		if sort_type == 'topological':
 			return nx.topological_sort(self)
