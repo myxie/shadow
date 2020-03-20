@@ -177,7 +177,6 @@ def rank_oct(wf, oct_rank_matrix, task, pk):
 
 	oct_rank_matrix[(task, pk)] = max_successor
 
-this is an credits()
 def ave_comm_cost(wf, task, successor):
 	"""
 	Returns the 'average' communication cost, which is just
@@ -290,7 +289,6 @@ def calc_est(wf, task, machine):
 
 	return est
 
-more test
 def insertion_policy(wf):
 	"""
 	Allocate tasks to machines following the insertion based policy outline
