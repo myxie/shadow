@@ -1,0 +1,245 @@
+{
+  "header": {
+    "time": true
+  },
+  "graph": {
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+      {
+        "comp": 103.52,
+        "id": "ID00000"
+      },
+      {
+        "comp": 7.01,
+        "id": "ID00001"
+      },
+      {
+        "comp": 8.23,
+        "id": "ID00002"
+      },
+      {
+        "comp": 8.15,
+        "id": "ID00003"
+      },
+      {
+        "comp": 9.25,
+        "id": "ID00004"
+      },
+      {
+        "comp": 11.89,
+        "id": "ID00005"
+      },
+      {
+        "comp": 2.36,
+        "id": "ID00006"
+      },
+      {
+        "comp": 3.54,
+        "id": "ID00007"
+      },
+      {
+        "comp": 3.26,
+        "id": "ID00008"
+      },
+      {
+        "comp": 3.06,
+        "id": "ID00009"
+      },
+      {
+        "comp": 5.02,
+        "id": "ID00010"
+      },
+      {
+        "comp": 4.25,
+        "id": "ID00011"
+      },
+      {
+        "comp": 5.91,
+        "id": "ID00012"
+      },
+      {
+        "comp": 4.03,
+        "id": "ID00013"
+      },
+      {
+        "comp": 4.72,
+        "id": "ID00014"
+      },
+      {
+        "comp": 5.16,
+        "id": "ID00015"
+      },
+      {
+        "comp": 2830.54,
+        "id": "ID00016"
+      },
+      {
+        "comp": 3196.4,
+        "id": "ID00017"
+      },
+      {
+        "comp": 2425.31,
+        "id": "ID00018"
+      },
+      {
+        "comp": 3623.08,
+        "id": "ID00019"
+      },
+      {
+        "comp": 4062.96,
+        "id": "ID00020"
+      },
+      {
+        "comp": 17.23,
+        "id": "ID00021"
+      },
+      {
+        "comp": 0.05,
+        "id": "ID00022"
+      },
+      {
+        "comp": 1375.22,
+        "id": "ID00023"
+      }
+    ],
+    "links": [
+      {
+        "size": 85534312.0,
+        "source": "ID00000",
+        "target": "ID00001"
+      },
+      {
+        "size": 98262176.0,
+        "source": "ID00000",
+        "target": "ID00002"
+      },
+      {
+        "size": 80623179.0,
+        "source": "ID00000",
+        "target": "ID00003"
+      },
+      {
+        "size": 98592518.0,
+        "source": "ID00000",
+        "target": "ID00004"
+      },
+      {
+        "size": 83847170.0,
+        "source": "ID00000",
+        "target": "ID00005"
+      },
+      {
+        "size": 44066037.0,
+        "source": "ID00001",
+        "target": "ID00006"
+      },
+      {
+        "size": 48142335.0,
+        "source": "ID00002",
+        "target": "ID00007"
+      },
+      {
+        "size": 38553524.0,
+        "source": "ID00003",
+        "target": "ID00008"
+      },
+      {
+        "size": 47435716.0,
+        "source": "ID00004",
+        "target": "ID00009"
+      },
+      {
+        "size": 43314524.0,
+        "source": "ID00005",
+        "target": "ID00010"
+      },
+      {
+        "size": 24613282.0,
+        "source": "ID00006",
+        "target": "ID00011"
+      },
+      {
+        "size": 44753970.0,
+        "source": "ID00007",
+        "target": "ID00012"
+      },
+      {
+        "size": 24969343.0,
+        "source": "ID00008",
+        "target": "ID00013"
+      },
+      {
+        "size": 36701822.0,
+        "source": "ID00009",
+        "target": "ID00014"
+      },
+      {
+        "size": 37310027.0,
+        "source": "ID00010",
+        "target": "ID00015"
+      },
+      {
+        "size": 6918721.0,
+        "source": "ID00011",
+        "target": "ID00016"
+      },
+      {
+        "size": 10323313.0,
+        "source": "ID00012",
+        "target": "ID00017"
+      },
+      {
+        "size": 5956867.0,
+        "source": "ID00013",
+        "target": "ID00018"
+      },
+      {
+        "size": 9015905.0,
+        "source": "ID00014",
+        "target": "ID00019"
+      },
+      {
+        "size": 9039432.0,
+        "source": "ID00015",
+        "target": "ID00020"
+      },
+      {
+        "size": 7520348.0,
+        "source": "ID00016",
+        "target": "ID00021"
+      },
+      {
+        "size": 11220992.0,
+        "source": "ID00017",
+        "target": "ID00021"
+      },
+      {
+        "size": 6474855.0,
+        "source": "ID00018",
+        "target": "ID00021"
+      },
+      {
+        "size": 9799896.0,
+        "source": "ID00019",
+        "target": "ID00021"
+      },
+      {
+        "size": 9825469.0,
+        "source": "ID00020",
+        "target": "ID00021"
+      },
+      {
+        "size": 42303358.0,
+        "source": "ID00021",
+        "target": "ID00022"
+      },
+      {
+        "size": 641552.0,
+        "source": "ID00022",
+        "target": "ID00023"
+      }
+    ]
+  }
+}
