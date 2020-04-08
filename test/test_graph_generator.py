@@ -24,7 +24,7 @@ from utils.graph_generator import random_wcost_matrix, \
 	random_ccost_matrix, \
 	generate_cost_matrices
 
-from test import test_config as cfg
+from test import config as cfg
 
 
 class TestMatrixGenerator(unittest.TestCase):

@@ -179,7 +179,19 @@ def mutation(soln):
 	return None
 
 
-def crowding_distance():
+def crowding_distance(solutions):
+	"""
+	For a given list of solutions, calculated the distance between the two closest solutions
+	for a given dimension; that is, the next highest and next lowest solution for that dimension.
+	:return:
+	"""
+	popsize = len(solutions)
+
+	crowding_distance= []
+
+	# Scores need to be normalised to the highest/lowest
+	normalise_scores = None
+
 	return None
 
 

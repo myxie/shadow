@@ -23,10 +23,7 @@ algorithms. Currently, this file implements the following algorithms:
 * PHEFT 
 """
 from random import randint
-import networkx as nx
 import operator
-import numpy as np
-from shadow.classes.workflow import Workflow
 
 RANDMAX = 1000
 
@@ -288,6 +285,7 @@ def calc_est(wf, task, machine):
 			return slot[0]
 
 	return est
+
 
 def insertion_policy(wf):
 	"""

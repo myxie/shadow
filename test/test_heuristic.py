@@ -19,7 +19,7 @@ import networkx as nx
 import os
 import logging
 
-from test import test_config as cfg
+from test import config as cfg
 from shadow.algorithms.heuristic import upward_rank, upward_oct_rank, \
 	heft, pheft
 from shadow.classes.workflow import Workflow

@@ -16,52 +16,51 @@
 
 import unittest
 
-from test import test_config as cfg
-from shadow.algorithms.metaheuristic import generate_population,\
-                                     generate_allocations,\
-                                     non_dom_sort
-
-
+from test import config as cfg
+from shadow.algorithms.metaheuristic import generate_population, \
+	generate_allocations, \
+	non_dom_sort
 
 from shadow.classes.workflow import Workflow
 
+
 class TestPopulationGeneration(unittest.TestCase):
-    """
-    Tests how we generate solutions for NSGAII and SPEAII
-    """ 
+	"""
+	Tests how we generate solutions for NSGAII and SPEAII
+	"""
 
-    def setUp(self):
-        self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'])
-        self.wf.load_attributes(cfg.test_heuristic_data['heft_attr'],calc_time=False)
+	def setUp(self):
+		self.wf = Workflow(cfg.test_heuristic_data['topcuoglu_graph'])
+		self.wf.load_attributes(cfg.test_heuristic_data['heft_attr'], calc_time=False)
 
-    def test_pop_gen(self):
-        seed = 10
-        a= generate_population(self.wf,10,seed,2)
-        # for x in a: 
-        #     print(x.task_order)
-        b= generate_population(self.wf,10,seed,2)
+	def test_pop_gen(self):
+		seed = 10
+		a = generate_population(self.wf, 10, seed, 2)
+		# for x in a:
+		#     print(x.task_order)
+		b = generate_population(self.wf, 10, seed, 2)
 
-        self.assertTrue(a==a)
-        seed = 47
+		self.assertTrue(a == a)
+		seed = 47
 
-        b= generate_population(self.wf,10,seed,2)
-        self.assertFalse(a==b)
+		b = generate_population(self.wf, 10, seed, 2)
+		self.assertFalse(a == b)
 
-        # for soln in a: 
-        #     print(soln.task_assign)
+		# for soln in a:
+		#     print(soln.task_assign)
 
-    def test_allocation(self):
-        seed = 10
-        a = generate_allocations(self.wf.graph.number_of_nodes(),10, 4,seed)
-        # print(a)  
-        # a = generate_allocations(self.wf.graph.number_of_nodes(),10, 4,seed)
-        # print(a)
+	def test_allocation(self):
+		seed = 10
+		a = generate_allocations(self.wf.graph.number_of_nodes(), 10, 4, seed)
+		# print(a)
+		# a = generate_allocations(self.wf.graph.number_of_nodes(),10, 4,seed)
+		# print(a)
 
-    def test_nondomsort(self):
-        seed = 10
-        pop = generate_population(self.wf,10,seed,2)
-        objectives = []
-        # print(pop)
-        non_dom_sort(pop,objectives)
-        for p in pop: 
-            print(p.nondom_rank)
+	def test_nondomsort(self):
+		seed = 10
+		pop = generate_population(self.wf, 10, seed, 2)
+		objectives = []
+		# print(pop)
+		non_dom_sort(pop, objectives)
+		for p in pop:
+			print(p.nondom_rank)

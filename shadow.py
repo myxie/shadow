@@ -16,7 +16,9 @@
 # Mosws.py is the entry point for running test and experiments from the command line
 
 
-import argparse, unittest, logging
+import argparse
+import unittest
+import logging
 
 import test.test_workflow, test.test_heuristic
 from shadow.algorithms.heuristic import heft

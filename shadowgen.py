@@ -15,10 +15,8 @@
 import argparse
 import logging
 
-from utils.shadowgen.daliuge import edit_channels, unroll_graph, generate_dot_from_networkx_graph
-from utils.shadowgen.ggen import genjson, dotgen
+from utils.shadowgen import daligue as dlg
 
-# from utils.shadowgen.dax import
 
 logger = logging.getLogger(__name__)
 
@@ -30,14 +28,14 @@ def run_daliuge_translator(arg):
 		logger.info('Editing number of channels')
 		channel_suffix = '_channels-{0}'.format(arg['nc'])
 		extension = 'graph'
-		edit_channels(
+		dlg.edit_channels(
 			graph_name=graph_file,
 			suffix=channel_suffix,
 			extension=extension
 		)
-		unroll_graph(graph_file+channel_suffix+extension)
+		dlg.unroll_graph(graph_file+channel_suffix+extension)
 		if arg['vis']:
-			generate_dot_from_networkx_graph(
+			dlg.generate_dot_from_networkx_graph(
 				graph_file+channel_suffix+extension,
 				graph_file+channel_suffix+'.dot'
 			)

@@ -64,9 +64,11 @@ def generate_dot_from_networkx_graph(graph, output):
 	if os.path.exists(graph):
 		dot_path = "{0}.dot".format(output)
 		nx.drawing.nx_pydot.write_dot(graph, dot_path)
-		cmd_list = ['graphviz',
-					'-Tpdf',
-					'{0}.dot'.format(output)]
+		cmd_list = [
+			'graphviz',
+			'-Tpdf',
+			'{0}.dot'.format(output)
+			]
 
 		dot_pdf = "{0}.pdf".format(output)
 		with open(dot_pdf, 'w') as f:

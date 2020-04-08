@@ -14,13 +14,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import subprocess
 import os
-import json
-import sys
 import datetime
-import networkx as nx
-from shadowgen_config import CURR_DIR, JSON_DIR, DOTS_DIR
+# from shadowgen_config import CURR_DIR, JSON_DIR, DOTS_DIR
 from generator import generate_graph_costs, generate_system_machines
-import random
 EAGLE_GRAPH = 'daliuge_graphs/TestAskapCont.graph'
 CHANNELS = 10
 SEED = 20
@@ -31,6 +27,7 @@ CCR = 0.5
 GGEN_OUTFILE = 'ggen_out'
 DATAFLOW = 'dataflow-graph'
 GFORMAT = 'denselu'
+
 
 def dotgen(minx, maxx, increment):
 	print("Using Ggen graph generating library")
@@ -51,8 +48,16 @@ def dotgen(minx, maxx, increment):
 		if not os.path.exists(outfile):
 			subprocess.run(['ggen', '-o', '{0}'.format(outfile), DATAFLOW, GFORMAT, str(x)])
 
+
 def generate_image_from_dot(dotpath, pdfpath):
+	"""
+	graphviz converts a .dot file to a pdf - run this code.
+	:param dotpath:
+	:param pdfpath:
+	:return:
+	"""
 	pass
+
 
 def genjson():
 	for path in sorted(os.listdir(CURR_DIR)):
