@@ -48,8 +48,8 @@ class Task(object):
 		self.ast = 0  # actual start time
 		self.aft = 0  # actual finish time
 
-	def __repr__(self):
-		return str(self.tid)
+	# def __repr__(self):
+	# 	return str(self.tid)
 	#
 	# Node must be hashable for use with networkx
 	def __hash__(self):
@@ -106,8 +106,6 @@ class Workflow(object):
 		self.edges = self.graph.edges
 		self.env = None
 		self.solution = None # Solution is dependent on an environment
-		self.machine_alloc = {}
-		self.execution_order = []
 		# This lets us know when reading the graph if 'comp' attribute
 		# in the Networkx graph is time or FLOPs based
 		self._time = wfconfig['header']['time']

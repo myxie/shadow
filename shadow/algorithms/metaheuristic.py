@@ -23,7 +23,7 @@ import networkx as nx
 import itertools
 import random
 
-from shadow.classes.solution import Solution
+# from shadow.classes.solution import Solution, Allocation
 
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
@@ -42,6 +42,7 @@ while(termination condition not satisfied)
 The two differ on evaluation and selection strategy
 """
 
+SKIP_RAND_BOUNDS = 1000
 
 def nsga2(wf, seed, generations=100, popsize=100):
 	"""
@@ -74,7 +75,19 @@ def nsga2(wf, seed, generations=100, popsize=100):
 	# Create a random parent population P size N
 	n = popsize
 	pop = generate_population(wf, seed, n)
-	non_dom_sort(pop, objectives)
+	fronts = non_dom_sort(pop, objectives)
+	Q = binary_tournament_rank(fronts)
+	mutation()
+	crossover()
+	g = 0
+	while g < generations:
+		new_pop = []
+		R = pop + Q
+		non_dom_sort(R, objectives)
+		crowding_distance(R)
+		for soln in R:
+			if len(new_pop) < popsize:
+				new_pop.append(soln)
 
 	return None
 
@@ -95,11 +108,11 @@ def generate_population(wf, size, seed, skip_limit):
 	"""
 	pop = [Solution() for x in range(size)]
 
-	# In order to generate solutions, we need to ensure that
 	exec_order = generate_exec_orders(wf, size, seed, skip_limit)
 
 	# Generate a list of task/resource assignments
-	task_assign = generate_allocations(wf.graph.number_of_nodes(), size, 4, seed)
+
+	task_assign = generate_allocations(wf, size, 4, seed)
 
 	if len(pop) != len(exec_order) or len(pop) != len(task_assign):
 		return None
@@ -109,6 +122,11 @@ def generate_population(wf, size, seed, skip_limit):
 			soln.task_assign = task_assign.pop()
 
 	return pop
+
+def calc_start_finish_times(solution):
+	# For a given solution, we have task-machine pairs in a given order
+	# This order will
+	return None
 
 # How can we test non-domination? Need to get a testing set together for our HEFT graph
 
@@ -158,6 +176,10 @@ def binary_tournament(pop):
 	return None
 
 
+def binary_tournament_rank(pop):
+	return None
+
+
 def crossover(soln):
 	"""
 	As described in Yu & Buyya 2007
@@ -191,7 +213,7 @@ def crowding_distance(solutions):
 	"""
 	popsize = len(solutions)
 
-	crowding_distance= []
+	crowding_distance = []
 
 	# Scores need to be normalised to the highest/lowest
 	normalise_scores = None
@@ -213,9 +235,6 @@ def generate_exec_orders(wf, popsize, seed, skip_limit):
 	retval = peek(generator)
 	if retval is None:
 		return None
-	else:
-		first, generator = retval
-		top_sort_list.append(first)
 
 	# Generate a list of topological sorts
 	random.seed(seed)
@@ -224,18 +243,20 @@ def generate_exec_orders(wf, popsize, seed, skip_limit):
 		for top in generator:
 			# 'skip through' a number of different top sorts to ensure we are
 			# getting a diverse range.
-			skip = random.randint(0, 100) % skip_limit
+			skip = random.randint(0, SKIP_RAND_BOUNDS) % skip_limit
 			for x in range(skip):
 				next(generator)
-			top_sort_list.append(list(top))
-			if len(top_sort_list) == popsize:
-				break
+			yield top
+			# top_sort_list.append(list(top))
+			# if len(top_sort_list) == popsize:
+			# 	break
 
-	return top_sort_list
+	# return top_sort_list
 
 
 def generate_allocations(num_nodes, popsize, num_resource, seed):
 	alloc_list = []
+
 	random.seed(seed)
 	for x in range(popsize):
 		alloc_list.append(
@@ -243,15 +264,11 @@ def generate_allocations(num_nodes, popsize, num_resource, seed):
 	return alloc_list
 
 
-class NSGASolution(Solution):
+class NSGASolution():
 	""" A simple class to store each solutions' related information
 	"""
-	dom_counter = 0
-	nondom_rank = -1
-	crowding_dist = -1
 
-	def _is_feasible(self, task_order):
-		"""
-		Check that task_order is a valid topological sort
-		"""
-		return True
+	def __init__(self):
+		dom_counter = 0
+		nondom_rank = -1
+		crowding_dist = -1
