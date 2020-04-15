@@ -20,7 +20,7 @@ import sys
 import networkx as nx
 import numpy as np
 from shadow.classes.environment import Environment
-
+from shadow.classes.solution import Solution
 
 # TODO clean up allocation and ranking;
 #  reduce direct  to the graph,
@@ -90,7 +90,7 @@ class Workflow(object):
 	The workflow includes
 	"""
 
-	def __init__(self, config):
+	def __init__(self, config, from_file=True):
 		"""
 		"""
 		with open(config, 'r') as infile:
@@ -105,6 +105,7 @@ class Workflow(object):
 		self.tasks = self.graph.nodes
 		self.edges = self.graph.edges
 		self.env = None
+		self.solution = None # Solution is dependent on an environment
 		self.machine_alloc = {}
 		self.execution_order = []
 		# This lets us know when reading the graph if 'comp' attribute
@@ -120,6 +121,7 @@ class Workflow(object):
 		self.env = environment
 		# Go through environment flags and check what processing we can do to the workflow
 		self.machine_alloc = {m: [] for m in self.env.machines.keys()}
+		self.solution = Solution(machines=self.env.machines.keys())
 		if self._time:
 			# Check the number of computation values stored for each node so they match the
 			# nunber of machines in the system config
