@@ -45,7 +45,6 @@ def heft(workflow):
 	makespan = insertion_policy(workflow)
 	return makespan
 
-
 def pheft(wf):
 	"""
 	Implementation of the PHEFT algorithm, which adaptst the HEFT algorithm
@@ -234,40 +233,33 @@ def calc_est(wf, task, machine):
 		else:
 			comm_cost = 0
 
-		# wf.graph.predecessors is not being updated in insertion_policy;
-		# need to use the tasks that are being updated to get the right results
 		aft = pretask.aft
 		tmp = aft + comm_cost
 		if tmp >= est:
 			est = tmp
 
 	machine_str = machine
-	machine_allocs = wf.machine_alloc[machine_str]
-	# Structure of our processor allocation is
-	# [{id:, ast:, aft:},{id:, ast:, aft:}]
-	# Now we find the time it fits in on the processor
-	# processor = wf.machine_alloc[machine]  # return the list of allocated tasks
-	wf.machine_alloc[machine_str].sort(key=lambda x: x['ast'])
+	curr_allocations = wf.solution.list_machine_allocations(machine_str)
 	available_slots = []
+	num_alloc = len(curr_allocations)
 	prev = None
-	if len(machine_allocs) == 0:
-		return est  # Nothing in the time slots yet
+	if num_alloc == 0:
+		test = 0
 	else:
-		for i, m in enumerate(machine_allocs):
-			# For each start/finish time tuple that exists in the processor
+		for i,alloc in enumerate(curr_allocations):
 			if i == 0:
-				if machine_allocs[i]['ast'] != 0:  # If the start time of the first tuple is not 0
-					available_slots.append((0, machine_allocs[i]['ast']))  # add a 0-current_start time tuple
+				if alloc.ast !=0: # If the start time of the first allocation is not 0
+					available_slots.append((0, alloc.ast))
 				else:
 					continue
 			else:
-				# Append the finish time of the previous slot and the ostart time of this slot
-				prev_allocation = machine_allocs[i - 1]
-				available_slots.append((machine_allocs[i - 1]['aft'], machine_allocs[i]['ast']))
-
-		# Add a -1 to the final time slot available, so we have a 'gap' after
-		final_alloc = machine_allocs[len(machine_allocs) - 1]
-		available_slots.append((final_alloc['aft'], -1))
+				prev_alloc = curr_allocations[i-1]
+				available_slots.append((
+					prev_alloc.aft,
+					alloc.ast
+				))
+		final_alloc = curr_allocations[num_alloc-1] # We want the finish time of the latest allocation.
+		available_slots.append((final_alloc.aft, -1))
 
 	for slot in available_slots:
 		if est < slot[0] and slot[0] + \
@@ -306,11 +298,8 @@ def insertion_policy(wf):
 			task.machine = m
 			task.ast = 0
 			task.aft = w
-			wf.machine_alloc[m].append({
-				"id": task.tid,
-				"ast": task.ast,
-				"aft": task.aft
-			})
+
+			wf.solution.add_allocation(task=task, machine=m)
 		else:
 			aft = -1  # Finish time for the current task
 			m = 0
@@ -331,15 +320,11 @@ def insertion_policy(wf):
 
 			if task.ast >= makespan:
 				makespan = task.aft
-			machine_str = m
-			wf.machine_alloc[machine_str].append({
-				"id": task.tid,
-				"ast": task.ast,
-				"aft": task.aft,
-			})
-			wf.machine_alloc[machine_str].sort(key=lambda x: x['ast'])
+
+			wf.solution.add_allocation(task=task, machine=m)
 
 	wf.makespan = makespan
+	wf.solution.makespan = makespan
 	return makespan
 
 
@@ -370,13 +355,7 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 					m = machine
 			task.aft = task.calculated_runtime[m]
 			task.machine = m
-			machine_str = m
-			wf.machine_alloc[machine_str].append({
-				"id": task.tid,
-				"ast": task.ast,
-				"aft": task.aft,
-			})
-
+			wf.solution.add_allocation(task=task, machine=m)
 		else:
 			min_oeft = -1
 			for machine in wf.machine_alloc:
@@ -386,6 +365,7 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 					est = 0
 				eft = est + task.calculated_runtime[machine]
 				eft_matrix[(task, machine)] = eft
+
 				oeft_matrix[(task, machine)] = \
 					eft_matrix[(task, machine)] + oct_rank_matrix[(task, machine)]
 				if (min_oeft == -1) or \
@@ -394,23 +374,14 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 					m = machine
 
 			task.aft = eft_matrix[(task, m)]
-
-			task.ast = \
-				task.aft \
-				- task.calculated_runtime[m]
-
+			task.ast = task.aft - task.calculated_runtime[m]
 			task.machine = m
 
 			if task.aft >= makespan:
 				makespan = task.aft
+			wf.solution.add_allocation(task=task, machine=m)
 
-			machine_str = m
-			wf.machine_alloc[machine_str].append({
-				"id": task.tid,
-				"ast": task.ast,
-				"aft": task.aft,
-			})
-			wf.machine_alloc[machine_str].sort(key=lambda x: x['ast'])
-
-	wf.makespan = makespan
+	wf.solution.makespan = makespan
 	return makespan
+
+

@@ -23,6 +23,8 @@ import networkx as nx
 import itertools
 import random
 
+from shadow.classes.solution import Solution
+
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
 
@@ -43,7 +45,6 @@ The two differ on evaluation and selection strategy
 
 def nsga2(wf, seed, generations=100, popsize=100):
 	"""
-	Create a random parent population P size N
 	Apply non-dominated sort to P
 	Binary tournament selection to create population Q, size N
 	For each generation, taking the most recent sets P and Q:
@@ -70,7 +71,9 @@ def nsga2(wf, seed, generations=100, popsize=100):
 	"""
 
 	objectives = []
-	pop = generate_population(wf, seed)
+	# Create a random parent population P size N
+	n = popsize
+	pop = generate_population(wf, seed, n)
 	non_dom_sort(pop, objectives)
 
 	return None
@@ -107,6 +110,7 @@ def generate_population(wf, size, seed, skip_limit):
 
 	return pop
 
+# How can we test non-domination? Need to get a testing set together for our HEFT graph
 
 def non_dom_sort(pop, objectives):
 	front = {0: []}
@@ -239,16 +243,14 @@ def generate_allocations(num_nodes, popsize, num_resource, seed):
 	return alloc_list
 
 
-class Solution:
+class NSGASolution(Solution):
 	""" A simple class to store each solutions' related information
 	"""
-	task_assign = []
-	exec_order = []
 	dom_counter = 0
 	nondom_rank = -1
 	crowding_dist = -1
 
-	def _is_feasible(task_order):
+	def _is_feasible(self, task_order):
 		"""
 		Check that task_order is a valid topological sort
 		"""
