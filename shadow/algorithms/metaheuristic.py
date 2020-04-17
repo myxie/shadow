@@ -23,7 +23,7 @@ import networkx as nx
 import itertools
 import random
 
-# from shadow.classes.solution import Solution, Allocation
+from shadow.classes.solution import Solution, Allocation
 
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
@@ -42,7 +42,8 @@ while(termination condition not satisfied)
 The two differ on evaluation and selection strategy
 """
 
-SKIP_RAND_BOUNDS = 1000
+RAND_BOUNDS = 1000
+
 
 def nsga2(wf, seed, generations=100, popsize=100):
 	"""
@@ -123,10 +124,6 @@ def generate_population(wf, size, seed, skip_limit):
 
 	return pop
 
-def calc_start_finish_times(solution):
-	# For a given solution, we have task-machine pairs in a given order
-	# This order will
-	return None
 
 # How can we test non-domination? Need to get a testing set together for our HEFT graph
 
@@ -142,7 +139,7 @@ def non_dom_sort(pop, objectives):
 				else:
 					dominated[p] += [q]  # add q to set of soln dominated by p
 			elif dominates(q, p, objectives):
-				p.dom_counter += 1
+				p.dom_counter += 1  # This determines if it has been dominated
 		if p.dom_counter == 0:
 			p.nondom_rank = 1
 			front[0].append(p)
@@ -231,44 +228,88 @@ def peek(iterable):
 
 def generate_exec_orders(wf, popsize, seed, skip_limit):
 	top_sort_list = []
-	generator = nx.all_topological_sorts(wf.graph)
+	generator = nx.all_topological_sorts(G=wf.graph)
 	retval = peek(generator)
 	if retval is None:
 		return None
 
-	# Generate a list of topological sorts
 	random.seed(seed)
 	while len(top_sort_list) < popsize:
-		generator = nx.all_topological_sorts(wf.graph)
+		generator = nx.all_topological_sorts(G=wf.graph)
 		for top in generator:
 			# 'skip through' a number of different top sorts to ensure we are
 			# getting a diverse range.
-			skip = random.randint(0, SKIP_RAND_BOUNDS) % skip_limit
+			skip = random.randint(0, RAND_BOUNDS) % skip_limit
 			for x in range(skip):
 				next(generator)
 			yield top
-			# top_sort_list.append(list(top))
-			# if len(top_sort_list) == popsize:
-			# 	break
-
-	# return top_sort_list
 
 
-def generate_allocations(num_nodes, popsize, num_resource, seed):
-	alloc_list = []
+# return top_sort_list
 
+
+def calc_solution_cost(solution, workflow):
+	cost = 0
+	for machine in workflow.env.machines.keys():
+		for alloc in solution.list_machine_allocations(machine):
+			runtime = alloc.aft-alloc.ast
+			cost += workflow.env.calc_task_cost_on_machine(machine,runtime)
+	return cost
+
+def generate_allocations(machines, task_order, wf, seed):
+	soln = NSGASolution(machines=machines)
+	rand_bounds = len(machines)
 	random.seed(seed)
-	for x in range(popsize):
-		alloc_list.append(
-			[random.randint(0, 1000) % num_resource for x in range(num_nodes)])
-	return alloc_list
+	for t in task_order:
+		index = random.randint(0, RAND_BOUNDS) % rand_bounds
+		m = machines[index]
+		calc_start_finish_times(t, m, wf,soln.list_machine_allocations(m))
+		soln.add_allocation(t, m)
+		if t.aft > soln.makespan:
+			soln.makespan = 107
+
+	soln.solution_cost = calc_solution_cost(soln,wf)
+
+	return soln
 
 
-class NSGASolution():
+def calc_start_finish_times(task, machine, workflow, curr_allocations):
+	# For a given solution, we have task-machine pairs in a given order
+	# This order will be based on the execution order provided by a topological sort
+	st = 0
+	predecessors = workflow.graph.predecessors(task)
+	for pretask in predecessors:
+		edge_comm_cost = 0
+		if pretask.machine != machine:
+			edge_comm_cost = workflow.graph.edges[pretask, task]['data_size']
+		# If the finish time of the previous task is greater than st and communication cost, then we update the est
+		if pretask.aft + edge_comm_cost >= st:
+			st = pretask.aft + edge_comm_cost
+	# Also need to check what the latest current allocation is on the machine
+
+	num_alloc = len(curr_allocations)
+	if num_alloc > 0:
+		final = curr_allocations[num_alloc - 1]
+		# This is in the event that the task execution order places tasks
+		# with the same previous task on the same machine
+		if final.aft > st:
+			st = final.aft
+
+	runtime = task.calc_runtime(machine)
+	task.ast = st
+	task.aft = task.ast + runtime
+	task.machine = machine
+
+	return None
+
+
+class NSGASolution(Solution):
 	""" A simple class to store each solutions' related information
 	"""
 
-	def __init__(self):
-		dom_counter = 0
-		nondom_rank = -1
-		crowding_dist = -1
+	def __init__(self, machines):
+		super().__init__(machines)
+		self.dom_counter = 0
+		self.nondom_rank = -1
+		self.crowding_dist = -1
+		self.solution_cost = 0

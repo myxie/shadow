@@ -24,6 +24,7 @@ from test import config as cfg
 from shadow.algorithms.metaheuristic import generate_population, \
 	generate_allocations, \
 	generate_exec_orders, \
+	calc_start_finish_times, \
 	non_dom_sort
 
 from shadow.classes.workflow import Workflow
@@ -31,6 +32,7 @@ from shadow.classes.environment import Environment
 
 current_dir = os.path.abspath('.')
 
+logging.basicConfig(level="DEBUG")
 
 class TestPopulationGeneration(unittest.TestCase):
 	"""
@@ -38,8 +40,8 @@ class TestPopulationGeneration(unittest.TestCase):
 	"""
 
 	def setUp(self):
-		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph']))
-		env = Environment("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph_system']))
+		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['topcuoglu_graph']))
+		env = Environment("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['graph_sys_with_costs']))
 		self.wf.add_environment(env)
 		self.SEED = 10
 
@@ -47,8 +49,7 @@ class TestPopulationGeneration(unittest.TestCase):
 		# Calling generate_exec_orders with a population of 1 should return a simple top sort
 		top_sort = generate_exec_orders(self.wf, popsize=4, seed=self.SEED, skip_limit=1)
 		# The result of running the above with self.SEED = 10, no skips is:
-		# The first should always be
-		# bitwise set &
+		# The first should always be 'order'
 		order = [0, 5, 4, 3, 2, 6, 1, 8, 7, 9]
 		curr = next(top_sort)
 		# Check that a comparison between top_sort and the correct order is correct
@@ -65,32 +66,54 @@ class TestPopulationGeneration(unittest.TestCase):
 		self.assertGreater(sum, 0)
 
 	def test_generate_allocations(self):
-		seed = 10
-		# We have a workflow, and an environment on which the workflow is being executed
-		tasks = self.wf.tasks
-		machines = self.wf.env.machines
+		# Generate allocations creates pairs. Solution is implied in allocation?
+		top_sort = generate_exec_orders(self.wf, popsize=4, seed=self.SEED, skip_limit=1)
+		curr = next(top_sort)
+		machines = list(self.wf.env.machines.keys())
+		# Solution should contain allocations between tasks and machines
+		soln = generate_allocations(machines, curr, self.wf, self.SEED)
+		# Test seed is 10; RANDBOUNDS is 1000
+		# first should be 0,0,1,2,0
+		# For each Task in soln, we will have an allocation
+		# e.g. tid=0, m='cat0_m0'.
+		# If we go through each machine, and each task, the order should be
+		##################  cat0_m1  |cat1_m1 | cat2_m2
+		# task_alloc_order = [0, 1, 4, 5, 2, 6, 8, 3, 7, 9]
+		# task_alloc_order = [0, 5, 4, 1, 2, 8, 3, 7, 9]
+		alloc_sets = [
+			{0, 5, 2, 6},
+			{4, 1, 7},
+			{3, 8, 9},
+		]
+		i = 0
+		for machine in machines:
+			x = len(alloc_sets[i] & set(soln.list_machine_allocations(machine)))
+			self.assertEqual(x, 0)  # The difference between the sets should be 0
 
-		solution = generate_allocations()
+		self.assertEqual(soln.makespan, 107)
+		self.assertAlmostEqual(soln.solution_cost,110.6,delta=0.01)
 
-	# print(a)
-	# a = generate_allocations(self.wf.graph.number_of_nodes(),10, 4,seed)
-	# print(a)
+		return 0
 
 	def test_pop_gen(self):
-		seed = 10
-		a = generate_population(self.wf, 10, seed, 2)
-		# for x in a:
-		#     print(x.task_order)
-		b = generate_population(self.wf, 10, seed, 2)
+		top_sort = generate_exec_orders(self.wf, popsize=4, seed=self.SEED, skip_limit=1)
+		curr_sort = next(top_sort)
+		machines = list(self.wf.env.machines.keys())
+		# Solution should contain allocations between tasks and machines
+		soln = generate_allocations(machines, self.wf.tasks, self.SEED)
+		retval = calc_start_finish_times(soln, curr_sort)
+		alloc = soln['cat0_m0'][1]  # This should be task 5
+		self.assertEqual(alloc.tid, 5)
+		self.assertEqual(alloc.ast, 17)
+		self.assertEqual(alloc.aft, 41)
+		alloc = soln['cat1_m1'][0]  # this should be task 6
+		self.assertEqual(alloc.tid, 2)
+		self.assertEqual(alloc.ast, 29)
+		self.assertEqual(alloc.aft, 45)
 
-		self.assertTrue(a == a)
-		seed = 47
+	# what our the costs?
 
-		b = generate_population(self.wf, 10, seed, 2)
-		self.assertFalse(a == b)
-
-	# for soln in a:
-	#     print(soln.task_assign)
+	# These two are generated in the above tests, so we can garauntee their correctness
 
 	def test_nondomsort(self):
 		seed = 10

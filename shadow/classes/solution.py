@@ -23,7 +23,6 @@ class Allocation:
 		self.tid = task.tid
 		self.ast = task.ast
 		self.aft = task.aft
-		self.machine = machine
 
 
 class Solution:
@@ -64,7 +63,9 @@ class Solution:
 		return self.allocations[machine]
 
 	def list_all_allocations(self):
-		return list(self.allocations)
+		return self.allocations
 
+	def find_alloc(self, task):
+		pass
 	def remove_allocation(self, tid, m):
 		pass

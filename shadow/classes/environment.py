@@ -43,14 +43,24 @@ class Environment(object):
 		if self.rates:
 			self.has_rates = True
 
-		logger.debug("Environment config:\n \
-					has_comp:{0}\n \
-					has_mem:{1}\n \
-					has_cost:{2}\n \
-					has_rates:{3}\n \
-					num_machines:{4}\n \
-					has_comp:{5}\n \
-					has_rates:{6}\n"
+		if 'cost' in self.env['system']:
+			self.has_cost = True
+		if self.has_cost:
+			self.costs = self.env['system']['cost']
+
+		logger.debug(
+			"Environment config:\n \
+			has_comp:{0}\n \
+			has_mem:{1}\n \
+			has_cost:{2}\n \
+			has_rates:{3}\n \
+			num_machines:{4}\n".format(
+				self.has_comp,
+				self.has_mem,
+				self.has_cost,
+				self.has_rates,
+				self.num_machines
+			)
 		)
 
 
@@ -78,6 +88,31 @@ class Environment(object):
 					# sys.exit('Error: The computing power of machines in the same category are different.')
 					return retval
 		return retval
+
+
+	def _check_cost(self, res_dict):
+		retval = False
+		return retval
+
+	def calc_task_runtime_on_machine(self, machine, task_flops):
+		"""
+		returns Task runtime based on total Floating point operations required to complete the task
+		:param machine: the machine on which the task is being run
+		:param task_flops: the total number of FLOPs in the task
+		:return:
+		"""
+		return int(np.round(task_flops/self.machines[machine]['flops']))
+
+
+	def calc_task_cost_on_machine(self, machine, task_runtime):
+		"""
+		Machine costs are presented as $ per second
+		:param machine: Machine on which the task is running
+		:param task_runtime: the total runtime of the task
+		:return: The total cost in $ of running the task on the
+		"""
+		machine_type_prefix = machine.split('_')[0]
+		return self.costs[machine_type_prefix] * task_runtime
 
 	# self.en nviron['system']
 	#

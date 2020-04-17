@@ -52,6 +52,11 @@ test_generator_data = {
 	'ccr_10_ccost': 'test/data/5_ccost_1000-2000.csv'
 }
 
+test_metaheuristic_data = {
+	'topcuoglu_graph': 'test/data/metaheuristic/final_heft.json',
+	'graph_sys_with_costs': 'test/data/metaheuristic/final_heft_sys.json'
+}
+
 test_environment_data = {
 	'environment_sys': 'test/data/environment/ggen_out_2-denselu_sys.json'
 }

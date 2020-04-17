@@ -67,6 +67,9 @@ class Task(object):
 		if isinstance(task, self.__class__):
 			return self.tid <= task.tid
 
+	def calc_runtime(self, machine):
+		return self.calculated_runtime[machine]
+
 	def calc_ave_runtime(self):
 		return sum(self.calculated_runtime.values()) / len(self.calculated_runtime)
 
@@ -142,7 +145,7 @@ class Workflow(object):
 					# if 'calculated_runtime' not in self.tasks[task]:
 					# 	self.tasks[task]['calculated_runtime'] = {}
 					comp = task.flops_demand
-					task.calculated_runtime[m] = int(np.round(comp / self.env.machines[m]['flops']))
+					task.calculated_runtime[m] = self.env.calc_task_runtime_on_machine(m,comp)
 			# self.tasks[node]['comp']
 			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
 
