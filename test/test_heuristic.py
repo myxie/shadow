@@ -22,8 +22,8 @@ import logging
 from test import config as cfg
 from shadow.algorithms.heuristic import upward_rank, upward_oct_rank, \
 	heft, pheft
-from shadow.classes.workflow import Workflow
-from shadow.classes.environment import Environment
+from shadow.models.workflow import Workflow
+from shadow.models.environment import Environment
 
 # CHANGE THIS TO GET DEBUG VALUES FROM LOGS
 logging.basicConfig(level='WARNING')
@@ -59,7 +59,6 @@ class TestHeftMethods(unittest.TestCase):
 
 	def test_schedule(self):
 		retval = heft(self.wf)
-		self.wf.pretty_print_allocation()
 		self.assertTrue(retval == 80)
 
 
@@ -77,7 +76,6 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 
 	def test_schedule(self):
 		retval = heft(self.wf)
-		self.wf.pretty_print_allocation()
 		self.assertTrue(retval == 98)
 
 
@@ -132,7 +130,6 @@ class TestPHeftMethods(unittest.TestCase):
 	def test_pheft_schedule(self):
 		# upward_rank(self.wf)
 		retval = pheft(self.wf)
-		self.wf.pretty_print_allocation()
 		self.assertTrue(retval == 122)
 
 
@@ -141,11 +138,11 @@ class TestDALiuGEGraph(unittest.TestCase):
 
 	def setUp(self):
 		self.wf = Workflow('test/data/daliugesample.json',
-						   cfg.test_heuristic_data['topcuoglu_graph_system'],
-						   calc_time=False)
+						cfg.test_heuristic_data['topcuoglu_graph_system'],
+						calc_time=False)
 		self.dense = Workflow('test/data/ggen_out_4-denselu.json',
-							  cfg.test_heuristic_data['topcuoglu_graph_system'],
-							  calc_time=False)
+							cfg.test_heuristic_data['topcuoglu_graph_system'],
+							calc_time=False)
 		self.gnp = Workflow('test/data/ggen_out_20-0.5.json',
 							cfg.test_heuristic_data['topcuoglu_graph_system'],
 							calc_time=False)

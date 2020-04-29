@@ -20,8 +20,8 @@ import os
 
 from test import config as cfg
 
-from shadow.classes.workflow import Workflow
-from shadow.classes.environment import Environment
+from shadow.models.workflow import Workflow
+from shadow.models.environment import Environment
 
 
 # TODO Need to test workflow class initialisation on a number of graph types

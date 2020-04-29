@@ -1,4 +1,4 @@
-# Copyright (C) 19/9/19 RW Bunney
+# Copyright (C) 2019 RW Bunney
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,3 +12,18 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+"""
+Globals in shadow are useful variables that access dictionary attributes without the
+uuser having to remember what the attribute strings are. This is especially useful given that
+configuration data in shadow is described in JSON files, and JSON maps very well to Python
+dictionaries. Unfortunately, this means users do not get access to linting or class-variable
+help in their chosen editors/IDEs, because the dictionary key is not reserved or accesible.
+"""
+
+ENV_SYS = 'system'
+ENV_RESOURCE = 'resources'
+ENV_RATES = 'rates'
+ENV_COST = 'cost'
+
+WORKFLOW_DATASIZE = 'data_size'

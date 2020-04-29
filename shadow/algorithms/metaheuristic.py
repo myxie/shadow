@@ -23,7 +23,8 @@ import networkx as nx
 import itertools
 import random
 
-from shadow.classes.solution import Solution, Allocation
+from shadow.models.solution import Solution, Allocation
+from shadow.models.globals import *
 
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
@@ -107,22 +108,19 @@ def generate_population(wf, size, seed, skip_limit):
 
 	In the future it might be useful, in addition to checking feasibility of solution, to minimise duplicates of the population generated. Not sure about this.
 	"""
-	pop = [Solution() for x in range(size)]
+	population = []
+	top_sort = generate_exec_orders(wf, popsize=size, seed=seed, skip_limit=skip_limit)
+	for x in range(size):
+		curr = next(top_sort)
+		soln = generate_allocations(
+			machines=wf.env.machines,
+			task_order=curr,
+			wf=wf,
+			seed=seed
+		)
+		population.append(soln)
 
-	exec_order = generate_exec_orders(wf, size, seed, skip_limit)
-
-	# Generate a list of task/resource assignments
-
-	task_assign = generate_allocations(wf, size, 4, seed)
-
-	if len(pop) != len(exec_order) or len(pop) != len(task_assign):
-		return None
-	else:
-		for soln in pop:
-			soln.exec_order = exec_order.pop()
-			soln.task_assign = task_assign.pop()
-
-	return pop
+	return population
 
 
 # How can we test non-domination? Need to get a testing set together for our HEFT graph
@@ -250,11 +248,12 @@ def generate_exec_orders(wf, popsize, seed, skip_limit):
 
 def calc_solution_cost(solution, workflow):
 	cost = 0
-	for machine in workflow.env.machines.keys():
+	for machine in workflow.env.machines:
 		for alloc in solution.list_machine_allocations(machine):
-			runtime = alloc.aft-alloc.ast
-			cost += workflow.env.calc_task_cost_on_machine(machine,runtime)
+			runtime = alloc.aft - alloc.ast
+			cost += workflow.env.calc_task_cost_on_machine(machine, runtime)
 	return cost
+
 
 def generate_allocations(machines, task_order, wf, seed):
 	soln = NSGASolution(machines=machines)
@@ -263,12 +262,12 @@ def generate_allocations(machines, task_order, wf, seed):
 	for t in task_order:
 		index = random.randint(0, RAND_BOUNDS) % rand_bounds
 		m = machines[index]
-		calc_start_finish_times(t, m, wf,soln.list_machine_allocations(m))
+		calc_start_finish_times(t, m, wf, soln.list_machine_allocations(m))
 		soln.add_allocation(t, m)
 		if t.aft > soln.makespan:
-			soln.makespan = 107
+			soln.makespan = t.aft
 
-	soln.solution_cost = calc_solution_cost(soln,wf)
+	soln.solution_cost = calc_solution_cost(soln, wf)
 
 	return soln
 
@@ -281,7 +280,7 @@ def calc_start_finish_times(task, machine, workflow, curr_allocations):
 	for pretask in predecessors:
 		edge_comm_cost = 0
 		if pretask.machine != machine:
-			edge_comm_cost = workflow.graph.edges[pretask, task]['data_size']
+			edge_comm_cost = workflow.graph.edges[pretask, task][WORKFLOW_DATASIZE]
 		# If the finish time of the previous task is greater than st and communication cost, then we update the est
 		if pretask.aft + edge_comm_cost >= st:
 			st = pretask.aft + edge_comm_cost

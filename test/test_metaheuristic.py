@@ -27,8 +27,8 @@ from shadow.algorithms.metaheuristic import generate_population, \
 	calc_start_finish_times, \
 	non_dom_sort
 
-from shadow.classes.workflow import Workflow
-from shadow.classes.environment import Environment
+from shadow.models.workflow import Workflow
+from shadow.models.environment import Environment
 
 current_dir = os.path.abspath('.')
 
@@ -69,7 +69,7 @@ class TestPopulationGeneration(unittest.TestCase):
 		# Generate allocations creates pairs. Solution is implied in allocation?
 		top_sort = generate_exec_orders(self.wf, popsize=4, seed=self.SEED, skip_limit=1)
 		curr = next(top_sort)
-		machines = list(self.wf.env.machines.keys())
+		machines = list(self.wf.env.machines)
 		# Solution should contain allocations between tasks and machines
 		soln = generate_allocations(machines, curr, self.wf, self.SEED)
 		# Test seed is 10; RANDBOUNDS is 1000
@@ -96,21 +96,15 @@ class TestPopulationGeneration(unittest.TestCase):
 		return 0
 
 	def test_pop_gen(self):
-		top_sort = generate_exec_orders(self.wf, popsize=4, seed=self.SEED, skip_limit=1)
-		curr_sort = next(top_sort)
-		machines = list(self.wf.env.machines.keys())
-		# Solution should contain allocations between tasks and machines
-		soln = generate_allocations(machines, self.wf.tasks, self.SEED)
-		retval = calc_start_finish_times(soln, curr_sort)
-		alloc = soln['cat0_m0'][1]  # This should be task 5
-		self.assertEqual(alloc.tid, 5)
-		self.assertEqual(alloc.ast, 17)
-		self.assertEqual(alloc.aft, 41)
-		alloc = soln['cat1_m1'][0]  # this should be task 6
-		self.assertEqual(alloc.tid, 2)
-		self.assertEqual(alloc.ast, 29)
-		self.assertEqual(alloc.aft, 45)
+		pop = generate_population(self.wf,size=4,seed=self.SEED,skip_limit=100)
+		soln1 = pop[0]
+		# First solution should be the same solution we have been working with previously.
+		self.assertEqual(107,soln1.makespan)
+		soln2 = pop[1]
+		self.assertNotEquals(107,soln2.makespan)
 
+		# self.assertEqual(soln.makespan,107)
+		# This means we are dealing with a
 	# what our the costs?
 
 	# These two are generated in the above tests, so we can garauntee their correctness

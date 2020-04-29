@@ -18,51 +18,56 @@ import sys
 import json
 import logging
 
+from shadow.models.globals import *
+
 logger = logging.getLogger(__name__)
 
 
-class Environment(object):
+class Machine(object):
+	def __init__(self, id, flops, cost, bandwidth):
+		self.id = id
+		self.machine_type = id.split("_")[0]
+		self.flops = flops
+		self.cost = cost
+		self.bandwidth = bandwidth
 
+
+def _process_env_resources(resources ):
+	if resources is None:
+		raise EnvironmentError("Environment is not appropriately defined")
+	else:
+		machines = []
+		# This is resources dictionary
+		for machine in resources:
+			name = machine
+			flops, memory, bandwidth = None, None, None
+			if 'flops' in resources[machine]:
+				flops = resources[machine]['flops']
+			if 'memory' in resources[machine]:
+				memory = resources[machine]['memory']
+			if 'bandwidth' in resources[machine]:
+				bandwidth = resources[machine]['bandwidth']
+			m = Machine(name, flops, memory, bandwidth)
+			machines.append(m)
+		return machines
+
+
+class Environment(object):
 	def __init__(self, config):
 		with open(config, 'r') as infile:
-			self.env = json.load(infile)
-		self.has_comp = False
-		self.has_mem = False
-		self.has_cost = False
-		self.has_rates = False
+			jdict = json.load(infile)
 
-		self.num_machines = len(self.env['system']['resources'])
+		resources, rates, cost = None, None, None
+		if ENV_RESOURCE in jdict[ENV_SYS]:
+			resources = jdict[ENV_SYS][ENV_RESOURCE]
+		if ENV_RATES in jdict[ENV_SYS]:
+			rates = jdict[ENV_SYS][ENV_RATES]
+		if ENV_COST in jdict[ENV_SYS]:
+			cost = jdict[ENV_SYS][ENV_COST]
 
-		if self._check_comp(self.env['system']['resources']):
-			self.has_comp = True
-
-		# machines -> categories -> machines -> compute
-		self.machines = self.env['system']['resources']
-		# TODO Use rates in system config; for time being rates are taken from graph
-		self.rates = self.env['system']['rates']
-		if self.rates:
-			self.has_rates = True
-
-		if 'cost' in self.env['system']:
-			self.has_cost = True
-		if self.has_cost:
-			self.costs = self.env['system']['cost']
-
-		logger.debug(
-			"Environment config:\n \
-			has_comp:{0}\n \
-			has_mem:{1}\n \
-			has_cost:{2}\n \
-			has_rates:{3}\n \
-			num_machines:{4}\n".format(
-				self.has_comp,
-				self.has_mem,
-				self.has_cost,
-				self.has_rates,
-				self.num_machines
-			)
-		)
-
+		self.machines = _process_env_resources(resources)
+		self.rates = rates
+		self.cost = cost
 
 	def _check_comp(self, res_dict):
 		"""
@@ -89,6 +94,13 @@ class Environment(object):
 					return retval
 		return retval
 
+	def parse_environment_config(self, dictionary):
+		"""
+
+		:param dictionary:
+		:return:
+		"""
+		return None
 
 	def _check_cost(self, res_dict):
 		retval = False
@@ -101,8 +113,7 @@ class Environment(object):
 		:param task_flops: the total number of FLOPs in the task
 		:return:
 		"""
-		return int(np.round(task_flops/self.machines[machine]['flops']))
-
+		return int(np.round(task_flops / machine.flops))
 
 	def calc_task_cost_on_machine(self, machine, task_runtime):
 		"""
@@ -111,12 +122,12 @@ class Environment(object):
 		:param task_runtime: the total runtime of the task
 		:return: The total cost in $ of running the task on the
 		"""
-		machine_type_prefix = machine.split('_')[0]
-		return self.costs[machine_type_prefix] * task_runtime
+		machine_type_prefix = machine.machine_type
+		return self.cost[machine_type_prefix] * task_runtime
 
-	# self.en nviron['system']
-	#
-	#
-	# self.machines = [[] for x in range(len(self.env['resource']))]
-	# self.data_load = np.array([])
-	# self.thrpt = 0.0
+# self.en nviron['system']
+#
+#
+# self.machines = [[] for x in range(len(self.env['resource']))]
+# self.data_load = np.array([])
+# self.thrpt = 0.0

@@ -22,8 +22,8 @@ import logging
 
 import test.test_workflow, test.test_heuristic
 from shadow.algorithms.heuristic import heft
-from shadow.classes.workflow import Workflow
-from shadow.classes.environment import Environment
+from shadow.models.workflow import Workflow
+from shadow.models.environment import Environment
 
 testcases = {  # Tests for the test runner
 	"workflow": test.test_workflow,

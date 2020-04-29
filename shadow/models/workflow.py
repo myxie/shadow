@@ -19,8 +19,8 @@ import sys
 
 import networkx as nx
 import numpy as np
-from shadow.classes.environment import Environment
-from shadow.classes.solution import Solution
+from shadow.models.environment import Environment
+from shadow.models.solution import Solution
 
 # TODO clean up allocation and ranking;
 #  reduce direct  to the graph,
@@ -121,29 +121,21 @@ class Workflow(object):
 		"""
 		self.env = environment
 		# Go through environment flags and check what processing we can do to the workflow
-		self.machine_alloc = {m: [] for m in self.env.machines.keys()}
-		self.solution = Solution(machines=self.env.machines.keys())
+		self.solution = Solution(machines=[m for m in self.env.machines])
 		if self._time:
 			# Check the number of computation values stored for each node so they match the
 			# nunber of machines in the system config
 			for task in self.tasks:
-				if len(self.tasks[task]['comp']) is not self.env.num_machines:
+				if len(self.tasks[task]['comp']) is not len(self.env.machines):
 					return -1
-				# if 'calculated_runtime' not in self.tasks[task]:
-				# 	self.tasks[task]['calculated_runtime'] = {}
-				machines = self.env.machines.keys()
+				machines = [m for m in self.env.machines]
 				runtime_list = self.tasks[task]['comp']
 				task.calculated_runtime = dict(zip(machines, runtime_list))
-			# sys.exit("Number of machines defined in environment is"
-			# 	  "not equivalent to the number definited in the workflow graph")
 			return 0
-		if self.env.has_comp:
 			# Use compute provided by system values to calculate the time taken
-			provided_flops = []
+		else:
 			for m in self.env.machines:
 				for task in self.tasks:
-					# if 'calculated_runtime' not in self.tasks[task]:
-					# 	self.tasks[task]['calculated_runtime'] = {}
 					comp = task.flops_demand
 					task.calculated_runtime[m] = self.env.calc_task_runtime_on_machine(m,comp)
 			# self.tasks[node]['comp']
@@ -170,5 +162,3 @@ class Workflow(object):
 		else:
 			return None
 
-	def pretty_print_allocation(self):
-		print(json.dumps(self.machine_alloc, indent=2))

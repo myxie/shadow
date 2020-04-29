@@ -158,7 +158,7 @@ def rank_oct(wf, oct_rank_matrix, task, pk):
 	max_successor = 0
 	for successor in wf.graph.successors(task):
 		min_machine = 1000
-		for machine in wf.machine_alloc:
+		for machine in wf.env.machines:
 			oct_val = 0
 			if (successor, machine) not in oct_rank_matrix.keys():
 				rank_oct(wf, oct_rank_matrix, successor, machine)
@@ -307,15 +307,15 @@ def insertion_policy(wf):
 				# tasks in self.rank_sort are being updated, not wf.graph;
 				est = calc_est(wf, task, machine)
 				if aft == -1:  # assign initial value of aft for this task
-					aft = est + task.calculated_runtime[machine]
+					aft = est + task.calc_runtime(machine)
 					m = machine
 				# see if the next processor gives us an earlier finish time
-				elif est + task.calculated_runtime[machine] < aft:
-					aft = est + task.calculated_runtime[machine]
+				elif est + task.calc_runtime(machine) < aft:
+					aft = est + task.calc_runtime(machine)
 					m = machine
 
 			task.machine = m
-			task.ast = aft - task.calculated_runtime[m]
+			task.ast = aft - task.calc_runtime(m)
 			task.aft = aft
 
 			if task.ast >= makespan:
@@ -345,7 +345,7 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 		if task == list(wf.tasks)[0]:
 			task.ast = 0
 			min_oeft = -1
-			for machine in wf.machine_alloc:
+			for machine in wf.env.machines:
 				eft_matrix[(task, machine)] = task.calculated_runtime[machine] 
 				oeft_matrix[(task, machine)] = \
 					eft_matrix[(task, machine)] + oct_rank_matrix[(task, machine)]
@@ -358,7 +358,7 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 			wf.solution.add_allocation(task=task, machine=m)
 		else:
 			min_oeft = -1
-			for machine in wf.machine_alloc:
+			for machine in wf.env.machines:
 				if wf.graph.predecessors(task):
 					est = calc_est(wf, task, machine)
 				else:

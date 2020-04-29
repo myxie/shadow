@@ -15,7 +15,7 @@
 import unittest
 from test.config import test_environment_data
 import os
-from shadow.classes.environment import Environment
+from shadow.models.environment import Environment
 # Tests for /algorithms/heuristic.py
 
 
