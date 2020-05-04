@@ -86,7 +86,7 @@ ax[0].set(ylabel='machine2')
 plt.show()
 
 
-class AllocationPlots(object):
+class AllocationPlot(object):
 	"""
 	This is created when we want to generate an allocation plot for the results of a scheduled 
 	workflow
@@ -95,6 +95,6 @@ class AllocationPlots(object):
 		pass
 	
 
-class StatPlots(object):
+class BarPlot(object):
 	def __init__(self):
 		pass
