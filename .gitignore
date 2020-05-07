@@ -6,3 +6,4 @@
 venv/
 utils/shadowgen/shadowgen_config.py
 .coverage
+.DS_Store
