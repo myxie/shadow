@@ -24,7 +24,7 @@
 # test_dir = 'test/data'
 
 test_heuristic_data = {  # Tests that use the Topcuoglu paper graph
-	'topcuoglu_graph': 'test/data/final_heft.json',
+	'topcuoglu_graph': 'test/data/heuristic/final_heft.json',
 	'topcuoglu_graph_nocalc': 'test/data/heuristic/heft_nocalc.json',
 	'flops_test_attr': 'test/data/flop_rep_test.json',
 	"topcuoglu_graph_system": 'test/data/heuristic/final_heft_sys.json',

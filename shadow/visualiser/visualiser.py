@@ -17,84 +17,81 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter, AutoMinorLocator)
 
-# figure(num=None,figsize=(10,100))
-
-makespan = 98
-x_axis_max_len = 105
-
-p1 = [(29, 42, '1'), (60, 81, '7'), (84, 98, '9')]
-p2 = [(22, 40, '4')]
-p3 = [(0, 11, '0'), (11, 21, '3'), (21, 30, '2'), (30, 45, '5'), (45, 55, '6'), (58, 71, '8')]
-fig, ax = plt.subplots(3, sharex='row', sharey='col', gridspec_kw={'hspace': 0})
-procs = [p1, p2, p3]
-data = np.zeros((105, 3)).transpose()
-count = 0
-# print(data[count])
-for proc in procs:
-	for tup in proc:
-		# data[count][tup[0]]=0.5
-		data[count][(tup[0]):(tup[1])-1] = 1
-		# data[count][tup[1]]=0.5
-		text = ax[count].text((tup[1] + tup[0]) / 2, 0, tup[2], horizontalalignment='center',
-							  verticalalignment='center', color="w")
-	# data[count][tup[1]+1]=0.5
-	count += 1
-print(data)
-
-# Set figure width to 12 and height to 9
-# fig_size=(8,6)
-# # fig_size[0] = 12
-# # fig_size[1] = 9
-# plt.rcParams["figure.figsize"] = fig_size
-# create discrete colormap
-# cmap = colors.ListedColormap(['red', 'blue'])
-# bounds = [0,100,100]
-# norm = colors.BoundaryNorm(bounds, cmap.N)
-ax[0].xaxis.set_major_locator(MultipleLocator(10))
-ax[0].xaxis.set_major_formatter(FormatStrFormatter('%d'))
-
-
-ax[0].imshow(np.array([data[0]]), cmap="Blues",origin='lower')
-ax[1].imshow(np.array([data[1]]), cmap="Blues")
-ax[2].imshow(np.array([data[2]]), cmap="Blues")
-for a in ax:
-	a.label_outer()
-# fig.dpi=1000
-# draw gridlines
-ax[0].set_yticks(np.arange(0, 2) - .5, minor=True)
-ax[1].set_yticks(np.arange(0, 2) - .5, minor=True)
-ax[2].set_yticks(np.arange(0, 2) - .5, minor=True)
-# ax[0].set_xticks(xticks)
-ax[0].grid(which='minor', axis='y', linestyle='-', color='w', linewidth=5)
-# ax.grid(which='major', axis='x', linestyle='-', color='w', linewidth=1)
-ax[0].set_yticks(np.arange(0, 0))
-ax[0].set_aspect('auto')
-ax[0].set(ylabel='machine0')
-
-ax[1].grid(which='minor', axis='y', linestyle='-', color='w', linewidth=5)
-# ax.grid(which='major', axis='x', linestyle='-', color='w', linewidth=1)
-ax[1].set_yticks(np.arange(0, 0))
-ax[1].set_aspect('auto')
-ax[0].set(ylabel='machine1')
-
-ax[2].grid(which='minor', axis='y', linestyle='-', color='w', linewidth=5)
-# ax.grid(which='major', axis='x', linestyle='-', color='w', linewidth=1)
-ax[2].set_yticks(np.arange(0, 0))
-ax[2].set_aspect('auto')
-ax[0].set(ylabel='machine2')
-
-plt.show()
-
 
 class AllocationPlot(object):
 	"""
 	This is created when we want to generate an allocation plot for the results of a scheduled 
 	workflow
 	"""
-	def __init__(self, workflow):
+
+	def __init__(self, solution):
+		self.machines = solution.machines
+		self.makespan = solution.makespan
+		self.plotable_allocations = self._unwrap_allocation_tuples(solution)
+		# We have a dictionary of the allocations, what do we do with them?
 		pass
-	
+
+	def _unwrap_allocation_tuples(self,solution):
+		alloc_list = []
+		for i,m in enumerate(self.machines):
+			alloc_list.append([])
+			for alloc in solution.list_machine_allocations(m):
+				alloc_list[i].append((alloc.ast, alloc.aft, alloc.tid))
+		return alloc_list
+
+	def plot(self):
+		num_machines = len(self.machines)
+		fig, ax = plt.subplots(num_machines, sharex='row', sharey='col', gridspec_kw={'hspace': 0})
+		self._setup_xaxis(num_machines, ax)
+		data = self._format_data_for_imshow(self.plotable_allocations,num_machines,self.makespan,ax)
+		self._use_imshow(data, ax, num_machines)
+		self._setup_grid(num_machines,ax, self.machines)
+		plt.show()
+
+	def _setup_grid(self, num_machines,ax,machines):
+		for x,m in enumerate(machines):
+			# Setup axis
+			ax[x].grid(which='minor', axis='y', linestyle='-', color='w', linewidth=5)
+			ax[x].set_yticks(np.arange(0, 0))
+			ax[x].set_aspect('auto')
+			ax[x].set(ylabel=m.id)
+
+	def _setup_xaxis(self, num_machines, ax):
+		ax[0].xaxis.set_major_locator(MultipleLocator(10))
+		ax[0].xaxis.set_major_formatter(FormatStrFormatter('%d'))
+		for x in range(0, num_machines):
+			ax[x].set_yticks(np.arange(0, 2) - .5, minor=True)
+
+	def _format_data_for_imshow(self, allocations,num_machines,makespan,ax):
+		data = np.zeros((makespan+10, num_machines)).transpose()
+		count = 0
+		for machine in allocations:
+			for tup in machine:
+				# data[count][tup[0]]=0.5
+				data[count][(tup[0]):(tup[1]) - 1] = 1
+				# data[count][tup[1]]=0.5
+				text = ax[count].text(
+					(tup[1] + tup[0]) / 2,
+					0,
+					tup[2],
+					horizontalalignment='center',
+					verticalalignment='center',
+					color="w"
+				)
+			# data[count][tup[1]+1]=0.5
+			count += 1
+		return data
+
+	def _use_imshow(self, data, ax, num_machines):
+		ax[0].imshow(np.array([data[0]]), cmap="Blues", origin='lower')
+		for x in range(1, num_machines):
+			ax[x].imshow(np.array([data[x]]), cmap="Blues")
+		for a in ax:
+			a.label_outer()
+
 
 class BarPlot(object):
 	def __init__(self):
 		pass
+
+
