@@ -40,6 +40,8 @@ def heft(workflow):
 	:params wf: The workflow object to schedule
 	:returns: The makespan of the resulting schedule
 	"""
+	if workflow.env is None:
+		raise RuntimeError("Workflow environment is not initialised")
 	upward_rank(workflow)
 	workflow.sort_tasks('rank')
 	makespan = insertion_policy(workflow)

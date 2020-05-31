@@ -1,7 +1,7 @@
 Example schedule
 ================
 
-*shadow* is Workflow-oriented, which means
+SHADOW is Workflow-oriented, which means
 most of the work done within the library involves passing around workflow
 objects, or storing data within the object itself. 
 
@@ -9,9 +9,9 @@ This workflows are represented as Directed Acyclic Graphs (DAGs), and the
 a solution to the DAG scheduling problem is the scheduling order and machine
 allocation of tasks (the nodes) from the DAG. 
 
-In *shadow*, we use JSON to store our workflows, which are always represented
-as DAGs. This JSON data is read into a *shadow* as a NetworkX ``DiGraph``
-object, and then wrapped in *shadow*'s ``Workflow`` class. The ``Workflow``
+In SHADOW, we use JSON to store our workflows, which are always represented
+as DAGs. This JSON data is read into a SHADOW as a NetworkX ``DiGraph``
+object, and then wrapped in SHADOW's ``Workflow`` class. The ``Workflow``
 class accepts two types of graph specifications; one that has pre-calculated
 costs, and one without. The preferred approach is to present task with 'total
 computation cost'; the units may be application specific, but when coupled
@@ -27,7 +27,7 @@ workflow is based on the example presented in the HEFT paper [1]_.
    
 
 The computation costs for tasks, along with the graph attributes, are stored
-in a JSON file separate to the machine specifications. In *shadow*, we first
+in a JSON file separate to the machine specifications. In SHADOW, we first
 initialise a ``Workflow`` object, and then add an environment to it; this
 environment is constructed from our machine specification. The
 structure of the specification files are described in more detail in

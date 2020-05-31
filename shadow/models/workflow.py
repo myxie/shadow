@@ -162,3 +162,7 @@ class Workflow(object):
 		else:
 			return None
 
+	def solution_exec_order(self):
+		return sorted(
+			self.tasks, key=lambda x: x.ast
+		)

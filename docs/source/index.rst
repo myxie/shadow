@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 =========
-*shadow*
+SHADOW
 =========
 
 .. include:: ../../README.rst
@@ -12,7 +12,7 @@
 Motivation
 ----------
 
-*shadow* has been designed to test the effectiveness  of algorithms
+SHADOW has been designed to test the effectiveness  of algorithms
 that may be used to schedule Radio Interferometry pipelines for the Square
 kilometre Array (SKA). It is hoped that the library becomes a repository of
 workflow scheduling heuristics and metaheuristics, as well as tool in which

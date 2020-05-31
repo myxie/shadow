@@ -4,7 +4,7 @@
 Configuration
 =============
 
-Running algorithms from the *shadow* library requires two important
+Running algorithms from the SHADOW library requires two important
 configuration files: 
 
     * The Workflow specification
@@ -104,7 +104,7 @@ common:
 
 As mentioned earlier, it is also possible to use pre-calculated costs (i.e.
 completion time in seconds) when
-scheduling with *shadow*. This approach is less flexible for
+scheduling with SHADOW. This approach is less flexible for
 scheduling workflows, but is a common approach used in the scheduling
 algorithm literature. This can be achieved by adding a list of costs per tasks
 to the workflow specification JSON file, in addition to the following 'header': 

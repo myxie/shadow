@@ -35,6 +35,7 @@ class Solution:
 		self.machines = machines
 		# Generate a list of allocations for each machine
 		self.allocations = {m: [] for m in machines}
+		self.execution_order = []
 		self.makespan = 0
 
 	def _is_feasible(self, task_order):
@@ -49,6 +50,8 @@ class Solution:
 		self.allocations[machine].sort(
 			key=lambda alloc: alloc.ast
 		)
+		self.execution_order.append(a)
+		self.execution_order.sort(key=lambda alloc: alloc.ast)
 
 	def list_machine_allocations(self, machine):
 		"""

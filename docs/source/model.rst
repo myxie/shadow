@@ -1,3 +1,3 @@
-The *shadow* scheduling model
+The SHADOW scheduling model
 =============================
 

@@ -12,4 +12,4 @@ HEFTWorkflow.add_environment(env)
 heft(HEFTWorkflow)
 
 sample_allocation = AllocationPlot(solution=HEFTWorkflow.solution)
-sample_allocation.plot()
+sample_allocation.plot(save=True, figname='fig.pdf')

@@ -28,15 +28,18 @@ from shadow.models.environment import Environment
 #  and system specifications.
 
 current_dir = os.path.abspath('.')
+
+
 class TestWorkflowClass(unittest.TestCase):
 
+	def setUp(self):
+		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph']))
+		self.env = Environment("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph_system']))
+
 	def test_add_environment(self):
-		wf = Workflow("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph']))
-		env = Environment("{0}/{1}".format(current_dir,cfg.test_workflow_data['topcuoglu_graph_system']))
-		retval = wf.add_environment(env)
 
-		# retval = wf.load_attributes('test/data/flop_rep_test.json')
-
+		retval = self.wf.add_environment(self.env)
 		self.assertEqual(retval, 0)
-		self.assertEqual(28, wf.graph.nodes[5]['comp'][1])
-		self.assertEqual(wf.graph.edges[3, 7]['data_size'], 27)
+		self.assertEqual(28, self.wf.graph.nodes[5]['comp'][1])
+		self.assertEqual(self.wf.graph.edges[3, 7]['data_size'], 27)
+

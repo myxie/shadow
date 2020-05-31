@@ -15,6 +15,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import RcParams
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter, AutoMinorLocator)
 
 
@@ -28,6 +29,7 @@ class AllocationPlot(object):
 		self.machines = solution.machines
 		self.makespan = solution.makespan
 		self.plotable_allocations = self._unwrap_allocation_tuples(solution)
+
 		# We have a dictionary of the allocations, what do we do with them?
 		pass
 
@@ -39,14 +41,18 @@ class AllocationPlot(object):
 				alloc_list[i].append((alloc.ast, alloc.aft, alloc.tid))
 		return alloc_list
 
-	def plot(self):
+	def plot(self, save=False, figname=None):
 		num_machines = len(self.machines)
 		fig, ax = plt.subplots(num_machines, sharex='row', sharey='col', gridspec_kw={'hspace': 0})
 		self._setup_xaxis(num_machines, ax)
 		data = self._format_data_for_imshow(self.plotable_allocations,num_machines,self.makespan,ax)
 		self._use_imshow(data, ax, num_machines)
 		self._setup_grid(num_machines,ax, self.machines)
-		plt.show()
+		plt.xlabel('Makespan (s)')
+		if save:
+			plt.savefig(figname, dpi=300)
+		else:
+			plt.show()
 
 	def _setup_grid(self, num_machines,ax,machines):
 		for x,m in enumerate(machines):
