@@ -22,17 +22,32 @@ FIT_TIME = 'time'
 FIT_THROUGPUT = 'throughput'
 FIT_REL = 'reliability'
 
-def cost_fitness(solution, env):
+def cost_fitness(solution):
 	"""
 	Calculate the cost of the solution based on the environment
 	:param solution:
 	:return: cost
 	"""
-	return None
+
+	cost = 0
+
+	for machine in solution.machines:
+		tmpcost = 0
+		cost = machine.cost
+		for allocation in solution.list_machine_allocations(machine):
+			runtime = allocation.aft-allocation.ast
+			tmpcost += runtime*cost
+		cost+=tmpcost
+	return cost
 
 
-def time_fitness():
-	return None
+def time_fitness(solution):
+	"""
+	Return the runtime of the solution based on the environment
+	:param solution:
+	:return:
+	"""
+	return solution.makespan
 
 
 def throughput_fitness():
