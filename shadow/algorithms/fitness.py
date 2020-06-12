@@ -17,8 +17,17 @@
 Fitness functions for use in evaluating objectives
 """
 
+FIT_COST = 'cost'
+FIT_TIME = 'time'
+FIT_THROUGPUT = 'throughput'
+FIT_REL = 'reliability'
 
-def cost_fitness():
+def cost_fitness(solution, env):
+	"""
+	Calculate the cost of the solution based on the environment
+	:param solution:
+	:return: cost
+	"""
 	return None
 
 
@@ -32,6 +41,7 @@ def throughput_fitness():
 
 def reliability_fitness():
 	return None
+
 
 
 # This is ugly - I should place this somewhere else (e.g current_globs.py)
