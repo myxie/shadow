@@ -58,8 +58,8 @@ class TestHeftMethods(unittest.TestCase):
 			self.assertTrue(rank_values[node.tid] == int(node.rank))
 
 	def test_schedule(self):
-		retval = heft(self.wf)
-		self.assertTrue(retval == 80)
+		solution = heft(self.wf)
+		self.assertTrue(solution.makespan == 80)
 
 
 class TestHeftMethodCalcTime(unittest.TestCase):
@@ -75,8 +75,8 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 	# self.wf.load_attributes(cfg.test_heuristic_data['flops_test_attr'])
 
 	def test_schedule(self):
-		retval = heft(self.wf)
-		self.assertTrue(retval == 98)
+		solution = heft(self.wf)
+		self.assertTrue(solution.makespan == 98)
 
 
 @unittest.SkipTest
@@ -98,7 +98,6 @@ class TestPHeftMethods(unittest.TestCase):
 
 	def setUp(self):
 		self.wf = Workflow(cfg.test_heuristic_data['pheft_graph'])
-		# self.wf.load_attributes(cfg.test_heuristic_data['pheft_attr'], calc_time=False)
 		env = Environment(cfg.test_workflow_data['topcuoglu_graph_system'])
 		self.wf.add_environment(env)
 		self.up_oct_rank_values = [72, 41, 37, 43, 31, 41, 17, 20, 16, 0]
@@ -124,13 +123,13 @@ class TestPHeftMethods(unittest.TestCase):
 
 	def test_heft_schedule(self):
 		# upward_rank(self.wf)
-		retval = heft(self.wf)
-		self.assertTrue(retval == 133)
+		solution = heft(self.wf)
+		self.assertTrue(solution.makespan == 133)
 
 	def test_pheft_schedule(self):
 		# upward_rank(self.wf)
-		retval = pheft(self.wf)
-		self.assertTrue(retval == 122)
+		solution = pheft(self.wf)
+		self.assertTrue(solution.makespan == 122)
 
 
 @unittest.SkipTest

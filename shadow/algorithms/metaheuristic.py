@@ -26,6 +26,8 @@ import random
 from shadow.models.solution import Solution, Allocation
 from shadow.models.globals import *
 
+from shadow.algorithms.fitness import FIT_COST, FIT_TIME
+
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
 
@@ -125,18 +127,20 @@ def generate_population(wf, size, seed, skip_limit):
 
 # How can we test non-domination? Need to get a testing set together for our HEFT graph
 
-def non_dom_sort(pop, objectives):
+def non_dom_sort(pop, objectives, env):
 	front = {0: []}
 	dominated = {}
 	for p in pop:
 		p.dom_counter = 0  # reset between different sorts, as may have changed
 		for q in pop:
-			if dominates(p, q, objectives):  # if p dominates q
+			if p is q:
+				continue
+			if dominates(p, q, objectives, env):  # if p dominates q
 				if p not in dominated:
 					dominated[p] = [q]
 				else:
 					dominated[p] += [q]  # add q to set of soln dominated by p
-			elif dominates(q, p, objectives):
+			elif dominates(q, p, objectives,env):
 				p.dom_counter += 1  # This determines if it has been dominated
 		if p.dom_counter == 0:
 			p.nondom_rank = 1
@@ -155,14 +159,19 @@ def non_dom_sort(pop, objectives):
 		i += 1
 		front[i] = Q
 
-	return None
+	return front
 
 
-def dominates(p, q, objective_set):
+def dominates(p, q, objective_set, env):
 	"""
 	Checks if the given solution 'p' dominates 'q' for each objective outlined
 	in 'objective set'
 	"""
+
+	p_sol = []
+	# objective is a function
+	for objective in objective_set:
+		p_sol.append(objective(p, env))
 
 	return True
 
@@ -226,20 +235,20 @@ def peek(iterable):
 
 def generate_exec_orders(wf, popsize, seed, skip_limit):
 	top_sort_list = []
-	generator = nx.all_topological_sorts(G=wf.graph)
-	retval = peek(generator)
+	gen = nx.all_topological_sorts(G=wf.graph)
+	retval = peek(gen)
 	if retval is None:
 		return None
 
 	random.seed(seed)
 	while len(top_sort_list) < popsize:
-		generator = nx.all_topological_sorts(G=wf.graph)
-		for top in generator:
+		gen = nx.all_topological_sorts(G=wf.graph)
+		for top in gen:
 			# 'skip through' a number of different top sorts to ensure we are
 			# getting a diverse range.
 			skip = random.randint(0, RAND_BOUNDS) % skip_limit
 			for x in range(skip):
-				next(generator)
+				next(gen)
 			yield top
 
 

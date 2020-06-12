@@ -108,10 +108,14 @@ class TestPopulationGeneration(unittest.TestCase):
 	# what our the costs?
 
 	# These two are generated in the above tests, so we can garauntee their correctness
+	def test_dominates(self):
+		pop = generate_population(self.wf,size=4,seed=self.SEED,skip_limit=100)
+		# This gives us 4 solutions with which to play
+
 
 	def test_nondomsort(self):
+		pop = generate_population(self.wf,size=4,seed=self.SEED,skip_limit=100)
 		seed = 10
-		pop = generate_population(self.wf, 10, seed, 2)
 		objectives = []
 		# print(pop)
 		non_dom_sort(pop, objectives)
