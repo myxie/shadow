@@ -2,6 +2,9 @@
 *.idea
 *.project
 *.pydev*
+build/*
+dist/*
+*.egg-info
 *docs/build
 venv/
 utils/shadowgen/shadowgen_config.py
