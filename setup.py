@@ -28,7 +28,7 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'SHADOW'
+NAME = 'shadow'
 DESCRIPTION = 'Scheduling algorithm framework for testing and reproducibility'
 URL = 'https://github.com/myxie/shadow'
 EMAIL = 'ryan.bunney@icrar.org'
