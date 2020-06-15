@@ -4,6 +4,7 @@ from shadow.models.workflow import Workflow, Task
 from shadow.models.environment import Environment
 
 from shadow.visualiser.visualiser import AllocationPlot
+import matplotlib.pyplot as plt
 from test import config
 
 HEFTWorkflow = Workflow(config.test_heuristic_data['topcuoglu_graph'])
@@ -12,4 +13,5 @@ HEFTWorkflow.add_environment(env)
 heft(HEFTWorkflow)
 
 sample_allocation = AllocationPlot(solution=HEFTWorkflow.solution)
-sample_allocation.plot(save=True, figname='fig.pdf')
+fig, ax = sample_allocation.plot()
+plt.show()

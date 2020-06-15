@@ -17,10 +17,17 @@
 Fitness functions for use in evaluating objectives
 """
 
-FIT_COST = 'cost'
-FIT_TIME = 'time'
-FIT_THROUGPUT = 'throughput'
-FIT_REL = 'reliability'
+objective_functions = ['time, cost']
+
+
+def calculate_fitness(objectives, solution):
+	fitness = {}
+	for objective in objectives:
+		if objective is 'time':
+			fitness['time'] = (time_fitness(solution))
+		if objective is 'cost':
+			fitness['cost'] = (cost_fitness(solution))
+
 
 def cost_fitness(solution):
 	"""
@@ -35,9 +42,9 @@ def cost_fitness(solution):
 		tmpcost = 0
 		cost = machine.cost
 		for allocation in solution.list_machine_allocations(machine):
-			runtime = allocation.aft-allocation.ast
-			tmpcost += runtime*cost
-		cost+=tmpcost
+			runtime = allocation.aft - allocation.ast
+			tmpcost += runtime * cost
+		cost += tmpcost
 	return cost
 
 
@@ -58,22 +65,8 @@ def reliability_fitness():
 	return None
 
 
-
 # This is ugly - I should place this somewhere else (e.g current_globs.py)
 # which keeps the current state of the shadow library options available; e.g.
 # visualisation parameters, objectives that can be tested etc.
 
-objective_set = {"cost": cost_fitness,
-				"time": time_fitness,
-				"throughput": throughput_fitness,
-				"reliability": reliability_fitness}
 
-
-def run_objectives(objectives):
-	retdict = {}
-	for objective in objectives:
-		if objective in objective_set:
-			func = objective_set[objective]
-			retdict[objective] = func()
-
-	return None

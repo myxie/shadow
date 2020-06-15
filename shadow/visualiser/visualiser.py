@@ -41,18 +41,28 @@ class AllocationPlot(object):
 				alloc_list[i].append((alloc.ast, alloc.aft, alloc.tid))
 		return alloc_list
 
-	def plot(self, save=False, figname=None):
+	def plot(self):
 		num_machines = len(self.machines)
 		fig, ax = plt.subplots(num_machines, sharex='row', sharey='col', gridspec_kw={'hspace': 0})
 		self._setup_xaxis(num_machines, ax)
-		data = self._format_data_for_imshow(self.plotable_allocations,num_machines,self.makespan,ax)
+		data = self._format_data_for_imshow(self.plotable_allocations, num_machines, self.makespan, ax)
 		self._use_imshow(data, ax, num_machines)
-		self._setup_grid(num_machines,ax, self.machines)
+		self._setup_grid(num_machines, ax, self.machines)
 		plt.xlabel('Makespan (s)')
-		if save:
-			plt.savefig(figname, dpi=300)
-		else:
-			plt.show()
+		# ax.set_xlabel('Makespan (s)')
+		return fig, ax
+
+	# def plot(self, save=False, figname=None):
+	# 	num_machines = len(self.machines)
+	# 	fig, ax = plt.subplots(num_machines, sharex='row', sharey='col', gridspec_kw={'hspace': 0})
+	# 	self._setup_xaxis(num_machines, ax)
+	# 	data = self._format_data_for_imshow(self.plotable_allocations,num_machines,self.makespan,ax)
+	# 	self._use_imshow(data, ax, num_machines)
+	# 	self._setup_grid(num_machines,ax, self.machines)
+	# 	if save:
+	# 		plt.savefig(figname, dpi=300)
+	# 	else:
+	# 		plt.show()
 
 	def _setup_grid(self, num_machines,ax,machines):
 		for x,m in enumerate(machines):
@@ -94,6 +104,21 @@ class AllocationPlot(object):
 			ax[x].imshow(np.array([data[x]]), cmap="Blues")
 		for a in ax:
 			a.label_outer()
+
+
+class ComparisonPlot:
+	def __init__(self, solutions):
+		# Solutions is a list
+		if not isinstance(solutions,list):
+			raise TypeError("solutions is a list of Solution objects")
+		self.solutions = solutions
+
+class MetricPlot:
+	def __init__(self, metrics):
+		if not isinstance(metrics, list):
+			raise TypeError("metrics is a list of metrics")
+		# These are the metrics that we are displaying
+		self.metrics = metrics
 
 
 class BarPlot(object):
