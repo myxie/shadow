@@ -38,6 +38,7 @@ VERSION = None
 
 # What packages are required for this module to be executed?
 REQUIRED = [
+	'numpy','networkx','pandas','matplotlib','coverage','coveralls'
 	# 'requests', 'maya', 'records',
 ]
 
