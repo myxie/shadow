@@ -34,6 +34,12 @@ logging.basicConfig(level='WARNING')
 
 current_dir = os.path.abspath('.')
 
+class TestFCFS(unittest.TestCase):
+
+	def setUp(self):
+		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_heuristic_data['topcuoglu_graph']))
+		env = Environment("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph_system']))
+		self.wf.add_environment(env)
 
 class TestHeftMethods(unittest.TestCase):
 	"""

@@ -3,7 +3,7 @@ from shadow.algorithms.heuristic import heft
 from shadow.models.workflow import Workflow, Task
 from shadow.models.environment import Environment
 
-from shadow.visualiser.visualiser import AllocationPlot
+from shadow.visualiser.plot import AllocationPlot
 import matplotlib.pyplot as plt
 from test import config
 

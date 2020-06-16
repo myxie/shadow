@@ -93,7 +93,7 @@ class Workflow(object):
 	The workflow includes
 	"""
 
-	def __init__(self, config, from_file=True):
+	def __init__(self, config, taskobj = Task, from_file=True):
 		"""
 		"""
 		with open(config, 'r') as infile:
@@ -102,7 +102,7 @@ class Workflow(object):
 		# Take advantage of how pipelines
 		mapping = {}
 		for node in self.graph.nodes:
-			t = Task(node, self.graph.nodes[node]['comp'])
+			t = taskobj(node, self.graph.nodes[node]['comp'])
 			mapping[node] = t
 		self.graph = nx.relabel_nodes(self.graph, mapping, copy=False)
 		self.tasks = self.graph.nodes

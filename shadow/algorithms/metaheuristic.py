@@ -26,7 +26,6 @@ import random
 from shadow.models.solution import Solution, Allocation
 from shadow.models.globals import *
 
-from shadow.algorithms.fitness import FIT_COST, FIT_TIME
 
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
@@ -47,6 +46,13 @@ The two differ on evaluation and selection strategy
 
 RAND_BOUNDS = 1000
 
+def ga(workflow, seed, generations=100, popsize=100):
+	# generate initial population
+	# crossover
+	# mutation on offspring
+	# evaluate solutions
+	# select individuals to be carried on next generation
+	pass
 
 def nsga2(wf, seed, generations=100, popsize=100):
 	"""

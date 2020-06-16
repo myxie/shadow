@@ -1,3 +1,6 @@
+from queue import Queue
+
+
 def sequential_execution(self):
 	# TODO Add test case for this
 	seq = -1
