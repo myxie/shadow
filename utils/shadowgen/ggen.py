@@ -15,8 +15,9 @@
 import subprocess
 import os
 import datetime
-# from shadowgen_config import CURR_DIR, JSON_DIR, DOTS_DIR
+from shadowgen_config import CURR_DIR, JSON_DIR, DOTS_DIR
 from generator import generate_graph_costs, generate_system_machines
+# TODO get rid of these default config values.
 EAGLE_GRAPH = 'daliuge_graphs/TestAskapCont.graph'
 CHANNELS = 10
 SEED = 20
@@ -27,6 +28,11 @@ CCR = 0.5
 GGEN_OUTFILE = 'ggen_out'
 DATAFLOW = 'dataflow-graph'
 GFORMAT = 'denselu'
+
+
+GGEN_FORMATS = ['denselu']
+GGEN_DATAFLOW = ['dataflow-graph']
+GGEN_OUTPUT_PREFIX = 'ggen_out'
 
 
 def dotgen(minx, maxx, increment):

@@ -104,16 +104,6 @@ def generate_system_machines(config_path,
 		json.dump(system, jfile, indent=2)
 
 
-# data_rate_matrix = []
-# for x in range(num_machines):
-# 	row = [1 for y in range(num_machines)]
-# 	row[x] = 0
-# 	data_rate_matrix.append(row)
-#
-# system = {'resource': [random.randint(0, 20) for x in range(num_machines)],
-# 		  'data_rate': data_rate_matrix}
-# jgraph['system'] = system
-
 def generate_graph_costs(dot_path, json_path, ccr, mean, uniform_range, magnitude='giga', seed=20):
 	"""
 	:param seed: 
