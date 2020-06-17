@@ -10,3 +10,5 @@ venv/
 utils/shadowgen/shadowgen_config.py
 .coverage
 .DS_Store
+notebooks/.ipynb_checkpoints/*
+notebooks/output/
