@@ -41,6 +41,7 @@ class TestFCFS(unittest.TestCase):
 		env = Environment("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph_system']))
 		self.wf.add_environment(env)
 
+
 class TestHeftMethods(unittest.TestCase):
 	"""
 	This class test HEFT on the same example graph presented by

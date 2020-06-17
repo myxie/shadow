@@ -22,6 +22,7 @@ import numpy as np
 from shadow.models.environment import Environment
 from shadow.models.solution import Solution
 
+
 # TODO clean up allocation and ranking;
 #  reduce direct  to the graph,
 #  instead, only interact with
@@ -32,7 +33,7 @@ class Task(object):
 	Helper class for the
 	"""
 
-	def __init__(self, tid, flops):
+	def __init__(self, tid, flops=0):
 		self.tid = tid  # task id - this is unique
 		self.rank = -1  # This is updated during the 'Task Prioritisation' phase
 
@@ -93,7 +94,7 @@ class Workflow(object):
 	The workflow includes
 	"""
 
-	def __init__(self, config, taskobj = Task, from_file=True):
+	def __init__(self, config, taskobj=Task, from_file=True):
 		"""
 		"""
 		with open(config, 'r') as infile:
@@ -107,8 +108,8 @@ class Workflow(object):
 		self.graph = nx.relabel_nodes(self.graph, mapping, copy=False)
 		self.tasks = self.graph.nodes
 		self.edges = self.graph.edges
-		self.env = None
-		self.solution = None # Solution is dependent on an environment
+		self.env = None # Initialised when we 'add_environment'
+		self.solution = None  # Solution is dependent on an environment
 		# This lets us know when reading the graph if 'comp' attribute
 		# in the Networkx graph is time or FLOPs based
 		self._time = wfconfig['header']['time']
@@ -122,22 +123,33 @@ class Workflow(object):
 		self.env = environment
 		# Go through environment flags and check what processing we can do to the workflow
 		self.solution = Solution(machines=[m for m in self.env.machines])
+		# That is, the runtime of tasks has already been calculated
 		if self._time:
-			# Check the number of computation values stored for each node so they match the
-			# nunber of machines in the system config
+			# Check the number of  values stored for each node so they match the
+			# nunber of machines in thcomputatione system config
 			for task in self.tasks:
+				try:
+					comp_array_length = len(self.tasks[task]['comp'])
+				except TypeError:
+					print(
+						"Computation costs should be an array, but instead is {0}. Check your configuration files".format(
+							self.tasks[task]['comp']
+						)
+					)
+					raise TypeError
 				if len(self.tasks[task]['comp']) is not len(self.env.machines):
-					return -1
+					raise RuntimeError
 				machines = [m for m in self.env.machines]
 				runtime_list = self.tasks[task]['comp']
 				task.calculated_runtime = dict(zip(machines, runtime_list))
 			return 0
-			# Use compute provided by system values to calculate the time taken
+		# Use compute provided by system values to calculate the time taken
+
 		else:
 			for m in self.env.machines:
 				for task in self.tasks:
 					comp = task.flops_demand
-					task.calculated_runtime[m] = self.env.calc_task_runtime_on_machine(m,comp)
+					task.calculated_runtime[m] = int(self.env.calc_task_runtime_on_machine(m, comp))
 			# self.tasks[node]['comp']
 			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
 

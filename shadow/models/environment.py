@@ -24,9 +24,9 @@ logger = logging.getLogger(__name__)
 
 
 class Machine(object):
-	def __init__(self, id, flops, cost, bandwidth):
-		self.id = id
-		self.machine_type = id.split("_")[0]
+	def __init__(self, mid, flops, cost, bandwidth):
+		self.id = mid
+		self.machine_type = mid.split("_")[0]
 		self.flops = flops
 		self.cost = cost
 		self.bandwidth = bandwidth

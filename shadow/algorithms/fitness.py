@@ -27,6 +27,12 @@ def calculate_fitness(objectives, solution):
 			fitness['time'] = (time_fitness(solution))
 		if objective is 'cost':
 			fitness['cost'] = (cost_fitness(solution))
+		else:
+			raise NotImplementedError(
+				"Objective function {0} has not been implemented".format(objective)
+			)
+
+	return fitness
 
 
 def cost_fitness(solution):

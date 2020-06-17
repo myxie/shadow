@@ -12,3 +12,19 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# This is adapted and expanded upon in the shadowgen.ipynb notebook
+
+
+
+from shadow.models.workflow import Workflow
+from shadow.models.environment import Environment
+import shadow.algorithms.heuristic as heuristic
+
+workflow = Workflow('dax_files/output/shadow_Epigenomics_24.json')
+env = Environment('environments/sys.json')
+workflow.add_environment(env)
+heuristic.heft(workflow)
+
+
+
