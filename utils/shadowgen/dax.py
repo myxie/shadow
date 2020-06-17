@@ -20,6 +20,8 @@ import networkx as nx
 import sys
 
 
+## NB DAX Data values are measured in BYTES. This is why they are (perhaps unnecessarily) large
+
 # allows for removal of string which interferes with etree
 def clean_xml(filename, newfile, search_str, replacement_str):
 	edited_str_lines = []
