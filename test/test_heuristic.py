@@ -21,9 +21,10 @@ import logging
 
 from test import config as cfg
 from shadow.algorithms.heuristic import upward_rank, upward_oct_rank, \
-	heft, pheft
-from shadow.models.workflow import Workflow
+	heft, pheft, check_machine_availability
+from shadow.models.workflow import Workflow,Task
 from shadow.models.environment import Environment
+from shadow.models.solution import Solution, Allocation
 
 # CHANGE THIS TO GET DEBUG VALUES FROM LOGS
 logging.basicConfig(level='WARNING')
@@ -34,12 +35,27 @@ logging.basicConfig(level='WARNING')
 
 current_dir = os.path.abspath('.')
 
+
 class TestFCFS(unittest.TestCase):
 
 	def setUp(self):
 		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_heuristic_data['topcuoglu_graph']))
-		env = Environment("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph_system']))
-		self.wf.add_environment(env)
+		self.env = Environment("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph_system']))
+		self.wf.add_environment(self.env)
+
+	def test_machine_availability(self):
+		solution = Solution(self.env.machines)
+		m = list(self.env.machines)[1] # second machine
+		t = Task(1)
+		t.ast = 3
+		t.aft = 11
+		t.machine = m
+		solution.add_allocation(t,m)
+
+		# Start time is 5, so machine should be unavailable
+		self.assertFalse(check_machine_availability(solution,m,start_time=5))
+
+
 
 
 class TestHeftMethods(unittest.TestCase):

@@ -32,7 +32,7 @@ class Machine(object):
 		self.bandwidth = bandwidth
 
 
-def _process_env_resources(resources ):
+def _process_env_resources(resources):
 	if resources is None:
 		raise EnvironmentError("Environment is not appropriately defined")
 	else:
@@ -54,6 +54,10 @@ def _process_env_resources(resources ):
 
 class Environment(object):
 	def __init__(self, config):
+		"""
+		This is a description of the Environment class
+		:param config:
+		"""
 		with open(config, 'r') as infile:
 			jdict = json.load(infile)
 
@@ -69,8 +73,8 @@ class Environment(object):
 		self.rates = rates
 		self.cost = cost
 
-
-	def _check_comp(self, res_dict):
+	@staticmethod
+	def _check_comp(res_dict):
 		"""
 		Sanity check for computation values in the resources part of our system spec
 		:param res_dict: The 'resources' sub-dictionary from our json file

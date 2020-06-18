@@ -170,11 +170,12 @@ class Workflow(object):
 				x.rank, reverse=True)
 
 		if sort_type == 'topological':
-			return nx.topological_sort(self)
+			return nx.topological_sort(self.graph)
 		else:
-			return None
+			raise NotImplementedError("This sorting method has not been implemented")
 
 	def solution_exec_order(self):
 		return sorted(
 			self.tasks, key=lambda x: x.ast
 		)
+

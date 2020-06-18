@@ -22,11 +22,22 @@ from test import config as cfg
 
 from shadow.models.workflow import Workflow, Task
 from shadow.models.environment import Environment
+import shadow.algorithms.heuristic as heuristic
 
 # TODO Need to test workflow class initialisation on a number of graph types
 #  and system specifications.
 
 current_dir = os.path.abspath('.')
+
+
+class TestWorkflowSorting(unittest.TestCase):
+	def setUp(self) -> None:
+		self.workflow = Workflow("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph']))
+
+	def test_topological_sort(self):
+		task_list = list(self.workflow.sort_tasks("topological"))
+		task_order = [t.tid for t in task_list]
+		self.assertSequenceEqual([0, 5, 4, 3, 2, 6, 1, 8, 7, 9], task_order)
 
 
 class TestAddEnvironment(unittest.TestCase):

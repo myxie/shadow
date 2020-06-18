@@ -23,11 +23,16 @@ algorithms. Currently, this file implements the following algorithms:
 * PHEFT 
 """
 from random import randint
+import networkx as nx
 import operator
+
+from shadow.models.workflow import Workflow
 
 RANDMAX = 1000
 
 heuristic_algorithms = ['heft', 'pheft']
+
+
 #############################################################################
 ############################# HUERISTICS  ###################################
 #############################################################################
@@ -61,17 +66,50 @@ def pheft(workflow):
 	return workflow.solution
 
 
-def topological_sort(workflow):
-	pass
+def fcfs_allocation(workflow, greedy, seed):
+	makespan = 0
+	# tasks = sort_tasks(wf, 'rank')
+	sorted_tasks = workflow.sort_tasks("topological")
+	# tmp = wf.tasks
+
+	for task in sorted_tasks:
+		if len(workflow.graph.predecessors(task)) == 0:
+			start_time = 0
+			m, w = min(
+				task.calculated_runtime.items(),
+				key=operator.itemgetter(1)
+			)
+			available = check_machine_availability(workflow.solution, m, start_time)
+			if available:
+				task.ast = start_time
+				task.aft = w
+				task.machine = m
+				workflow.solution.add_allocation(task,m)
+
+		else:
+			pred = list(workflow.graph.predecessors(task))
+			last_pred = pred.sort(key=lambda x: x.aft, reverse=True)[0]
+			earliest_start = last_pred.aft
+			for m in workflow.env.machines:
+				if m != last_pred.machine:
+					data_size = workflow.graph.edges[last_pred,task]['data_size']
+					earliest_start += workflow.env.calc_data_transfer_time(m,data_size)
+				if check_machine_availability(workflow.solution,m, earliest_start):
+					task.ast = earliest_start
+					task.aft = task.ast + task.calculated_runtime[m]
+					task.machine = m
+					workflow.solution.add_allocation(task, m)
 
 
-def fcfs_allocation(workflow):
-	pass
+def check_machine_availability(solution, machine, start_time):
+	for alloc in solution.list_machine_allocation(machine):
+		if alloc.ast <= start_time <= alloc.asft:
+			return False
+	return True
 
 
-def fcfs(workflow):
-	topological_sort(workflow)
-	fcfs_allocation(workflow)
+def fcfs(workflow, greedy=True, seed=None):
+	fcfs_allocation(workflow, greedy, seed)
 	return workflow.solution
 
 
@@ -167,7 +205,7 @@ def rank_up(wf, task):
 
 		longest_rank = max(
 			longest_rank, ave_comm_cost(wf, task, successor)
-			+ successor.rank
+						  + successor.rank
 		)
 
 	task.rank = task.calc_ave_runtime() + longest_rank
@@ -187,7 +225,7 @@ def rank_up_random(wf, task):
 
 		longest_rank = max(
 			longest_rank, ave_comm_cost(wf, task, successor)
-						+ wf.tasks[successor]['rank'])
+						  + wf.tasks[successor]['rank'])
 
 	randval = randint(0, RANDMAX) % 3
 	ave_comp = 0
@@ -218,7 +256,7 @@ def rank_oct(wf, oct_rank_matrix, task, pk):
 			if machine is not pk:
 				comm_cost = ave_comm_cost(wf, task, successor)
 			oct_val = oct_rank_matrix[(successor, machine)] + \
-					comp_cost + comm_cost
+					  comp_cost + comm_cost
 			min_machine = min(min_machine, oct_val)
 		max_successor = max(max_successor, min_machine)
 
@@ -226,11 +264,11 @@ def rank_oct(wf, oct_rank_matrix, task, pk):
 
 
 def ave_comm_cost(wf, task, successor):
-
 	data_size = wf.graph.edges[task, successor]['data_size']
 	# return wf.graph.edges[task, successor]['data_size']
 
 	return wf.env.calc_data_transfer_time(data_size=data_size)
+
 
 def ave_comp_cost(wf, task):
 	comp = wf.tasks[task]['comp']
@@ -276,19 +314,19 @@ def calc_est(wf, task, machine):
 	if num_alloc == 0:
 		test = 0
 	else:
-		for i,alloc in enumerate(curr_allocations):
+		for i, alloc in enumerate(curr_allocations):
 			if i == 0:
-				if alloc.ast !=0: # If the start time of the first allocation is not 0
+				if alloc.ast != 0:  # If the start time of the first allocation is not 0
 					available_slots.append((0, alloc.ast))
 				else:
 					continue
 			else:
-				prev_alloc = curr_allocations[i-1]
+				prev_alloc = curr_allocations[i - 1]
 				available_slots.append((
 					prev_alloc.aft,
 					alloc.ast
 				))
-		final_alloc = curr_allocations[num_alloc-1] # We want the finish time of the latest allocation.
+		final_alloc = curr_allocations[num_alloc - 1]  # We want the finish time of the latest allocation.
 		available_slots.append((final_alloc.aft, -1))
 
 	for slot in available_slots:
@@ -357,7 +395,6 @@ def insertion_policy(wf):
 	wf.solution.makespan = makespan
 
 
-
 def insertion_policy_oct(wf, oct_rank_matrix):
 	"""
 	Allocate tasks to machines following the insertion based policy outline
@@ -376,7 +413,7 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 			task.ast = 0
 			min_oeft = -1
 			for machine in wf.env.machines:
-				eft_matrix[(task, machine)] = task.calculated_runtime[machine] 
+				eft_matrix[(task, machine)] = task.calculated_runtime[machine]
 				oeft_matrix[(task, machine)] = \
 					eft_matrix[(task, machine)] + oct_rank_matrix[(task, machine)]
 				if (min_oeft == -1) or \
@@ -412,5 +449,3 @@ def insertion_policy_oct(wf, oct_rank_matrix):
 			wf.solution.add_allocation(task=task, machine=m)
 
 	wf.solution.makespan = makespan
-
-

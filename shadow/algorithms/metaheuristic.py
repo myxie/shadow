@@ -17,7 +17,23 @@
 
 # This file contains code for implementing metaheuristic scheduling algorithms.
 # Currently, this file implements the following algorithms:
-# 
+
+"""
+N = population size
+P = create parent population by randomly creating N individuals
+while not done
+    C = create empty child population
+    while not enough individuals in C
+        parent1 = select parent   ***** HERE IS WHERE YOU DO TOURNAMENT SELECTION *****
+        parent2 = select parent   ***** HERE IS WHERE YOU DO TOURNAMENT SELECTION *****
+        child1, child2 = crossover(parent1, parent2)
+        mutate child1, child2
+        evaluate child1, child2 for fitness
+        insert child1, child2 into C
+    end while
+    P = combine P and C somehow to get N new individuals
+end while
+"""
 
 import networkx as nx
 import itertools
@@ -25,7 +41,7 @@ import random
 
 from shadow.models.solution import Solution, Allocation
 from shadow.models.globals import *
-
+from shadow.algorithms import fitness
 
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
@@ -46,13 +62,33 @@ The two differ on evaluation and selection strategy
 
 RAND_BOUNDS = 1000
 
-def ga(workflow, seed, generations=100, popsize=100):
+
+def ga(workflow, objectives, seed, generations=100, popsize=100):
 	# generate initial population
 	# crossover
 	# mutation on offspring
 	# evaluate solutions
 	# select individuals to be carried on next generation
+	pop = generate_population(workflow, seed, generations, popsize)
+	for soln in pop:
+		soln.fitness = fitness.calculate_fitness(soln)
+	# binary_tournament(pop)
+	generation = 0
+	limit = False
+	while generation < generations or limit:
+		newgen = []
+		while len(newgen) > len(pop):
+			p1 = binary_tournament(pop)
+			p2 = binary_tournament(pop)
+			c1, c2 = crossover(p1, p2)
+			for c in [c1, c2]:
+				mutation(c)
+				fitness.calculate_fitness(c, objectives)
+				newgen.append(c)
+		generation += 1
+		continue
 	pass
+
 
 def nsga2(wf, seed, generations=100, popsize=100):
 	"""
@@ -146,7 +182,7 @@ def non_dom_sort(pop, objectives, env):
 					dominated[p] = [q]
 				else:
 					dominated[p] += [q]  # add q to set of soln dominated by p
-			elif dominates(q, p, objectives,env):
+			elif dominates(q, p, objectives, env):
 				p.dom_counter += 1  # This determines if it has been dominated
 		if p.dom_counter == 0:
 			p.nondom_rank = 1
@@ -183,14 +219,28 @@ def dominates(p, q, objective_set, env):
 
 
 def binary_tournament(pop):
-	return None
+	"""
+	Stock standard binary tournament selection
+	:param pop: population of solutions
+	:return: selected parent for crossover
+	"""
+
+	k = 2 # BINARY tournament selection
+	best = None
+	for i in range(k):
+		index = random.randint(0,len(pop))
+		tmp = pop[index]
+		if (best == None) or tmp.fitness > tmp.best:
+			best = tmp
+	return best
+
 
 
 def binary_tournament_rank(pop):
 	return None
 
 
-def crossover(soln):
+def crossover(parent1, parent2):
 	"""
 	As described in Yu & Buyya 2007
 
@@ -200,7 +250,17 @@ def crossover(soln):
 	3. all tasks between the points are chosen as crossover points
 	4. the service allocation of the tasks within the crossover points are exchanged.
 	"""
-	return None
+	p1_tasks = parent1
+	p2_tasks = parent2
+
+	min_boundary = random.randint(0, len(p1_tasks))
+	max_boundary = random.randint(0, len(p2_tasks))
+	# We achieve the crossover by finding the 'like tasks' between the boundary and swapping
+	# Them between parents.
+	c1_tasks = p1_tasks
+	c2_tasks = p2_tasks
+
+	return c1_tasks, c2_tasks
 
 
 def mutation(soln):
@@ -270,8 +330,8 @@ def calc_solution_cost(solution, workflow):
 	return cost
 
 
-def generate_allocations(machines, task_order, wf, seed):
-	soln = NSGASolution(machines=machines)
+def generate_allocations(machines, task_order, wf, seed, solution_class=GASolution):
+	soln = solution_class(machines=machines)
 	rand_bounds = len(machines)
 	random.seed(seed)
 	for t in task_order:
@@ -316,6 +376,11 @@ def calc_start_finish_times(task, machine, workflow, curr_allocations):
 
 	return None
 
+class GASolution(Solution):
+	def __init__(self,machines):
+		super().__init__(machines)
+		# Fitness is a dictionary of objectives and the calculated fitness
+		self.fitness = {}
 
 class NSGASolution(Solution):
 	""" A simple class to store each solutions' related information
