@@ -73,77 +73,86 @@ def fcfs_allocation(workflow, greedy, seed):
 	# tmp = wf.tasks
 
 	for task in sorted_tasks:
-		if len(workflow.graph.predecessors(task)) == 0:
+		pred = list(workflow.graph.predecessors(task))
+		if len(pred) == 0:
 			start_time = 0
 			m, w = min(
 				task.calculated_runtime.items(),
 				key=operator.itemgetter(1)
 			)
-			available = check_machine_availability(workflow.solution, m, start_time)
+			available = check_machine_availability(workflow.solution, m, start_time, task)
 			if available:
 				task.ast = start_time
 				task.aft = w
 				task.machine = m
-				workflow.solution.add_allocation(task,m)
+				workflow.solution.add_allocation(task, m)
 
 		else:
-			pred = list(workflow.graph.predecessors(task))
-			last_pred = pred.sort(key=lambda x: x.aft, reverse=True)[0]
-			earliest_start = last_pred.aft
+			# pred = list(workflow.graph.predecessors(task))
+			pred.sort(key=lambda x: x.aft, reverse=True)
+			last_pred = pred[0]
+			earliest_start_time = -1
+			finish_time = 0
+			machine = last_pred.machine
+			available = False
 			for m in workflow.env.machines:
-				if m != last_pred.machine:
-					data_size = workflow.graph.edges[last_pred,task]['data_size']
-					earliest_start += workflow.env.calc_data_transfer_time(m,data_size)
-				if check_machine_availability(workflow.solution,m, earliest_start):
-					task.ast = earliest_start
-					task.aft = task.ast + task.calculated_runtime[m]
-					task.machine = m
-					workflow.solution.add_allocation(task, m)
+				new_start = last_pred.aft
+				if m is not last_pred.machine:
+					data_size = workflow.graph.edges[last_pred, task]['data_size']
+					new_start += workflow.env.calc_data_transfer_time(data_size)
+				if check_machine_availability(workflow.solution, m, new_start, task):
+					available = True
+					if earliest_start_time == -1:
+						earliest_start_time = new_start
+						finish_time = earliest_start_time + task.calculated_runtime[m]
+						machine = m
+					elif earliest_start_time > new_start:
+						earliest_start_time = new_start
+						finish_time = earliest_start_time + task.calculated_runtime[m]
+						machine = m
+			if not available:
+				print("Nothing is available for {0} - task must wait".format(task.tid))
+				# Take the next available one
+				for m in workflow.env.machines:
+					new_start = last_pred.aft
+					if m is not last_pred.machine:
+						data_size = workflow.graph.edges[last_pred, task]['data_size']
+						new_start += workflow.env.calc_data_transfer_time(data_size)
+					# Tmp is the machine earliest availability
+					tmp = machine_earliest_availability(workflow.solution, m)
+					if earliest_start_time == -1 and new_start < tmp:
+						earliest_start_time = tmp
+						finish_time = earliest_start_time + task.calculated_runtime[m]
+						machine = m
+					elif earliest_start_time > tmp and new_start <tmp:
+						earliest_start_time = tmp
+						finish_time = earliest_start_time + task.calculated_runtime[m]
+						machine = m
 
+			task.ast = earliest_start_time
+			task.aft = finish_time
+			task.machine = machine
+			workflow.solution.add_allocation(task, task.machine)
 
-def check_machine_availability(solution, machine, start_time):
-	for alloc in solution.list_machine_allocation(machine):
-		if alloc.ast <= start_time <= alloc.asft:
+# TODO return next available time
+def machine_earliest_availability(solution, machine):
+	last_alloc = solution.latest_allocation_on_machine(machine)
+	return last_alloc.aft
+
+def check_machine_availability(solution, machine, start_time, task):
+	for alloc in solution.list_machine_allocations(machine):
+		if alloc.ast <= start_time < alloc.aft:
 			return False
+		# if it starts beforehand but will over-run:
+		if start_time < alloc.ast <= start_time + task.calculated_runtime[machine]:
+			return False
+
 	return True
 
 
 def fcfs(workflow, greedy=True, seed=None):
 	fcfs_allocation(workflow, greedy, seed)
 	return workflow.solution
-
-
-def allocate_mct(workflow):
-	for task in workflow.tasks:
-		# If task has predecessors, get them
-		pred = workflow.graph.predecessors(task)
-		ct = -1
-		if not pred:
-			# We don't have any predecessors:
-			ct = 0
-		else:
-			# Get the largest finish time of the predecessor taskss
-			ct = max([t.aft for t in pred])
-			task.ast = ct
-			tmp = -1
-			tmp_m = None
-			for m in workflow.env.machines:
-				cost = task.calculated_runtime(m)
-				if tmp == -1:
-					tmp = cost
-					tmp_m = m
-				elif tmp > cost:
-					tmp = cost
-					tmp_m = m
-			ct += tmp
-			task.aft = ct
-			task.machine = tmp_m
-			workflow.solution.add_allocation(task, tmp_m)
-
-
-def mct(workflow):
-	topological_sort(workflow)
-	allocate_mct(workflow)
 
 
 # TODO: Partial Critical Paths 

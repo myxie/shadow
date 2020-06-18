@@ -52,6 +52,8 @@ class Solution:
 		)
 		self.execution_order.append(a)
 		self.execution_order.sort(key=lambda alloc: alloc.ast)
+		if task.aft > self.makespan:
+			self.makespan = task.aft
 
 	def list_machine_allocations(self, machine):
 		"""
@@ -64,6 +66,10 @@ class Solution:
 			key=lambda alloc: alloc.ast
 		)
 		return self.allocations[machine]
+
+	def latest_allocation_on_machine(self, machine):
+		final = len(self.allocations[machine])
+		return self.allocations[machine][final-1]
 
 	def list_all_allocations(self):
 		return self.allocations

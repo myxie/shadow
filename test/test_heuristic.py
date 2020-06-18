@@ -21,8 +21,8 @@ import logging
 
 from test import config as cfg
 from shadow.algorithms.heuristic import upward_rank, upward_oct_rank, \
-	heft, pheft, check_machine_availability
-from shadow.models.workflow import Workflow,Task
+	heft, pheft, check_machine_availability, fcfs
+from shadow.models.workflow import Workflow, Task
 from shadow.models.environment import Environment
 from shadow.models.solution import Solution, Allocation
 
@@ -45,17 +45,43 @@ class TestFCFS(unittest.TestCase):
 
 	def test_machine_availability(self):
 		solution = Solution(self.env.machines)
-		m = list(self.env.machines)[1] # second machine
+		m = list(self.env.machines)[1]  # second machine
 		t = Task(1)
 		t.ast = 3
 		t.aft = 11
 		t.machine = m
-		solution.add_allocation(t,m)
+		t.calculated_runtime[m] = 5
+		solution.add_allocation(t, m)
 
 		# Start time is 5, so machine should be unavailable
-		self.assertFalse(check_machine_availability(solution,m,start_time=5))
+		self.assertFalse(check_machine_availability(solution, m, start_time=5, task=t))
+		# Start time is 2, so *technically* this fine; however, if we take into account task runtime it will overlap
+		self.assertFalse(check_machine_availability(solution, m, start_time=2, task=t))
+		# Start time is now ahead of the two allocations
+		self.assertTrue(check_machine_availability(solution, m, start_time=11, task=t))
 
+		# Add a spanner in the works and have TWO allocations
 
+		u = Task(2)
+		u.ast = 14
+		u.aft = 17
+		u.machine = m
+		u.calculated_runtime[m] = 4
+		solution.add_allocation(u, m)
+		# THis should be false, as start-time+runtime overlaps with 14-17
+		self.assertFalse(check_machine_availability(solution, m, start_time=13, task=u))
+		# If we change the runtime, however, and start a little earlier, this should 'slot' inbetween the two allocations
+		u.calculated_runtime[m] = 2
+		self.assertTrue(check_machine_availability(solution, m, start_time=11, task=u))
+
+	def test_fcfs_allocations(self):
+		# The order should be [0, 5, 4, 3, 2, 6, 1, 8, 7, 9]
+		solution = fcfs(workflow=self.wf)
+		for t in self.wf.tasks:
+			if t.tid == 0:
+				self.assertEqual(0, t.ast)
+				self.assertEqual(11, t.aft)
+		
 
 
 class TestHeftMethods(unittest.TestCase):
@@ -160,11 +186,11 @@ class TestDALiuGEGraph(unittest.TestCase):
 
 	def setUp(self):
 		self.wf = Workflow('test/data/daliugesample.json',
-						cfg.test_heuristic_data['topcuoglu_graph_system'],
-						calc_time=False)
+						   cfg.test_heuristic_data['topcuoglu_graph_system'],
+						   calc_time=False)
 		self.dense = Workflow('test/data/ggen_out_4-denselu.json',
-							cfg.test_heuristic_data['topcuoglu_graph_system'],
-							calc_time=False)
+							  cfg.test_heuristic_data['topcuoglu_graph_system'],
+							  calc_time=False)
 		self.gnp = Workflow('test/data/ggen_out_20-0.5.json',
 							cfg.test_heuristic_data['topcuoglu_graph_system'],
 							calc_time=False)
