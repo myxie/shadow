@@ -69,6 +69,7 @@ class Environment(object):
 		self.rates = rates
 		self.cost = cost
 
+
 	def _check_comp(self, res_dict):
 		"""
 		Sanity check for computation values in the resources part of our system spec
@@ -124,6 +125,13 @@ class Environment(object):
 		"""
 		machine_type_prefix = machine.machine_type
 		return self.cost[machine_type_prefix] * task_runtime
+
+	def calc_data_transfer_time(self, data_size):
+		average_rate = sum(self.rates.values())/len(self.rates.values())
+		return int(data_size/average_rate)
+
+
+
 
 # self.en nviron['system']
 #

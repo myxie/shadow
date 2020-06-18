@@ -224,34 +224,13 @@ def rank_oct(wf, oct_rank_matrix, task, pk):
 
 	oct_rank_matrix[(task, pk)] = max_successor
 
+
 def ave_comm_cost(wf, task, successor):
-	"""
-	Returns the 'average' communication cost, which is just
-	the cost in the matrix. Not sure how the ave. in the
-	original paper was calculate or represented...
 
-	:params task: Starting task
-	:params successor: Node with which the starting task is communicating
-	"""
-	# TODO sort out data rates in future release
-	# cost, zeros = 0, 0
-	# data_product_size = wf.graph.edges[task, successor]['data_size']
-	# for val in range(len(wf.system['data_rate'][0])):
-	# 	rate = wf.system['data_rate'][0][val]
-	# 	if rate != 0:
-	# 		cost += data_product_size / rate
-	# 	else:
-	# 		zeros += 1
-	# denominator = len(wf.system['data_rate'][0]) - zeros
-	#
-	# # if denominator is 0, the data rate between each machine is negligible.
-	# if denominator == 0:
-	# 	return 0
-	# else:
-	# 	return int(cost / denominator)
+	data_size = wf.graph.edges[task, successor]['data_size']
+	# return wf.graph.edges[task, successor]['data_size']
 
-	return wf.graph.edges[task, successor]['data_size']
-
+	return wf.env.calc_data_transfer_time(data_size=data_size)
 
 def ave_comp_cost(wf, task):
 	comp = wf.tasks[task]['comp']
