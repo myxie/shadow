@@ -101,7 +101,6 @@ class Environment(object):
 
 	def parse_environment_config(self, dictionary):
 		"""
-
 		:param dictionary:
 		:return:
 		"""
@@ -123,8 +122,10 @@ class Environment(object):
 	def calc_task_cost_on_machine(self, machine, task_runtime):
 		"""
 		Machine costs are presented as $ per second
-		:param machine: Machine on which the task is running
-		:param task_runtime: the total runtime of the task
+
+		:param machine: The Machine object instance on which the task is running
+		:param task_runtime: The total runtime of the task, when executed on machine
+
 		:return: The total cost in $ of running the task on the
 		"""
 		machine_type_prefix = machine.machine_type
@@ -136,10 +137,3 @@ class Environment(object):
 
 
 
-
-# self.en nviron['system']
-#
-#
-# self.machines = [[] for x in range(len(self.env['resource']))]
-# self.data_load = np.array([])
-# self.thrpt = 0.0
