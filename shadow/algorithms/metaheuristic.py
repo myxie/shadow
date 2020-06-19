@@ -43,6 +43,10 @@ from shadow.models.solution import Solution, Allocation
 from shadow.models.globals import *
 from shadow.algorithms import fitness
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
 
@@ -61,9 +65,36 @@ The two differ on evaluation and selection strategy
 """
 
 RAND_BOUNDS = 1000
+DEFAULT_SEED = 50
 
 
 def ga(workflow, objectives, seed, generations=100, popsize=100):
+	"""
+
+	This function runs a standard genetic algorithm, with basic elitism, and
+	basic diversification. The algorithm:
+
+		* Generates a population of Solutions, based on the workflow provided
+		* For a given number of generations:
+
+			* Create a child population (newgen)
+			* Whilst the |newgen| < |pop|
+				* Select parents using binary tournament seleciton
+				* Crossover the parents to children
+				* mutate the children
+				* calculate the fitness of each child
+				* add new  children to newgen
+
+			* Keep as many children as there are that outperform the parents
+
+	:param workflow:
+	:param objectives:
+	:param seed:
+	:param generations:
+	:param popsize:
+	:return:
+
+	"""
 	# generate initial population
 	# crossover
 	# mutation on offspring
@@ -80,7 +111,7 @@ def ga(workflow, objectives, seed, generations=100, popsize=100):
 		while len(newgen) > len(pop):
 			p1 = binary_tournament(pop)
 			p2 = binary_tournament(pop)
-			c1, c2 = crossover(p1, p2)
+			c1, c2 = crossover(p1, p2, seed)
 			for c in [c1, c2]:
 				mutation(c)
 				fitness.calculate_fitness(c, objectives)
@@ -143,6 +174,12 @@ def spea2(wf, seed):
 	return None
 
 
+################################################################################
+################################################################################
+#    							HELPER FUNCTIONS							   #
+################################################################################
+################################################################################
+
 def generate_population(wf, size, seed, skip_limit):
 	"""
 	task_assign[0] is the resource to which Task0 is assigned
@@ -168,79 +205,27 @@ def generate_population(wf, size, seed, skip_limit):
 
 
 # How can we test non-domination? Need to get a testing set together for our HEFT graph
+# OR WE CAN USE A DIFFERENT GRAPH :O
 
-def non_dom_sort(pop, objectives, env):
-	front = {0: []}
-	dominated = {}
-	for p in pop:
-		p.dom_counter = 0  # reset between different sorts, as may have changed
-		for q in pop:
-			if p is q:
-				continue
-			if dominates(p, q, objectives, env):  # if p dominates q
-				if p not in dominated:
-					dominated[p] = [q]
-				else:
-					dominated[p] += [q]  # add q to set of soln dominated by p
-			elif dominates(q, p, objectives, env):
-				p.dom_counter += 1  # This determines if it has been dominated
-		if p.dom_counter == 0:
-			p.nondom_rank = 1
-			front[0].append(p)
-
-	i = 1
-
-	if i in front:
-		Q = []
-		for p in front[i]:
-			for q in dominated[p]:
-				q.dom_counter -= 1
-				if q.dom_counter == 0:
-					q.nondom_rank = i + 1
-					Q.append(q)
-		i += 1
-		front[i] = Q
-
-	return front
-
-
-def dominates(p, q, objective_set, env):
-	"""
-	Checks if the given solution 'p' dominates 'q' for each objective outlined
-	in 'objective set'
-	"""
-
-	p_sol = []
-	# objective is a function
-	for objective in objective_set:
-		p_sol.append(objective(p, env))
-
-	return True
-
-
-def binary_tournament(pop):
+def binary_tournament(pop, seed=DEFAULT_SEED):
 	"""
 	Stock standard binary tournament selection
 	:param pop: population of solutions
 	:return: selected parent for crossover
 	"""
+	random.seed(seed)
 
-	k = 2 # BINARY tournament selection
+	k = 2  # BINARY tournament selection
 	best = None
 	for i in range(k):
-		index = random.randint(0,len(pop))
+		index = random.randint(0, len(pop))
 		tmp = pop[index]
-		if (best == None) or tmp.fitness > tmp.best:
+		if (best is None) or tmp.fitness > tmp.best:
 			best = tmp
 	return best
 
 
-
-def binary_tournament_rank(pop):
-	return None
-
-
-def crossover(parent1, parent2):
+def crossover(parent1, parent2, seed=DEFAULT_SEED):
 	"""
 	As described in Yu & Buyya 2007
 
@@ -253,6 +238,7 @@ def crossover(parent1, parent2):
 	p1_tasks = parent1
 	p2_tasks = parent2
 
+	random.seed(seed)
 	min_boundary = random.randint(0, len(p1_tasks))
 	max_boundary = random.randint(0, len(p2_tasks))
 	# We achieve the crossover by finding the 'like tasks' between the boundary and swapping
@@ -271,22 +257,6 @@ def mutation(soln):
 	Level 0 should have just the first task(s) - those with no indegree
 	Level n should have just the final task(s) - those with no outdegree
 	"""
-
-	return None
-
-
-def crowding_distance(solutions):
-	"""
-	For a given list of solutions, calculated the distance between the two closest solutions
-	for a given dimension; that is, the next highest and next lowest solution for that dimension.
-	:return:
-	"""
-	popsize = len(solutions)
-
-	crowding_distance = []
-
-	# Scores need to be normalised to the highest/lowest
-	normalise_scores = None
 
 	return None
 
@@ -376,11 +346,84 @@ def calc_start_finish_times(task, machine, workflow, curr_allocations):
 
 	return None
 
+
 class GASolution(Solution):
-	def __init__(self,machines):
+	def __init__(self, machines):
 		super().__init__(machines)
 		# Fitness is a dictionary of objectives and the calculated fitness
 		self.fitness = {}
+
+
+###### NSGAII Specific functions #####
+
+def binary_tournament_rank(pop):
+	return None
+
+
+def non_dom_sort(pop, objectives, env):
+	front = {0: []}
+	dominated = {}
+	for p in pop:
+		p.dom_counter = 0  # reset between different sorts, as may have changed
+		for q in pop:
+			if p is q:
+				continue
+			if dominates(p, q, objectives, env):  # if p dominates q
+				if p not in dominated:
+					dominated[p] = [q]
+				else:
+					dominated[p] += [q]  # add q to set of soln dominated by p
+			elif dominates(q, p, objectives, env):
+				p.dom_counter += 1  # This determines if it has been dominated
+		if p.dom_counter == 0:
+			p.nondom_rank = 1
+			front[0].append(p)
+
+	i = 1
+
+	if i in front:
+		Q = []
+		for p in front[i]:
+			for q in dominated[p]:
+				q.dom_counter -= 1
+				if q.dom_counter == 0:
+					q.nondom_rank = i + 1
+					Q.append(q)
+		i += 1
+		front[i] = Q
+
+	return front
+
+
+def dominates(p, q, objective_set, env):
+	"""
+	Checks if the given solution 'p' dominates 'q' for each objective outlined
+	in 'objective set'
+	"""
+
+	p_sol = []
+	# objective is a function
+	for objective in objective_set:
+		p_sol.append(objective(p, env))
+
+	return True
+
+
+def crowding_distance(solutions):
+	"""
+	For a given list of solutions, calculated the distance between the two closest solutions
+	for a given dimension; that is, the next highest and next lowest solution for that dimension.
+	:return:
+	"""
+	popsize = len(solutions)
+
+	crowding_distance = []
+
+	# Scores need to be normalised to the highest/lowest
+	normalise_scores = None
+
+	return None
+
 
 class NSGASolution(Solution):
 	""" A simple class to store each solutions' related information

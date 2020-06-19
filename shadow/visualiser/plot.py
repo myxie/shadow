@@ -33,9 +33,9 @@ class AllocationPlot(object):
 		# We have a dictionary of the allocations, what do we do with them?
 		pass
 
-	def _unwrap_allocation_tuples(self,solution):
+	def _unwrap_allocation_tuples(self, solution):
 		alloc_list = []
-		for i,m in enumerate(self.machines):
+		for i, m in enumerate(self.machines):
 			alloc_list.append([])
 			for alloc in solution.list_machine_allocations(m):
 				alloc_list[i].append((alloc.ast, alloc.aft, alloc.tid))
@@ -49,23 +49,10 @@ class AllocationPlot(object):
 		self._use_imshow(data, ax, num_machines)
 		self._setup_grid(num_machines, ax, self.machines)
 		plt.xlabel('Makespan (s)')
-		# ax.set_xlabel('Makespan (s)')
 		return fig, ax
 
-	# def plot(self, save=False, figname=None):
-	# 	num_machines = len(self.machines)
-	# 	fig, ax = plt.subplots(num_machines, sharex='row', sharey='col', gridspec_kw={'hspace': 0})
-	# 	self._setup_xaxis(num_machines, ax)
-	# 	data = self._format_data_for_imshow(self.plotable_allocations,num_machines,self.makespan,ax)
-	# 	self._use_imshow(data, ax, num_machines)
-	# 	self._setup_grid(num_machines,ax, self.machines)
-	# 	if save:
-	# 		plt.savefig(figname, dpi=300)
-	# 	else:
-	# 		plt.show()
-
-	def _setup_grid(self, num_machines,ax,machines):
-		for x,m in enumerate(machines):
+	def _setup_grid(self, num_machines, ax, machines):
+		for x, m in enumerate(machines):
 			# Setup axis
 			ax[x].grid(which='minor', axis='y', linestyle='-', color='w', linewidth=5)
 			ax[x].set_yticks(np.arange(0, 0))
@@ -78,8 +65,8 @@ class AllocationPlot(object):
 		for x in range(0, num_machines):
 			ax[x].set_yticks(np.arange(0, 2) - .5, minor=True)
 
-	def _format_data_for_imshow(self, allocations,num_machines,makespan,ax):
-		data = np.zeros((makespan+10, num_machines)).transpose()
+	def _format_data_for_imshow(self, allocations, num_machines, makespan, ax):
+		data = np.zeros((makespan + 10, num_machines)).transpose()
 		count = 0
 		for machine in allocations:
 			for tup in machine:
@@ -99,9 +86,9 @@ class AllocationPlot(object):
 		return data
 
 	def _use_imshow(self, data, ax, num_machines):
-		ax[0].imshow(np.array([data[0]]), cmap="Blues", origin='lower')
+		ax[0].imshow(np.array([data[0]]), cmap="binary", origin='lower')
 		for x in range(1, num_machines):
-			ax[x].imshow(np.array([data[x]]), cmap="Blues")
+			ax[x].imshow(np.array([data[x]]), cmap="binary")
 		for a in ax:
 			a.label_outer()
 
@@ -109,9 +96,10 @@ class AllocationPlot(object):
 class ComparisonPlot:
 	def __init__(self, solutions):
 		# Solutions is a list
-		if not isinstance(solutions,list):
+		if not isinstance(solutions, list):
 			raise TypeError("solutions is a list of Solution objects")
 		self.solutions = solutions
+
 
 class MetricPlot:
 	def __init__(self, metrics):
@@ -124,5 +112,3 @@ class MetricPlot:
 class BarPlot(object):
 	def __init__(self):
 		pass
-
-

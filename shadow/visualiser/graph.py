@@ -14,6 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import networkx as nx
 import pydot
+from IPython.display import Image
 
 
 def visualise_graph(nx_graph, output, format='png',):
@@ -25,3 +26,4 @@ def visualise_graph(nx_graph, output, format='png',):
 			"File format {0} not implemeted in SHADOW".format(format)
 		)
 
+	Image(output)

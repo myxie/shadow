@@ -1,6 +1,6 @@
 {
   "header": {
-    "time": true
+    "time": false
   },
   "graph": {
     "directed": true,

@@ -80,7 +80,7 @@ def fcfs_allocation(workflow, greedy, seed):
 				task.calculated_runtime.items(),
 				key=operator.itemgetter(1)
 			)
-			available = check_machine_availability(workflow.solution, m, start_time, task)
+			available = _check_machine_availability(workflow.solution, m, start_time, task)
 			if available:
 				task.ast = start_time
 				task.aft = w
@@ -100,7 +100,7 @@ def fcfs_allocation(workflow, greedy, seed):
 				if m is not last_pred.machine:
 					data_size = workflow.graph.edges[last_pred, task]['data_size']
 					new_start += workflow.env.calc_data_transfer_time(data_size)
-				if check_machine_availability(workflow.solution, m, new_start, task):
+				if _check_machine_availability(workflow.solution, m, new_start, task):
 					available = True
 					if earliest_start_time == -1:
 						earliest_start_time = new_start
@@ -119,12 +119,12 @@ def fcfs_allocation(workflow, greedy, seed):
 						data_size = workflow.graph.edges[last_pred, task]['data_size']
 						new_start += workflow.env.calc_data_transfer_time(data_size)
 					# Tmp is the machine earliest availability
-					tmp = machine_earliest_availability(workflow.solution, m)
+					tmp = _machine_earliest_availability(workflow.solution, m)
 					if earliest_start_time == -1 and new_start < tmp:
 						earliest_start_time = tmp
 						finish_time = earliest_start_time + task.calculated_runtime[m]
 						machine = m
-					elif earliest_start_time > tmp and new_start <tmp:
+					elif earliest_start_time > tmp and new_start < tmp:
 						earliest_start_time = tmp
 						finish_time = earliest_start_time + task.calculated_runtime[m]
 						machine = m
@@ -134,12 +134,14 @@ def fcfs_allocation(workflow, greedy, seed):
 			task.machine = machine
 			workflow.solution.add_allocation(task, task.machine)
 
+
 # TODO return next available time
-def machine_earliest_availability(solution, machine):
+def _machine_earliest_availability(solution, machine):
 	last_alloc = solution.latest_allocation_on_machine(machine)
 	return last_alloc.aft
 
-def check_machine_availability(solution, machine, start_time, task):
+
+def _check_machine_availability(solution, machine, start_time, task):
 	for alloc in solution.list_machine_allocations(machine):
 		if alloc.ast <= start_time < alloc.aft:
 			return False
@@ -151,6 +153,8 @@ def check_machine_availability(solution, machine, start_time, task):
 
 
 def fcfs(workflow, greedy=True, seed=None):
+	if workflow.env is None:
+		raise RuntimeError("Workflow environment is not initialised")
 	fcfs_allocation(workflow, greedy, seed)
 	return workflow.solution
 

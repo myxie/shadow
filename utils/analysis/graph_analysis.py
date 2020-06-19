@@ -16,20 +16,21 @@ def sequential_execution(self):
 
 
 # TODO Update this to ensure it corresponds with Topcuoglu et al.'s defintion of CPmin
-def critical_path_min(self):
+def critical_path_min(workflow):
 	"""
 	Critical path using the minimum cost (for SLR calculation)
 	Use the minimum cost per task to calculate the CP
-	:param self:
+
+	:param workflow:
 	:return:
 	"""
-	top_sort = self.top_sort_tasks()
-	dist = [-1 for x in range(len(list(self.graph.nodes())))]
+	top_sort = workflow.sort_tasks("topological")
+	dist = [-1 for x in range(len(list(workflow.graph.nodes())))]
 	dist[0] = 0
 	critical_path = []
 
 	for u in top_sort:
-		for v in list(self.graph.edges(u)):
+		for v in list(workflow.graph.edges(u)):
 			tmp_v = v[1]
 			if dist[v[1].tid] < dist[u.tid] + min(self.comp_matrix[v[1].tid]) + self.comm_matrix[v[1].tid][u.tid]:
 				dist[v[1].tid] = dist[u.tid] + min(self.comp_matrix[v[1].tid]) + self.comm_matrix[v[1].tid][u.tid]

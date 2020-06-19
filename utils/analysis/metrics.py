@@ -15,14 +15,28 @@
 
 metric_map = ['slr, speedup, efficiency']
 
+""" 
+These metrics are derived from Kwok and Ahmed 1998  
+"""
+
 
 def schedule_to_length(solution):
 	pass
 
 
-def speedup(solution):
-	pass
+def speedup(workflow):
+	sequential_execution = -1
+	for machine in workflow.env.machines:
+		tmp = 0
+		for task in workflow.tasks:
+			tmp += task.calculated_runtime[machine]
+		if sequential_execution < 0 or sequential_execution < tmp:
+			sequential_execution = tmp
+
+	speedup = workflow.solution.makespan/sequential_execution
+
+	return speedup
 
 
-def efficiency(solution):
+def efficiency():
 	pass
