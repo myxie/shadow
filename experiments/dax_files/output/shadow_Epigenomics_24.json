@@ -106,137 +106,137 @@
     ],
     "links": [
       {
-        "data_size": 85534312.0,
+        "data_size": 85.534312,
         "source": "ID00000",
         "target": "ID00001"
       },
       {
-        "data_size": 98262176.0,
+        "data_size": 98.262176,
         "source": "ID00000",
         "target": "ID00002"
       },
       {
-        "data_size": 80623179.0,
+        "data_size": 80.623179,
         "source": "ID00000",
         "target": "ID00003"
       },
       {
-        "data_size": 98592518.0,
+        "data_size": 98.592518,
         "source": "ID00000",
         "target": "ID00004"
       },
       {
-        "data_size": 83847170.0,
+        "data_size": 83.84717,
         "source": "ID00000",
         "target": "ID00005"
       },
       {
-        "data_size": 44066037.0,
+        "data_size": 44.066037,
         "source": "ID00001",
         "target": "ID00006"
       },
       {
-        "data_size": 48142335.0,
+        "data_size": 48.142335,
         "source": "ID00002",
         "target": "ID00007"
       },
       {
-        "data_size": 38553524.0,
+        "data_size": 38.553524,
         "source": "ID00003",
         "target": "ID00008"
       },
       {
-        "data_size": 47435716.0,
+        "data_size": 47.435716,
         "source": "ID00004",
         "target": "ID00009"
       },
       {
-        "data_size": 43314524.0,
+        "data_size": 43.314524,
         "source": "ID00005",
         "target": "ID00010"
       },
       {
-        "data_size": 24613282.0,
+        "data_size": 24.613282,
         "source": "ID00006",
         "target": "ID00011"
       },
       {
-        "data_size": 44753970.0,
+        "data_size": 44.75397,
         "source": "ID00007",
         "target": "ID00012"
       },
       {
-        "data_size": 24969343.0,
+        "data_size": 24.969343,
         "source": "ID00008",
         "target": "ID00013"
       },
       {
-        "data_size": 36701822.0,
+        "data_size": 36.701822,
         "source": "ID00009",
         "target": "ID00014"
       },
       {
-        "data_size": 37310027.0,
+        "data_size": 37.310027,
         "source": "ID00010",
         "target": "ID00015"
       },
       {
-        "data_size": 6918721.0,
+        "data_size": 6.918721,
         "source": "ID00011",
         "target": "ID00016"
       },
       {
-        "data_size": 10323313.0,
+        "data_size": 10.323313,
         "source": "ID00012",
         "target": "ID00017"
       },
       {
-        "data_size": 5956867.0,
+        "data_size": 5.956867,
         "source": "ID00013",
         "target": "ID00018"
       },
       {
-        "data_size": 9015905.0,
+        "data_size": 9.015905,
         "source": "ID00014",
         "target": "ID00019"
       },
       {
-        "data_size": 9039432.0,
+        "data_size": 9.039432,
         "source": "ID00015",
         "target": "ID00020"
       },
       {
-        "data_size": 7520348.0,
+        "data_size": 7.520348,
         "source": "ID00016",
         "target": "ID00021"
       },
       {
-        "data_size": 11220992.0,
+        "data_size": 11.220992,
         "source": "ID00017",
         "target": "ID00021"
       },
       {
-        "data_size": 6474855.0,
+        "data_size": 6.474855,
         "source": "ID00018",
         "target": "ID00021"
       },
       {
-        "data_size": 9799896.0,
+        "data_size": 9.799896,
         "source": "ID00019",
         "target": "ID00021"
       },
       {
-        "data_size": 9825469.0,
+        "data_size": 9.825469,
         "source": "ID00020",
         "target": "ID00021"
       },
       {
-        "data_size": 42303358.0,
+        "data_size": 42.303358,
         "source": "ID00021",
         "target": "ID00022"
       },
       {
-        "data_size": 641552.0,
+        "data_size": 0.641552,
         "source": "ID00022",
         "target": "ID00023"
       }

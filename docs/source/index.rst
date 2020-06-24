@@ -10,19 +10,13 @@ SHADOW
 What is SHADOW?
 =================
 
-SHADOW is a library for the use and testing of workflow scheduling
-algorithms, with a focus on data-intensive science applications.
-SHADOW provides implementations of various heuristic and metaheuristic
-algorithms to address single-and multi-objective scheduling problems,
-with schedule-reporting and visualisation options.
+SHADOW is a library for the use and testing of DAG-based workflow scheduling algorithms. SHADOW provides implementations of various heuristic and metaheuristic algorithms to address single-and multi-objective scheduling problems; these algorithms are accessed using a workflow-oriented class system built into the library.
 
 
 Motivation
 ----------
 
-SHADOW has been designed to test the effectiveness  of algorithms
-that may be used to schedule Radio Interferometry pipelines for the Square
-kilometre Array (SKA). It is hoped that the library becomes a repository of
+Development of the SHADOW library was motivated by a lack of public implementations of popular and highly-cited workflow scheduling algorithms.   It is hoped that the library becomes a repository of
 workflow scheduling heuristics and metaheuristics, as well as tool in which
 algorithm developers may test and benchmark their own efforts. 
 
