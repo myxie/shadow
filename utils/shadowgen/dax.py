@@ -50,7 +50,7 @@ def build_dag(xml):
 			building_dag.add_edge(pid, id)
 	for node in building_dag.nodes:
 		runtime = [e.get('runtime') for e in root.findall("job/[@id='{0}']".format(node))]
-		building_dag.nodes[node]['comp'] = float(runtime[0])
+		building_dag.nodes[node]['comp'] = float(runtime[0])*1000
 		x = node
 
 	for edge in building_dag.edges:

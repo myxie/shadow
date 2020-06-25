@@ -17,13 +17,14 @@ import pydot
 from IPython.display import Image
 
 
-def visualise_graph(nx_graph, output, format='png',):
+def visualise_graph(nx_graph, output='dag', format='png',):
 	dotgraph = nx.nx_pydot.to_pydot(nx_graph)
+	str = None
 	if format == 'png':
+		str = output + '.' + format
 		dotgraph.write_png(output)
 	else:
 		raise NotImplementedError(
 			"File format {0} not implemeted in SHADOW".format(format)
 		)
-
-	Image(output)
+	return str

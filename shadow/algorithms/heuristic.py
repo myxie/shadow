@@ -111,7 +111,6 @@ def fcfs_allocation(workflow, greedy, seed):
 						finish_time = earliest_start_time + task.calculated_runtime[m]
 						machine = m
 			if not available:
-				print("Nothing is available for {0} - task must wait".format(task.tid))
 				# Take the next available one
 				for m in workflow.env.machines:
 					new_start = last_pred.aft
