@@ -1,4 +1,4 @@
-# Copyright (C) 16/6/20 RW Bunney
+# Copyright (C) 26/6/20 RW Bunney
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,12 +12,17 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import networkx as nx
-import pydot
-import graphviz
+from shadow.models.workflow import Workflow
+from shadow.models.environment import Environment
+import shadow.visualiser.graph as sgraph
 from IPython.display import Image
 
+workflow_file = 'final_heft.json'
+sys = 'final_heft_sys.json'
+workflow = Workflow(workflow_file)
+env = Environment(sys)
+workflow.add_environment(env)
 
-def convert_to_graphviz(workflow):
-	dotgraph = nx.nx_pydot.to_pydot(workflow.graph)
-	return graphviz.Source(dotgraph)
+# png = sgraph.visualise_graph(workflow, workflow_file.strip('.json')+'.png')
+
+graphviz = sgraph.convert_to_graphviz(workflow)

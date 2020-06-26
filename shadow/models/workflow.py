@@ -49,8 +49,8 @@ class Task(object):
 		self.ast = 0  # actual start time
 		self.aft = 0  # actual finish time
 
-	# def __repr__(self):
-	# 	return str(self.tid)
+	def __repr__(self):
+		return str(self.tid)
 	#
 	# Node must be hashable for use with networkx
 	def __hash__(self):
