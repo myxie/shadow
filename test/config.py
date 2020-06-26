@@ -23,6 +23,11 @@
 
 # test_dir = 'test/data'
 
+test_analysis_data = {
+	'workflow': 'test/data/analysis/final_heft.json',
+	'environment': 'test/data/analysis/final_heft_sys.json'
+}
+
 test_heuristic_data = {  # Tests that use the Topcuoglu paper graph
 	'topcuoglu_graph': 'test/data/heuristic/final_heft.json',
 	'topcuoglu_graph_nocalc': 'test/data/heuristic/heft_nocalc.json',

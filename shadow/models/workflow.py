@@ -155,8 +155,6 @@ class Workflow(object):
 
 			return 0
 
-	pass
-
 	def sort_tasks(self, sort_type):
 		"""
 		Sorts task in a task wf based on a specified sort_type

@@ -13,30 +13,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-metric_map = ['slr, speedup, efficiency']
+from utils.analysis import graph_analysis as ga
 
 """ 
 These metrics are derived from Kwok and Ahmed 1998  
 """
 
+metric_map = ['slr, speedup, efficiency']
 
-def schedule_to_length(solution):
-	pass
+
+def schedule_to_length(workflow):
+	cpmin = ga.critical_path_min(workflow)
+	return workflow.solution.makespan/cpmin
 
 
 def speedup(workflow):
-	sequential_execution = -1
-	for machine in workflow.env.machines:
-		tmp = 0
-		for task in workflow.tasks:
-			tmp += task.calculated_runtime[machine]
-		if sequential_execution < 0 or sequential_execution < tmp:
-			sequential_execution = tmp
-
-	speedup = workflow.solution.makespan/sequential_execution
-
-	return speedup
+	seq_eq = ga.sequential_execution(workflow)
+	if workflow.solution.makespan > 0:
+		return seq_eq/ workflow.solution.makespan
+	else:
+		return -1
 
 
-def efficiency():
-	pass
+def efficiency(workflow):
+	if workflow.solution.makespan > 0:
+		su = speedup(workflow)
+		denom = len(workflow.env.machines)
+		return su / denom
+	else:
+		return -1
