@@ -17,7 +17,7 @@ from shadow.models.environment import Environment
 import shadow.visualiser.graph as sgraph
 from IPython.display import Image
 
-workflow_file = 'final_heft.json'
+workflow_file = '.json'
 sys = 'final_heft_sys.json'
 workflow = Workflow(workflow_file)
 env = Environment(sys)

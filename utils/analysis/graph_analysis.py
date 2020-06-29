@@ -57,7 +57,7 @@ def critical_path_min(workflow):
 		tmp_max = 0
 		for v in list(workflow.graph.predecessors(Task(u))):
 			if dist[v.tid] > tmp_max:
-				tmp_max = dist[v.tid]
+				tmp_max = dist[v.tid
 				tmp_v = v.tid
 				if tmp_v not in critical_path:
 					critical_path.append(tmp_v)
