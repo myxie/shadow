@@ -31,6 +31,9 @@ class Machine(object):
 		self.cost = cost
 		self.bandwidth = bandwidth
 
+	def __repr__(self):
+		return self.id
+
 
 def _process_env_resources(resources):
 	if resources is None:

@@ -17,7 +17,7 @@ from shadow.models.environment import Environment
 import shadow.visualiser.graph as sgraph
 from IPython.display import Image
 
-workflow_file = '.json'
+workflow_file = 'TestAskapCont_channels-10_shadow.json'
 sys = 'final_heft_sys.json'
 workflow = Workflow(workflow_file)
 env = Environment(sys)
@@ -26,3 +26,4 @@ workflow.add_environment(env)
 # png = sgraph.visualise_graph(workflow, workflow_file.strip('.json')+'.png')
 
 graphviz = sgraph.convert_to_graphviz(workflow)
+graphviz.render('output.gz')

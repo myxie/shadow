@@ -25,7 +25,7 @@ import random
 
 
 EAGLE_EXT = ".graph"
-EAGLE_GRAPH = 'daliuge_graphs/TestAskapCont.graph'
+EAGLE_GRAPH = 'test/data/shadowgen/TestAskapCont.graph'
 CHANNELS = 10
 CHANNEL_SUFFIX = "_channels-{0}".format(CHANNELS)
 SEED = 20
@@ -40,7 +40,7 @@ def edit_channels(graph_name, suffix, extension):
 	jdict = json.load(f)
 	f.close()
 	# TODO make this less hard-coded?
-	jdict['nodeDataArra'][0]['fields'][0]['value'] = CHANNELS
+	jdict['nodeDataArray'][0]['fields'][0]['value'] = CHANNELS
 	ngraph = graph_name[:-6] + suffix + extension
 	f = open(ngraph, 'w')
 	json.dump(jdict, f, indent=2)
@@ -155,7 +155,7 @@ def daliugeimport(graph,
 			"header": {
 				"time": False
 			},
-			'graph': nx.readwrite.node_link_data(translated_graph)
+			'graph': nx.readwrite.node_link_data(unrolled_nx)
 		}
 
 		save = "{0}_shadow.json".format(graph[:-5])

@@ -1,0 +1,10 @@
+0 {cat0_m0: 17, cat1_m1: 20, cat2_m2: 11}
+1 {cat0_m0: 13, cat1_m1: 15, cat2_m2: 8}
+2 {cat0_m0: 14, cat1_m1: 16, cat2_m2: 9}
+3 {cat0_m0: 16, cat1_m1: 18, cat2_m2: 10}
+4 {cat0_m0: 15, cat1_m1: 18, cat2_m2: 10}
+5 {cat0_m0: 24, cat1_m1: 28, cat2_m2: 15}
+6 {cat0_m0: 16, cat1_m1: 18, cat2_m2: 10}
+7 {cat0_m0: 21, cat1_m1: 24, cat2_m2: 13}
+8 {cat0_m0: 21, cat1_m1: 24, cat2_m2: 13}
+9 {cat0_m0: 14, cat1_m1: 17, cat2_m2: 9}
