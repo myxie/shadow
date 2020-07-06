@@ -8,3 +8,4 @@ Testing the Algorithms module
 
 .. autofunction:: shadow.algorithms.heuristic.heft
 
+.. autofunction:: shadow.algorithms.metaheuristic.ga

@@ -2,4 +2,4 @@
 Classes
 ========
 
-.. autoclass:: shadow.classes.workflow.Workflow
+.. autoclass:: shadow.models.workflow.Workflow
