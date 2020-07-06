@@ -24,6 +24,9 @@ class Allocation:
 		self.ast = task.ast
 		self.aft = task.aft
 
+	def __repr__(self):
+		return str(self.tid)
+
 
 class Solution:
 	"""

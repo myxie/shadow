@@ -23,9 +23,9 @@ objective_functions = ['time, cost']
 def calculate_fitness(objectives, solution):
 	fitness = {}
 	for objective in objectives:
-		if objective is 'time':
+		if objective == 'time':
 			fitness['time'] = (time_fitness(solution))
-		if objective is 'cost':
+		elif objective == 'cost':
 			fitness['cost'] = (cost_fitness(solution))
 		else:
 			raise NotImplementedError(
@@ -45,11 +45,10 @@ def cost_fitness(solution):
 	cost = 0
 
 	for machine in solution.machines:
-		tmpcost = 0
-		cost = machine.cost
+		tmpcost = 0.0
 		for allocation in solution.list_machine_allocations(machine):
 			runtime = allocation.aft - allocation.ast
-			tmpcost += runtime * cost
+			tmpcost += runtime * machine.cost
 		cost += tmpcost
 	return cost
 

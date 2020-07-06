@@ -18,22 +18,22 @@
 # This file contains code for implementing metaheuristic scheduling algorithms.
 # Currently, this file implements the following algorithms:
 
-"""
-N = population size
-P = create parent population by randomly creating N individuals
-while not done
-    C = create empty child population
-    while not enough individuals in C
-        parent1 = select parent   ***** HERE IS WHERE YOU DO TOURNAMENT SELECTION *****
-        parent2 = select parent   ***** HERE IS WHERE YOU DO TOURNAMENT SELECTION *****
-        child1, child2 = crossover(parent1, parent2)
-        mutate child1, child2
-        evaluate child1, child2 for fitness
-        insert child1, child2 into C
-    end while
-    P = combine P and C somehow to get N new individuals
-end while
-"""
+# """
+# N = population size
+# P = create parent population by randomly creating N individuals
+# while not done
+#     C = create empty child population
+#     while not enough individuals in C
+#         parent1 = select parent   ***** HERE IS WHERE YOU DO TOURNAMENT SELECTION *****
+#         parent2 = select parent   ***** HERE IS WHERE YOU DO TOURNAMENT SELECTION *****
+#         child1, child2 = crossover(parent1, parent2)
+#         mutate child1, child2
+#         evaluate child1, child2 for fitness
+#         insert child1, child2 into C
+#     end while
+#     P = combine P and C somehow to get N new individuals
+# end while
+# """
 
 import networkx as nx
 import itertools
@@ -49,28 +49,48 @@ logger = logging.getLogger(__name__)
 
 # TODO; initial setup required for a genetic algorithm
 # TODO; initial setup required for an evolutionary algorithm 6
-
-"""
-From Yu, Kirley & Buyya 2007
-NSGAII* and SPEAII*: 
-1. Generate intial population
-do:
-    2. crossover on individuals
-    3. perform mutation on offspring
-    4. evaluate current solutions
-    5. select individuals to be carried onto next generation
-while(termination condition not satisfied)
-
-The two differ on evaluation and selection strategy
-"""
+#
+# """
+# From Yu, Kirley & Buyya 2007
+# NSGAII* and SPEAII*:
+# 1. Generate intial population
+# do:
+#     2. crossover on individuals
+#     3. perform mutation on offspring
+#     4. evaluate current solutions
+#     5. select individuals to be carried onto next generation
+# while(termination condition not satisfied)
+#
+# The two differ on evaluation and selection strategy
+# """
 
 RAND_BOUNDS = 1000
 DEFAULT_SEED = 50
 
 
-def ga(workflow, objectives, seed, generations=100, popsize=100):
-	"""
+class GASolution(Solution):
+	def __init__(self, machines):
+		super().__init__(machines)
+		# Fitness is a dictionary of objectives and the calculated fitness
+		self.fitness = {}
+		self.total_fitness = None
 
+	def calc_total_fitness(self):
+		total = 0
+		for objective in self.fitness:
+			total += self.fitness[objective]
+		return total
+
+
+
+def ga(workflow,
+	   objectives,
+	   seed,
+	   mutation_probability,
+	   crossover_probability,
+	   generations=100,
+	   popsize=100):
+	"""
 	This function runs a standard genetic algorithm, with basic elitism, and
 	basic diversification. The algorithm:
 
@@ -78,7 +98,7 @@ def ga(workflow, objectives, seed, generations=100, popsize=100):
 		* For a given number of generations:
 
 			* Create a child population (newgen)
-			* Whilst the |newgen| < |pop|
+			* While the newgen < pop
 				* Select parents using binary tournament seleciton
 				* Crossover the parents to children
 				* mutate the children
@@ -87,22 +107,19 @@ def ga(workflow, objectives, seed, generations=100, popsize=100):
 
 			* Keep as many children as there are that outperform the parents
 
+	:param mutation_probability:
+	:param crossover_probability:
 	:param workflow:
 	:param objectives:
 	:param seed:
 	:param generations:
 	:param popsize:
 	:return:
-
 	"""
-	# generate initial population
-	# crossover
-	# mutation on offspring
-	# evaluate solutions
-	# select individuals to be carried on next generation
+
 	pop = generate_population(workflow, seed, generations, popsize)
 	for soln in pop:
-		soln.fitness = fitness.calculate_fitness(soln)
+		soln.fitness = fitness.calculate_fitness(objectives, soln)
 	# binary_tournament(pop)
 	generation = 0
 	limit = False
@@ -169,9 +186,11 @@ def nsga2(wf, seed, generations=100, popsize=100):
 	return None
 
 
-def spea2(wf, seed):
-	generate_population(wf, seed)
-	return None
+#
+#
+# def spea2(wf, seed):
+# 	generate_population(wf, seed)
+# 	return None
 
 
 ################################################################################
@@ -211,18 +230,35 @@ def binary_tournament(pop, seed=DEFAULT_SEED):
 	"""
 	Stock standard binary tournament selection
 	:param pop: population of solutions
+	:param seed: Random seed value for repeatability
 	:return: selected parent for crossover
 	"""
-	random.seed(seed)
+	# random.seed(seed)
 
 	k = 2  # BINARY tournament selection
 	best = None
-	for i in range(k):
-		index = random.randint(0, len(pop))
-		tmp = pop[index]
-		if (best is None) or tmp.fitness > tmp.best:
-			best = tmp
-	return best
+	# Get two random solutions from the population
+	t1, t2 = random.sample(pop, k)
+	return compare_fitness(t1, t2, [0.5, 0.5])
+
+
+# if compare_fitness(t1, t2, [0.5, 0.5]):
+# 	return t1
+# else:
+# 	return t2
+
+
+def compare_fitness(soln1, soln2, weights, comparison=min):
+	if len(soln1.fitness) != len(soln2.fitness) or len(weights) != len(soln1.fitness):
+		raise ValueError("Solutions have diferent numbers of fitness scores")
+
+	s1fit = sum(soln1.fitness.values()) * weights[0]
+	s2fit = sum(soln1.fitness.values()) * weights[1]
+
+	if comparison(s1fit, s2fit) == s1fit:
+		return soln1
+	else:
+		return soln2
 
 
 def crossover(parent1, parent2, seed=DEFAULT_SEED):
@@ -290,7 +326,6 @@ def generate_exec_orders(wf, popsize, seed, skip_limit):
 
 # return top_sort_list
 
-
 def calc_solution_cost(solution, workflow):
 	cost = 0
 	for machine in workflow.env.machines:
@@ -333,11 +368,12 @@ def calc_start_finish_times(task, machine, workflow, curr_allocations):
 
 	num_alloc = len(curr_allocations)
 	if num_alloc > 0:
-		final = curr_allocations[num_alloc - 1]
-		# This is in the event that the task execution order places tasks
-		# with the same previous task on the same machine
-		if final.aft > st:
-			st = final.aft
+		if not _check_machine_availability(workflow.solution, machine, st, task):
+			final = curr_allocations[num_alloc - 1]
+			# This is in the event that the task execution order places tasks
+			# with the same previous task on the same machine
+			if final.aft > st:
+				st = final.aft
 
 	runtime = task.calc_runtime(machine)
 	task.ast = st
@@ -347,11 +383,13 @@ def calc_start_finish_times(task, machine, workflow, curr_allocations):
 	return None
 
 
-class GASolution(Solution):
-	def __init__(self, machines):
-		super().__init__(machines)
-		# Fitness is a dictionary of objectives and the calculated fitness
-		self.fitness = {}
+def _check_machine_availability(solution, machine, start_time, task):
+	for alloc in solution.list_machine_allocations(machine):
+		if alloc.ast <= start_time < alloc.aft:
+			return False
+		# if it starts beforehand but will over-run:
+		if start_time < alloc.ast <= start_time + task.calculated_runtime[machine]:
+			return False
 
 
 ###### NSGAII Specific functions #####

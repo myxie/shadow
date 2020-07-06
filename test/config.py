@@ -58,7 +58,10 @@ test_generator_data = {
 }
 
 test_metaheuristic_data = {
-	'topcuoglu_graph': 'test/data/metaheuristic/final_heft.json',
+	# Final_heft_metaheuristic is a slightly modified version of the Final_heft
+	# This is because "final_heft" has Task 7 and 8 flops being the same; if they are allocated in alternating way
+	# we don't get much variation in final cost.
+	'topcuoglu_graph': 'test/data/metaheuristic/final_heft_metaheuristic.json',
 	'graph_sys_with_costs': 'test/data/metaheuristic/final_heft_sys.json'
 }
 

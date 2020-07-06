@@ -24,12 +24,13 @@ logger = logging.getLogger(__name__)
 
 
 class Machine(object):
-	def __init__(self, mid, flops, cost, bandwidth):
+	def __init__(self, mid, flops, memory, bandwidth, cost):
 		self.id = mid
 		self.machine_type = mid.split("_")[0]
 		self.flops = flops
-		self.cost = cost
+		self.memory = memory
 		self.bandwidth = bandwidth
+		self.cost = cost
 
 	def __repr__(self):
 		return self.id
@@ -50,7 +51,8 @@ def _process_env_resources(resources):
 				memory = resources[machine]['memory']
 			if 'bandwidth' in resources[machine]:
 				bandwidth = resources[machine]['bandwidth']
-			m = Machine(name, flops, memory, bandwidth)
+
+			m = Machine(name, flops, memory, bandwidth, cost=None)
 			machines.append(m)
 		return machines
 
@@ -64,17 +66,22 @@ class Environment(object):
 		with open(config, 'r') as infile:
 			jdict = json.load(infile)
 
-		resources, rates, cost = None, None, None
+		resources, rates, costs = {}, {}, {}
 		if ENV_RESOURCE in jdict[ENV_SYS]:
 			resources = jdict[ENV_SYS][ENV_RESOURCE]
 		if ENV_RATES in jdict[ENV_SYS]:
 			rates = jdict[ENV_SYS][ENV_RATES]
 		if ENV_COST in jdict[ENV_SYS]:
-			cost = jdict[ENV_SYS][ENV_COST]
+			costs = jdict[ENV_SYS][ENV_COST]
 
 		self.machines = _process_env_resources(resources)
+		self.costs = costs
+		self._process_env_costs(costs)
 		self.rates = rates
-		self.cost = cost
+
+	def _process_env_costs(self, costs):
+		for machine in self.machines:
+			machine.cost = costs[machine.machine_type]
 
 	@staticmethod
 	def _check_comp(res_dict):
@@ -131,12 +138,8 @@ class Environment(object):
 
 		:return: The total cost in $ of running the task on the
 		"""
-		machine_type_prefix = machine.machine_type
-		return self.cost[machine_type_prefix] * task_runtime
+		return float(machine.cost * task_runtime)
 
 	def calc_data_transfer_time(self, data_size):
-		average_rate = sum(self.rates.values())/len(self.rates.values())
-		return int(data_size/average_rate)
-
-
-
+		average_rate = sum(self.rates.values()) / len(self.rates.values())
+		return int(data_size / average_rate)

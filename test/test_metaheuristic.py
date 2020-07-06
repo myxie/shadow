@@ -17,6 +17,7 @@
 import unittest
 import os
 import logging
+import random
 
 import networkx as nx
 
@@ -25,14 +26,19 @@ from shadow.algorithms.metaheuristic import generate_population, \
 	generate_allocations, \
 	generate_exec_orders, \
 	calc_start_finish_times, \
-	non_dom_sort
+	non_dom_sort,\
+	binary_tournament
 
+
+from shadow.algorithms.fitness import calculate_fitness
 from shadow.models.workflow import Workflow
 from shadow.models.environment import Environment
+from shadow.algorithms.heuristic import heft
 
 current_dir = os.path.abspath('.')
 
 logging.basicConfig(level="DEBUG")
+
 
 class TestPopulationGeneration(unittest.TestCase):
 	"""
@@ -91,33 +97,80 @@ class TestPopulationGeneration(unittest.TestCase):
 			self.assertEqual(x, 0)  # The difference between the sets should be 0
 
 		self.assertEqual(soln.makespan, 107)
-		self.assertAlmostEqual(soln.solution_cost,110.6,delta=0.01)
+		# self.assertAlmostEqual(soln.solution_cost, 110.6, delta=0.01)
 
-		return 0
 
 	def test_pop_gen(self):
-		pop = generate_population(self.wf,size=4,seed=self.SEED,skip_limit=100)
+		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=100)
 		soln1 = pop[0]
 		# First solution should be the same solution we have been working with previously.
-		self.assertEqual(107,soln1.makespan)
+		self.assertEqual(107, soln1.makespan)
 		soln2 = pop[1]
-		self.assertNotEquals(107,soln2.makespan)
+		self.assertNotEqual(107, soln2.makespan)
 
-		# self.assertEqual(soln.makespan,107)
-		# This means we are dealing with a
+	# self.assertEqual(soln.makespan,107)
+	# This means we are dealing with a
 	# what our the costs?
 
-	# These two are generated in the above tests, so we can garauntee their correctness
-	def test_dominates(self):
-		pop = generate_population(self.wf,size=4,seed=self.SEED,skip_limit=100)
-		# This gives us 4 solutions with which to play
-
-
+	@unittest.skip
 	def test_nondomsort(self):
-		pop = generate_population(self.wf,size=4,seed=self.SEED,skip_limit=100)
+		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=100)
 		seed = 10
 		objectives = []
 		# print(pop)
 		non_dom_sort(pop, objectives)
 		for p in pop:
 			print(p.nondom_rank)
+
+
+	# Playground test to print some values for the test data set
+	# @unittest.skip
+	def test_create_sample_pop(self):
+		logging.debug("HEFT makespan".format(heft(self.wf).makespan))
+		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=1)
+		logging.debug("GA Initial Population")
+		print("########################")
+		for soln in pop:
+			logging.debug(("Execution order: {0}".format(soln.execution_order)))
+			logging.debug("Allocations: {0}".format(soln.list_all_allocations()))
+			logging.debug("Makespan (s): {0}".format(soln.makespan))
+			logging.debug("Cost ($){0}".format(calculate_fitness(['cost'],soln)))
+
+
+class TestGASelectionMethods(unittest.TestCase):
+
+	def setUp(self):
+		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['topcuoglu_graph']))
+		env = Environment("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['graph_sys_with_costs']))
+		self.wf.add_environment(env)
+		self.SEED = 10
+
+	def test_binary_tournament(self):
+		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=1)
+		for soln in pop:
+			soln.fitness = calculate_fitness(['time', 'cost'], soln)
+		random.seed(self.SEED)
+		parent1 = binary_tournament(pop)
+		logging.debug(parent1.execution_order)
+		parent2 = binary_tournament(pop)
+		logging.debug(parent2.execution_order)
+		self.assertSequenceEqual([0, 5, 3, 4, 2, 1, 6, 7, 8, 9],[t.tid for t in parent1.execution_order])
+		logging.debug("Fitness: {0}".format(parent1.fitness))
+		self.assertSequenceEqual([0, 5, 3, 4, 2, 1, 6, 8, 7, 9],[t.tid for t in parent2.execution_order])
+		logging.debug("Fitness: {0}".format(parent2.fitness))
+
+
+class TestNSGAIIMethods(unittest.TestCase):
+
+	def setUp(self):
+		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['topcuoglu_graph']))
+		env = Environment("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['graph_sys_with_costs']))
+		self.wf.add_environment(env)
+		self.SEED = 10
+
+	# These two are generated in the above tests, so we can garauntee their correctness
+	def test_dominates(self):
+		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=100)
+
+	# This gives us 4 solutions with which to play
+
