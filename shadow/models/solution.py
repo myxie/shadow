@@ -23,6 +23,7 @@ class Allocation:
 		self.tid = task.tid
 		self.ast = task.ast
 		self.aft = task.aft
+		self.machine = machine
 
 	def __repr__(self):
 		return str(self.tid)
@@ -38,6 +39,7 @@ class Solution:
 		self.machines = machines
 		# Generate a list of allocations for each machine
 		self.allocations = {m: [] for m in machines}
+		self.task_allocations = {}
 		self.execution_order = []
 		self.makespan = 0
 
@@ -53,6 +55,7 @@ class Solution:
 		self.allocations[machine].sort(
 			key=lambda alloc: alloc.ast
 		)
+		self.task_allocations[task] = machine
 		self.execution_order.append(a)
 		self.execution_order.sort(key=lambda alloc: alloc.ast)
 		if task.aft > self.makespan:
@@ -69,6 +72,13 @@ class Solution:
 			key=lambda alloc: alloc.ast
 		)
 		return self.allocations[machine]
+
+	def task_machine_pairs(self):
+		pairs = []
+		for machine in self.allocations:
+			pairs.append([(machine,task.tid) for task in self.allocations[machine]])
+		return pairs
+
 
 	def latest_allocation_on_machine(self, machine):
 		final = len(self.allocations[machine])

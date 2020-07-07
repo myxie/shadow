@@ -38,6 +38,7 @@
 import networkx as nx
 import itertools
 import random
+import copy
 
 from shadow.models.solution import Solution, Allocation
 from shadow.models.globals import *
@@ -80,7 +81,6 @@ class GASolution(Solution):
 		for objective in self.fitness:
 			total += self.fitness[objective]
 		return total
-
 
 
 def ga(workflow,
@@ -242,12 +242,6 @@ def binary_tournament(pop, seed=DEFAULT_SEED):
 	return compare_fitness(t1, t2, [0.5, 0.5])
 
 
-# if compare_fitness(t1, t2, [0.5, 0.5]):
-# 	return t1
-# else:
-# 	return t2
-
-
 def compare_fitness(soln1, soln2, weights, comparison=min):
 	if len(soln1.fitness) != len(soln2.fitness) or len(weights) != len(soln1.fitness):
 		raise ValueError("Solutions have diferent numbers of fitness scores")
@@ -271,18 +265,28 @@ def crossover(parent1, parent2, seed=DEFAULT_SEED):
 	3. all tasks between the points are chosen as crossover points
 	4. the service allocation of the tasks within the crossover points are exchanged.
 	"""
-	p1_tasks = parent1
-	p2_tasks = parent2
 
-	random.seed(seed)
-	min_boundary = random.randint(0, len(p1_tasks))
-	max_boundary = random.randint(0, len(p2_tasks))
+	p1, p2 = create_window(parent1, parent2, seed)
 	# We achieve the crossover by finding the 'like tasks' between the boundary and swapping
 	# Them between parents.
-	c1_tasks = p1_tasks
-	c2_tasks = p2_tasks
+	pairs = parent1.task_machine_pairs()
+	c1, c2 = copy.deepcopy(p1), copy.deepcopy(p2)
+	tasks = parent1.execution_order[p1:p2]
+	for task in tasks:
+		m = task.machine
+	return c1, c2
 
-	return c1_tasks, c2_tasks
+
+def create_window(parent1, parent2, seed=DEFAULT_SEED):
+	random.seed(seed)
+	# Select two random points as our 'window'
+	p1 = random.randint(1, len(parent1.execution_order) - 1)
+	p2 = random.randint(1, len(parent2.execution_order))
+	if p2 <= p1:
+		tmp = p1
+		p1 = p2
+		p2 = tmp
+	return p1, p2
 
 
 def mutation(soln):
@@ -350,6 +354,13 @@ def generate_allocations(machines, task_order, wf, seed, solution_class=GASoluti
 	soln.solution_cost = calc_solution_cost(soln, wf)
 
 	return soln
+
+
+def solution_calculation_updates():
+	### This function is for when we crossover or mutate and need to recalculate
+	### Machine assignments have been done, we just want to go through the order
+	### and double check allocations.
+	return None
 
 
 def calc_start_finish_times(task, machine, workflow, curr_allocations):

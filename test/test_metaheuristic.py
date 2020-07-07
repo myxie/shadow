@@ -19,6 +19,9 @@ import os
 import logging
 import random
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 import networkx as nx
 
 from test import config as cfg
@@ -26,9 +29,9 @@ from shadow.algorithms.metaheuristic import generate_population, \
 	generate_allocations, \
 	generate_exec_orders, \
 	calc_start_finish_times, \
-	non_dom_sort,\
-	binary_tournament
-
+	non_dom_sort, \
+	binary_tournament, \
+	crossover
 
 from shadow.algorithms.fitness import calculate_fitness
 from shadow.models.workflow import Workflow
@@ -38,6 +41,7 @@ from shadow.algorithms.heuristic import heft
 current_dir = os.path.abspath('.')
 
 logging.basicConfig(level="DEBUG")
+logger = logging.getLogger(__name__)
 
 
 class TestPopulationGeneration(unittest.TestCase):
@@ -97,16 +101,20 @@ class TestPopulationGeneration(unittest.TestCase):
 			self.assertEqual(x, 0)  # The difference between the sets should be 0
 
 		self.assertEqual(soln.makespan, 107)
-		# self.assertAlmostEqual(soln.solution_cost, 110.6, delta=0.01)
 
+	# self.assertAlmostEqual(soln.solution_cost, 110.6, delta=0.01)
 
 	def test_pop_gen(self):
-		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=100)
+		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
 		soln1 = pop[0]
 		# First solution should be the same solution we have been working with previously.
 		self.assertEqual(107, soln1.makespan)
-		soln2 = pop[1]
-		self.assertNotEqual(107, soln2.makespan)
+		soln2 = pop[2]
+		self.assertNotEqual(114,soln2.makespan)
+		soln5 = pop[4]
+		self.assertEqual(145, soln5.makespan)
+		soln25 = pop[24]
+		self.assertEqual(130,soln25.makespan)
 
 	# self.assertEqual(soln.makespan,107)
 	# This means we are dealing with a
@@ -122,19 +130,29 @@ class TestPopulationGeneration(unittest.TestCase):
 		for p in pop:
 			print(p.nondom_rank)
 
-
 	# Playground test to print some values for the test data set
 	# @unittest.skip
 	def test_create_sample_pop(self):
-		logging.debug("HEFT makespan".format(heft(self.wf).makespan))
-		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=1)
-		logging.debug("GA Initial Population")
-		print("########################")
+		logger.debug("HEFT makespan {0}".format(heft(self.wf).makespan))
+		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
+		logger.debug("GA Initial Population")
+		logger.debug("########################")
 		for soln in pop:
-			logging.debug(("Execution order: {0}".format(soln.execution_order)))
-			logging.debug("Allocations: {0}".format(soln.list_all_allocations()))
-			logging.debug("Makespan (s): {0}".format(soln.makespan))
-			logging.debug("Cost ($){0}".format(calculate_fitness(['cost'],soln)))
+			logger.debug(("Execution order: {0}".format(soln.execution_order)))
+			logger.debug("Allocations: {0}".format(soln.list_all_allocations()))
+			logger.debug("Makespan (s): {0}".format(calculate_fitness(['time'], soln)))
+			logger.debug("Cost ($){0}".format(calculate_fitness(['cost'], soln)))
+
+			soln.fitness = calculate_fitness(['time', 'cost'], soln)
+		fig, ax = plt.subplots()
+		x = [soln.fitness['time'] for soln in pop]
+		y = [soln.fitness['cost'] for soln in pop]
+		ax.scatter(x, y)
+		ax.legend()
+		ax.grid(True)
+		plt.xlabel('Solution Runtime')
+		plt.ylabel('Solution execution cost')
+		plt.show()
 
 
 class TestGASelectionMethods(unittest.TestCase):
@@ -146,18 +164,44 @@ class TestGASelectionMethods(unittest.TestCase):
 		self.SEED = 10
 
 	def test_binary_tournament(self):
-		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=1)
+		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
 		for soln in pop:
 			soln.fitness = calculate_fitness(['time', 'cost'], soln)
 		random.seed(self.SEED)
 		parent1 = binary_tournament(pop)
-		logging.debug(parent1.execution_order)
+		logger.debug(parent1.execution_order)
 		parent2 = binary_tournament(pop)
-		logging.debug(parent2.execution_order)
-		self.assertSequenceEqual([0, 5, 3, 4, 2, 1, 6, 7, 8, 9],[t.tid for t in parent1.execution_order])
-		logging.debug("Fitness: {0}".format(parent1.fitness))
-		self.assertSequenceEqual([0, 5, 3, 4, 2, 1, 6, 8, 7, 9],[t.tid for t in parent2.execution_order])
-		logging.debug("Fitness: {0}".format(parent2.fitness))
+		logger.debug(parent2.execution_order)
+		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9],[t.tid for t in parent1.execution_order])
+		logger.debug("Fitness: {0}".format(parent1.fitness))
+		self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.tid for t in parent2.execution_order])
+		logger.debug("Fitness: {0}".format(parent2.fitness))
+		fig, ax = plt.subplots()
+		x = [soln.fitness['time'] for soln in pop]
+		y = [soln.fitness['cost'] for soln in pop]
+		ax.grid(True)
+		ax.scatter(x, y, c='red')
+		selectedx = [parent1.fitness['time'],parent2.fitness['time']]
+		selectedy = [parent1.fitness['cost'],parent2.fitness['cost']]
+		ax.scatter(selectedx,selectedy,c='blue')
+		ax.legend()
+		plt.xlabel('Solution Runtime')
+		plt.ylabel('Solution execution cost')
+		plt.show()
+
+	def test_crossover(self):
+		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
+		for soln in pop:
+			soln.fitness = calculate_fitness(['time', 'cost'], soln)
+
+		random.seed(self.SEED)
+
+		p1 = binary_tournament(pop)
+		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9],[t.tid for t in p1.execution_order])
+		p2 = binary_tournament(pop)
+		self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.tid for t in p2.execution_order])
+		result = crossover(p1,p2)
+
 
 
 class TestNSGAIIMethods(unittest.TestCase):
@@ -172,5 +216,4 @@ class TestNSGAIIMethods(unittest.TestCase):
 	def test_dominates(self):
 		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=100)
 
-	# This gives us 4 solutions with which to play
-
+# This gives us 4 solutions with which to play
