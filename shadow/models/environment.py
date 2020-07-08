@@ -65,7 +65,7 @@ class Environment(object):
 		"""
 		with open(config, 'r') as infile:
 			jdict = json.load(infile)
-
+		costs_bool = False
 		resources, rates, costs = {}, {}, {}
 		if ENV_RESOURCE in jdict[ENV_SYS]:
 			resources = jdict[ENV_SYS][ENV_RESOURCE]
@@ -73,10 +73,12 @@ class Environment(object):
 			rates = jdict[ENV_SYS][ENV_RATES]
 		if ENV_COST in jdict[ENV_SYS]:
 			costs = jdict[ENV_SYS][ENV_COST]
+			costs_bool = True
 
 		self.machines = _process_env_resources(resources)
-		self.costs = costs
-		self._process_env_costs(costs)
+		if costs_bool:
+			self.costs = costs
+			self._process_env_costs(costs)
 		self.rates = rates
 
 	def _process_env_costs(self, costs):
