@@ -47,7 +47,7 @@ def cost_fitness(solution):
 	for machine in solution.machines:
 		tmpcost = 0.0
 		for allocation in solution.list_machine_allocations(machine):
-			runtime = allocation.aft - allocation.ast
+			runtime = allocation.task.aft - allocation.task.ast
 			tmpcost += runtime * machine.cost
 		cost += tmpcost
 	return cost

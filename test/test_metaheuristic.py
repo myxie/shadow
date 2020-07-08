@@ -34,7 +34,7 @@ from shadow.algorithms.metaheuristic import generate_population, \
 	crossover
 
 from shadow.algorithms.fitness import calculate_fitness
-from shadow.models.workflow import Workflow
+from shadow.models.workflow import Workflow, Task
 from shadow.models.environment import Environment
 from shadow.algorithms.heuristic import heft
 
@@ -110,11 +110,11 @@ class TestPopulationGeneration(unittest.TestCase):
 		# First solution should be the same solution we have been working with previously.
 		self.assertEqual(107, soln1.makespan)
 		soln2 = pop[2]
-		self.assertNotEqual(114,soln2.makespan)
+		self.assertNotEqual(114, soln2.makespan)
 		soln5 = pop[4]
 		self.assertEqual(145, soln5.makespan)
 		soln25 = pop[24]
-		self.assertEqual(130,soln25.makespan)
+		self.assertEqual(130, soln25.makespan)
 
 	# self.assertEqual(soln.makespan,107)
 	# This means we are dealing with a
@@ -172,21 +172,22 @@ class TestGASelectionMethods(unittest.TestCase):
 		logger.debug(parent1.execution_order)
 		parent2 = binary_tournament(pop)
 		logger.debug(parent2.execution_order)
-		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9],[t.tid for t in parent1.execution_order])
+		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9], [t.task.tid for t in parent1.execution_order])
 		logger.debug("Fitness: {0}".format(parent1.fitness))
-		self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.tid for t in parent2.execution_order])
+		self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.task.tid for t in parent2.execution_order])
 		logger.debug("Fitness: {0}".format(parent2.fitness))
 		fig, ax = plt.subplots()
 		x = [soln.fitness['time'] for soln in pop]
 		y = [soln.fitness['cost'] for soln in pop]
 		ax.grid(True)
 		ax.scatter(x, y, c='red')
-		selectedx = [parent1.fitness['time'],parent2.fitness['time']]
-		selectedy = [parent1.fitness['cost'],parent2.fitness['cost']]
-		ax.scatter(selectedx,selectedy,c='blue')
+		selectedx = [parent1.fitness['time'], parent2.fitness['time']]
+		selectedy = [parent1.fitness['cost'], parent2.fitness['cost']]
+		ax.scatter(selectedx, selectedy, c='blue')
 		ax.legend()
 		plt.xlabel('Solution Runtime')
-		plt.ylabel('Solution execution cost')
+		plt.ylabel('Solution execution cost binary')
+
 		plt.show()
 
 	def test_crossover(self):
@@ -197,11 +198,38 @@ class TestGASelectionMethods(unittest.TestCase):
 		random.seed(self.SEED)
 
 		p1 = binary_tournament(pop)
-		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9],[t.tid for t in p1.execution_order])
+		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9], [t.task.tid for t in p1.execution_order])
 		p2 = binary_tournament(pop)
-		self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.tid for t in p2.execution_order])
-		result = crossover(p1,p2)
+		self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.task.tid for t in p2.execution_order])
+		c1, c2 = crossover(p1, p2, self.wf)
 
+		for m in c1.machines:
+			for allocation in c1.list_machine_allocations(m):
+				if allocation.task.tid == 4:
+					self.assertEqual('cat1_m1', allocation.machine.id)
+		for m in c2.machines:
+			for allocation in c2.list_machine_allocations(m):
+				if allocation.task.tid == 4:
+					self.assertEqual('cat0_m0', allocation.machine.id)
+		self.assertNotEqual(p2.makespan, c2.makespan)
+
+		fig, ax = plt.subplots()
+		c1.fitness = calculate_fitness(['time', 'cost'], c1)
+		c2.fitness = calculate_fitness(['time', 'cost'], c2)
+		crossx = [c1.fitness['time'], c2.fitness['time']]
+		crossy = [c1.fitness['cost'], c2.fitness['cost']]
+		ax.scatter(crossx, crossy, c='green')
+		x = [soln.fitness['time'] for soln in pop]
+		y = [soln.fitness['cost'] for soln in pop]
+		ax.grid(True)
+		ax.scatter(x, y, c='red')
+		selectedx = [p1.fitness['time'], p2.fitness['time']]
+		selectedy = [p1.fitness['cost'], p2.fitness['cost']]
+		ax.scatter(selectedx, selectedy, c='blue')
+		ax.legend()
+		plt.xlabel('Solution Runtime')
+		plt.ylabel('Solution execution cost')
+		plt.show()
 
 
 class TestNSGAIIMethods(unittest.TestCase):

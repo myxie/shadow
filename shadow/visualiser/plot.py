@@ -38,7 +38,7 @@ class AllocationPlot(object):
 		for i, m in enumerate(self.machines):
 			alloc_list.append([])
 			for alloc in solution.list_machine_allocations(m):
-				alloc_list[i].append((alloc.ast, alloc.aft, alloc.tid))
+				alloc_list[i].append((alloc.task.ast, alloc.task.aft, alloc.tid))
 		return alloc_list
 
 	def plot(self):

@@ -42,6 +42,7 @@ import copy
 
 from shadow.models.solution import Solution, Allocation
 from shadow.models.globals import *
+from shadow.models.workflow import Task
 from shadow.algorithms import fitness
 
 import logging
@@ -255,7 +256,7 @@ def compare_fitness(soln1, soln2, weights, comparison=min):
 		return soln2
 
 
-def crossover(parent1, parent2, seed=DEFAULT_SEED):
+def crossover(parent1, parent2, workflow, seed=DEFAULT_SEED):
 	"""
 	As described in Yu & Buyya 2007
 
@@ -270,10 +271,84 @@ def crossover(parent1, parent2, seed=DEFAULT_SEED):
 	# We achieve the crossover by finding the 'like tasks' between the boundary and swapping
 	# Them between parents.
 	pairs = parent1.task_machine_pairs()
-	c1, c2 = copy.deepcopy(p1), copy.deepcopy(p2)
-	tasks = parent1.execution_order[p1:p2]
-	for task in tasks:
-		m = task.machine
+	# machines = copy.deepcopy(parent1.machines)
+	c1, c2 = GASolution(parent1.machines), GASolution(parent2.machines)
+	# c1.execution_order = copy.deepcopy(parent1.execution_order)
+	# c2.execution_order = copy.deepcopy(parent2.execution_order)
+
+	crossover_tasks = [allocation.task.tid for allocation in parent1.execution_order[p1:p2]]
+	c1_crossover_m, c2_crossover_m = [], []
+	# These are the machine allocations for each task/pair swap
+	c1_tmp_alloc = []
+	c2_tmp_alloc = []
+	for m in parent1.machines:
+		for alloc in parent1.list_machine_allocations(m):
+			if alloc.task.tid in crossover_tasks:
+				continue
+			else:
+				nalloc = copy.deepcopy(alloc)
+				nalloc.reset()
+				c1_tmp_alloc.append(nalloc)
+		for alloc in parent2.list_machine_allocations(m):
+			if alloc.task.tid in crossover_tasks:
+				continue
+			else:
+				nalloc = copy.deepcopy(alloc)
+				nalloc.reset()
+				c2_tmp_alloc.append(nalloc)
+
+
+	for m in parent1.machines:
+		for alloc in parent2.list_machine_allocations(m):
+			if alloc.task.tid in crossover_tasks:
+				nalloc = copy.deepcopy(alloc)
+				nalloc.reset()
+				c1_tmp_alloc.append(nalloc)
+		for alloc in parent1.list_machine_allocations(m):
+			if alloc.task.tid in crossover_tasks:
+				nalloc = copy.deepcopy(alloc)
+				nalloc.reset()
+				c2_tmp_alloc.append(nalloc)
+
+	c1taskorder = [alloc.task.tid for alloc in parent1.execution_order]
+	c1_tmp_alloc.sort(key=lambda x: c1taskorder.index(x.task.tid))
+	c2taskorder = [alloc.task.tid for alloc in parent2.execution_order]
+	c2_tmp_alloc.sort(key=lambda x: c2taskorder.index(x.task.tid))
+
+	for alloc in c1_tmp_alloc:
+		t = alloc.task
+		m = alloc.machine
+		calc_start_finish_times(
+			task=t,
+			machine=m,
+			workflow=workflow,
+			curr_allocations=c1.list_machine_allocations(m)
+		)
+		c1.add_allocation(alloc.task, alloc.machine)
+		if t.aft > c1.makespan:
+			c1.makespan = t.aft
+
+	for alloc in c2_tmp_alloc:
+		t = alloc.task
+		m = alloc.machine
+		calc_start_finish_times(
+			task=t,
+			machine=m,
+			workflow=workflow,
+			curr_allocations=c2.list_machine_allocations(m)
+		)
+		c2.add_allocation(alloc.task, alloc.machine)
+		if t.aft > c2.makespan:
+			c2.makespan = t.aft
+	# 	index = random.randint(0, RAND_BOUNDS) % rand_bounds
+	# 	m = machines[index]
+	# 	calc_start_finish_times(t, m, wf, soln.list_machine_allocations(m))
+	# 	soln.add_allocation(t, m)
+	# 	if t.aft > soln.makespan:
+	# 		soln.makespan = t.aft
+	#
+	# soln.solution_cost = calc_solution_cost(soln, wf)
+
 	return c1, c2
 
 
@@ -334,7 +409,7 @@ def calc_solution_cost(solution, workflow):
 	cost = 0
 	for machine in workflow.env.machines:
 		for alloc in solution.list_machine_allocations(machine):
-			runtime = alloc.aft - alloc.ast
+			runtime = alloc.task.aft - alloc.task.ast
 			cost += workflow.env.calc_task_cost_on_machine(machine, runtime)
 	return cost
 
@@ -355,12 +430,30 @@ def generate_allocations(machines, task_order, wf, seed, solution_class=GASoluti
 
 	return soln
 
+#
+# def solution_calculation_updates(workflow, solution, seed, solution_class=GASolution):
+# 	"""
+# 	This function is for when we crossover or mutate and need to recalculate
+# 	Machine assignments have been done, we just want to go through the order
+# 	and double check allocations.
+# 	"""
+#
+# 	rand_bounds = len(solution.machines)
+# 	random.seed(seed)
+# 	# taskorder = sorted(, key=lambda x: order.index(x))
+# 	task_order = [alloc.task.tid for alloc in solution.execution_order]
+# 	for task in task_order:
+# 		for allocation in solution.list_machine_allocations(m):
+# 			ast, aft = update_start_finish_times(allocation.task, allocation.machine, workflow,
+# 												 solution.list_machine_allocations(m))
+# 			allocation.ast = ast
+# 			allocation.aft = aft
+# 			if allocation.aft > solution.makespan:
+# 				solution.makespan = allocation.aft
+#
+# 	solution.solution_cost = calc_solution_cost(solution, workflow)
+# 	return None
 
-def solution_calculation_updates():
-	### This function is for when we crossover or mutate and need to recalculate
-	### Machine assignments have been done, we just want to go through the order
-	### and double check allocations.
-	return None
 
 
 def calc_start_finish_times(task, machine, workflow, curr_allocations):
@@ -383,23 +476,25 @@ def calc_start_finish_times(task, machine, workflow, curr_allocations):
 			final = curr_allocations[num_alloc - 1]
 			# This is in the event that the task execution order places tasks
 			# with the same previous task on the same machine
-			if final.aft > st:
-				st = final.aft
+			if final.task.aft > st:
+				st = final.task.aft
 
+	ast = st
 	runtime = task.calc_runtime(machine)
+	aft = ast + runtime
 	task.ast = st
 	task.aft = task.ast + runtime
 	task.machine = machine
 
-	return None
+	return ast, aft
 
 
 def _check_machine_availability(solution, machine, start_time, task):
 	for alloc in solution.list_machine_allocations(machine):
-		if alloc.ast <= start_time < alloc.aft:
+		if alloc.task.ast <= start_time < alloc.task.aft:
 			return False
 		# if it starts beforehand but will over-run:
-		if start_time < alloc.ast <= start_time + task.calculated_runtime[machine]:
+		if start_time < alloc.task.ast <= start_time + task.calculated_runtime[machine]:
 			return False
 
 

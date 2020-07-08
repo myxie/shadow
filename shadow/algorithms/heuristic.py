@@ -137,15 +137,15 @@ def fcfs_allocation(workflow, greedy, seed):
 # TODO return next available time
 def _machine_earliest_availability(solution, machine):
 	last_alloc = solution.latest_allocation_on_machine(machine)
-	return last_alloc.aft
+	return last_alloc.task.aft
 
 
 def _check_machine_availability(solution, machine, start_time, task):
 	for alloc in solution.list_machine_allocations(machine):
-		if alloc.ast <= start_time < alloc.aft:
+		if alloc.task.ast <= start_time < alloc.task.aft:
 			return False
 		# if it starts beforehand but will over-run:
-		if start_time < alloc.ast <= start_time + task.calculated_runtime[machine]:
+		if start_time < alloc.task.ast <= start_time + task.calculated_runtime[machine]:
 			return False
 
 	return True
@@ -328,18 +328,18 @@ def calc_est(wf, task, machine):
 	else:
 		for i, alloc in enumerate(curr_allocations):
 			if i == 0:
-				if alloc.ast != 0:  # If the start time of the first allocation is not 0
-					available_slots.append((0, alloc.ast))
+				if alloc.task.ast != 0:  # If the start time of the first allocation is not 0
+					available_slots.append((0, alloc.task.ast))
 				else:
 					continue
 			else:
 				prev_alloc = curr_allocations[i - 1]
 				available_slots.append((
-					prev_alloc.aft,
-					alloc.ast
+					prev_alloc.task.aft,
+					alloc.task.ast
 				))
 		final_alloc = curr_allocations[num_alloc - 1]  # We want the finish time of the latest allocation.
-		available_slots.append((final_alloc.aft, -1))
+		available_slots.append((final_alloc.task.aft, -1))
 
 	for slot in available_slots:
 		if est < slot[0] and slot[0] + \

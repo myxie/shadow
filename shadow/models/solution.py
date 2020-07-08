@@ -20,13 +20,15 @@ class Allocation:
 	"""
 
 	def __init__(self, task, machine):
-		self.tid = task.tid
-		self.ast = task.ast
-		self.aft = task.aft
 		self.machine = machine
+		self.task = task
 
 	def __repr__(self):
-		return str(self.tid)
+		return str(self.task)
+
+	def reset(self):
+		self.task.ast = -1
+		self.task.aft = -1
 
 
 class Solution:
@@ -38,7 +40,7 @@ class Solution:
 	def __init__(self, machines):
 		self.machines = machines
 		# Generate a list of allocations for each machine
-		self.allocations = {m: [] for m in machines}
+		self.allocations = {m.id: [] for m in machines}
 		self.task_allocations = {}
 		self.execution_order = []
 		self.makespan = 0
@@ -51,13 +53,13 @@ class Solution:
 
 	def add_allocation(self, task, machine):
 		a = Allocation(task, machine)
-		self.allocations[machine].append(a)
-		self.allocations[machine].sort(
-			key=lambda alloc: alloc.ast
+		self.allocations[machine.id].append(a)
+		self.allocations[machine.id].sort(
+			key=lambda alloc: alloc.task.ast
 		)
 		self.task_allocations[task] = machine
 		self.execution_order.append(a)
-		self.execution_order.sort(key=lambda alloc: alloc.ast)
+		self.execution_order.sort(key=lambda alloc: alloc.task.ast)
 		if task.aft > self.makespan:
 			self.makespan = task.aft
 
@@ -68,26 +70,26 @@ class Solution:
 		:param machine: The String name of the machine
 		:return:
 		"""
-		self.allocations[machine].sort(
-			key=lambda alloc: alloc.ast
+		self.allocations[machine.id].sort(
+			key=lambda alloc: alloc.task.ast
 		)
-		return self.allocations[machine]
+		return self.allocations[machine.id]
 
 	def task_machine_pairs(self):
 		pairs = []
 		for machine in self.allocations:
-			pairs.append([(machine,task.tid) for task in self.allocations[machine]])
+			pairs.append([(machine, alloc.task.tid) for alloc in self.allocations[machine]])
 		return pairs
 
-
 	def latest_allocation_on_machine(self, machine):
-		final = len(self.allocations[machine])
-		return self.allocations[machine][final-1]
+		final = len(self.allocations[machine.id])
+		return self.allocations[machine.id][final - 1]
 
 	def list_all_allocations(self):
 		return self.allocations
 
 	def find_alloc(self, task):
 		pass
+
 	def remove_allocation(self, tid, m):
 		pass
