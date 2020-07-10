@@ -215,7 +215,7 @@ def generate_population(wf, size, seed, skip_limit):
 		curr = next(top_sort)
 		soln = generate_allocations(
 			machines=wf.env.machines,
-			task_order=curr,
+			task_order=(curr),
 			wf=wf,
 			seed=seed
 		)
@@ -297,7 +297,6 @@ def crossover(parent1, parent2, workflow, seed=DEFAULT_SEED):
 				nalloc.reset()
 				c2_tmp_alloc.append(nalloc)
 
-
 	for m in parent1.machines:
 		for alloc in parent2.list_machine_allocations(m):
 			if alloc.task.tid in crossover_tasks:
@@ -322,9 +321,13 @@ def crossover(parent1, parent2, workflow, seed=DEFAULT_SEED):
 			task=t,
 			machine=m,
 			workflow=workflow,
-			curr_allocations=c1.list_machine_allocations(m)
+			curr_allocations=c1.list_machine_allocations(m),
+			solution=c1
 		)
-		c1.add_allocation(alloc.task, alloc.machine)
+		alloc = Allocation(alloc.task, alloc.machine)
+		c1.allocations[m.id].append(alloc)
+		c1.execution_order.append(alloc)
+		c1.task_allocations[t] = alloc
 		if t.aft > c1.makespan:
 			c1.makespan = t.aft
 
@@ -335,9 +338,13 @@ def crossover(parent1, parent2, workflow, seed=DEFAULT_SEED):
 			task=t,
 			machine=m,
 			workflow=workflow,
-			curr_allocations=c2.list_machine_allocations(m)
+			curr_allocations=c2.list_machine_allocations(m),
+			solution=c2
 		)
-		c2.add_allocation(alloc.task, alloc.machine)
+		alloc = Allocation(alloc.task, alloc.machine)
+		c2.allocations[m.id].append(alloc)
+		c2.execution_order.append(alloc)
+		c2.task_allocations[t] = alloc
 		if t.aft > c2.makespan:
 			c2.makespan = t.aft
 	# 	index = random.randint(0, RAND_BOUNDS) % rand_bounds
@@ -364,7 +371,7 @@ def create_window(parent1, parent2, seed=DEFAULT_SEED):
 	return p1, p2
 
 
-def mutation(soln):
+def mutation(solution, workflow, mutation_type='swapping', seed=None):
 	"""
 	Mutation requires us to separate the nodes into levels of nodes that are
 	independent of each other with respect to precedence:
@@ -373,7 +380,117 @@ def mutation(soln):
 	Level n should have just the final task(s) - those with no outdegree
 	"""
 
-	return None
+	# Swapping mutation
+	"""
+	The swapping mutation involves mixing up the execution order of two tasks.
+	This requires us to make sure we are only swapping the order of tasks 
+	that are independent of each other. We are lucky because in a directed graph, 
+	we just need to calculate if there is a path between these nodes; if YES, then 
+	we cannot swap because that breaks precedence (so we find another!).  
+	"""
+
+	random.seed(seed)
+	task_order = [alloc.task.tid for alloc in solution.execution_order]
+
+	# Calculate random ints
+	order_length = len(task_order)
+	selected_tasks = False
+	t1, t2 = None, None
+	selected_machine = random.sample(solution.machines,1)[0]
+
+	machine_allocations = solution.allocations[selected_machine.id]
+	alloc_order=[alloc.task.tid for alloc in machine_allocations]
+	alloc_length = len(machine_allocations)
+	while not selected_tasks:
+		i1 = random.randint(0, alloc_length-1)
+		i2 = random.randint(0, alloc_length -1)
+		if i1 > i2:
+			tmp = i1
+			i1 = i2
+			i2 = tmp
+		nodes = list(workflow.graph.nodes)
+		curr_nodes = [nodes[i] for i in alloc_order]
+		curr_nodes.sort(key=lambda task: alloc_order.index(task.tid))
+		t1, t2 = curr_nodes[i1], curr_nodes[i2]
+		if not nx.algorithms.shortest_paths.has_path(workflow.graph, t1, t2):
+			selected_tasks = True
+
+	t1index = alloc_order.index(t1.tid)
+	t2index = alloc_order.index(t2.tid)
+
+	tmp = alloc_order[t1index]
+	alloc_order[t1index] = alloc_order[t2index]
+	alloc_order[t2index] = tmp
+
+	solution_exec = solution.execution_order
+
+	# task2 may be independent from task1, but it may need other tasks to finish before
+	# it can, and therefore task 1 can. So we need to adjust the execution order accordingly.
+
+	pred = [t.tid for t in workflow.graph.predecessors(t2)]
+
+	for task in task_order:
+		if task in pred:
+			i=task_order.index(task)
+			t1i = task_order.index(t1.tid)
+			if i > t1i:
+				task_order[t1i] = task
+				task_order[i] = t1.tid
+	# Now that we have ensured that none of task2 predecessors will start before it does in the eecution order,
+	# we swap it with task1 to finish off the process!
+	t1i = task_order.index(t1.tid)
+	t2i = task_order.index(t2.tid)
+	task_order[t1i] = t2.tid
+	task_order[t2i] = t1.tid
+
+	succ = [t.tid for t in workflow.graph.successors(t1)]
+	for task in task_order:
+		if task in succ:
+			i=task_order.index(task)
+			t1i = task_order.index(t1.tid)
+			if i < t1i:
+				task_order[t1i] = task
+				task_order[i] = t1.tid
+	c1 = GASolution(solution.machines)
+	# c1.allocations = copy.deepcopy(solution.allocations)
+	# c1.allocations[selected_machine.id].sort(key=lambda alloc: alloc_order.index(alloc.task.tid))
+
+	# for m in solution.machines:
+	# 	if m is selected_machine:
+	# 		c1.allocations[selected_machine.id].sort(key=lambda alloc: alloc_order.index(alloc.task.tid))
+
+		# for alloc in parent1.list_machine_allocations(m):
+		# 	if alloc.task.tid in crossover_tasks:
+		# 		continue
+		# 	else:
+		# 		nalloc = copy.deepcopy(alloc)
+		# 		nalloc.reset()
+		# 		c1_tmp_alloc.append(nalloc)
+
+	tmp_alloc = copy.deepcopy(solution.allocations)
+	tmp_alloc[selected_machine.id].sort(key=lambda alloc: alloc_order.index(alloc.task.tid))
+	tmp_list = []
+	for m in solution.machines:
+		for alloc in tmp_alloc[m.id]:
+			alloc.reset()
+			tmp_list.append(alloc)
+	tmp_list.sort(key=lambda alloc: task_order.index(alloc.task.tid))
+
+	for alloc in tmp_list:
+		t = alloc.task
+		m = alloc.machine
+		calc_start_finish_times(
+			task=t,
+			machine=m,
+			workflow=workflow,
+			curr_allocations=c1.list_machine_allocations(m),
+			solution=c1
+		)
+		c1.add_allocation(alloc.task, alloc.machine,sort=False)
+		if t.aft > c1.makespan:
+			c1.makespan = t.aft
+
+	return c1
 
 
 def peek(iterable):
@@ -421,14 +538,19 @@ def generate_allocations(machines, task_order, wf, seed, solution_class=GASoluti
 	for t in task_order:
 		index = random.randint(0, RAND_BOUNDS) % rand_bounds
 		m = machines[index]
-		calc_start_finish_times(t, m, wf, soln.list_machine_allocations(m))
-		soln.add_allocation(t, m)
-		if t.aft > soln.makespan:
-			soln.makespan = t.aft
+		ast, aft = calc_start_finish_times(t, m, wf, soln.list_machine_allocations(m))
+		t.ast = ast
+		t.aft = aft
+		solnt = copy.deepcopy(t)
+		soln.add_allocation(solnt, m)
+		if solnt.aft > soln.makespan:
+			soln.makespan = solnt.aft
 
+	soln.makespan = soln.execution_order[-1].task.aft
 	soln.solution_cost = calc_solution_cost(soln, wf)
 
 	return soln
+
 
 #
 # def solution_calculation_updates(workflow, solution, seed, solution_class=GASolution):
@@ -455,19 +577,22 @@ def generate_allocations(machines, task_order, wf, seed, solution_class=GASoluti
 # 	return None
 
 
-
-def calc_start_finish_times(task, machine, workflow, curr_allocations):
+def calc_start_finish_times(task, machine, workflow, curr_allocations, solution=None):
 	# For a given solution, we have task-machine pairs in a given order
 	# This order will be based on the execution order provided by a topological sort
 	st = 0
 	predecessors = workflow.graph.predecessors(task)
 	for pretask in predecessors:
+		solntask = pretask
+		if solution:
+			alloc = solution.task_allocations[pretask]
+			solntask = alloc.task
 		edge_comm_cost = 0
-		if pretask.machine != machine:
+		if solntask.machine.id != machine.id:
 			edge_comm_cost = workflow.graph.edges[pretask, task][WORKFLOW_DATASIZE]
 		# If the finish time of the previous task is greater than st and communication cost, then we update the est
-		if pretask.aft + edge_comm_cost >= st:
-			st = pretask.aft + edge_comm_cost
+		if solntask.aft + edge_comm_cost >= st:
+			st = solntask.aft + edge_comm_cost
 	# Also need to check what the latest current allocation is on the machine
 
 	num_alloc = len(curr_allocations)

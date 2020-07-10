@@ -21,6 +21,7 @@ import random
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 import networkx as nx
 
@@ -31,7 +32,9 @@ from shadow.algorithms.metaheuristic import generate_population, \
 	calc_start_finish_times, \
 	non_dom_sort, \
 	binary_tournament, \
-	crossover
+	crossover,\
+	mutation
+
 
 from shadow.algorithms.fitness import calculate_fitness
 from shadow.models.workflow import Workflow, Task
@@ -135,6 +138,8 @@ class TestPopulationGeneration(unittest.TestCase):
 	def test_create_sample_pop(self):
 		logger.debug("HEFT makespan {0}".format(heft(self.wf).makespan))
 		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
+		for soln in pop:
+			self.assertEqual(soln.execution_order[-1].task.aft,soln.makespan)
 		logger.debug("GA Initial Population")
 		logger.debug("########################")
 		for soln in pop:
@@ -145,9 +150,12 @@ class TestPopulationGeneration(unittest.TestCase):
 
 			soln.fitness = calculate_fitness(['time', 'cost'], soln)
 		fig, ax = plt.subplots()
+		ax.set_xlim([90,200])
+		ax.set_ylim([100,170])
 		x = [soln.fitness['time'] for soln in pop]
 		y = [soln.fitness['cost'] for soln in pop]
-		ax.scatter(x, y)
+		ax.scatter(x, y, c='red')
+		ax.set_axisbelow(True)
 		ax.legend()
 		ax.grid(True)
 		plt.xlabel('Solution Runtime')
@@ -172,15 +180,18 @@ class TestGASelectionMethods(unittest.TestCase):
 		logger.debug(parent1.execution_order)
 		parent2 = binary_tournament(pop)
 		logger.debug(parent2.execution_order)
-		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9], [t.task.tid for t in parent1.execution_order])
+		# self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9], [t.task.tid for t in parent1.execution_order])
 		logger.debug("Fitness: {0}".format(parent1.fitness))
-		self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.task.tid for t in parent2.execution_order])
+		# self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.task.tid for t in parent2.execution_order])
 		logger.debug("Fitness: {0}".format(parent2.fitness))
 		fig, ax = plt.subplots()
 		x = [soln.fitness['time'] for soln in pop]
 		y = [soln.fitness['cost'] for soln in pop]
+		ax.set_xlim([90,200])
+		ax.set_ylim([100,170])
 		ax.grid(True)
 		ax.scatter(x, y, c='red')
+		ax.set_axisbelow(True)
 		selectedx = [parent1.fitness['time'], parent2.fitness['time']]
 		selectedy = [parent1.fitness['cost'], parent2.fitness['cost']]
 		ax.scatter(selectedx, selectedy, c='blue')
@@ -202,7 +213,9 @@ class TestGASelectionMethods(unittest.TestCase):
 		p2 = binary_tournament(pop)
 		self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.task.tid for t in p2.execution_order])
 		c1, c2 = crossover(p1, p2, self.wf)
-
+		p1order = [t.task.tid for t in p1.execution_order]
+		c1order = [t.task.tid for t in c1.execution_order]
+		self.assertSequenceEqual(p1order, c1order)
 		for m in c1.machines:
 			for allocation in c1.list_machine_allocations(m):
 				if allocation.task.tid == 4:
@@ -222,7 +235,10 @@ class TestGASelectionMethods(unittest.TestCase):
 		x = [soln.fitness['time'] for soln in pop]
 		y = [soln.fitness['cost'] for soln in pop]
 		ax.grid(True)
+		ax.set_xlim([90,200])
+		ax.set_ylim([100,170])
 		ax.scatter(x, y, c='red')
+		ax.set_axisbelow(True)
 		selectedx = [p1.fitness['time'], p2.fitness['time']]
 		selectedy = [p1.fitness['cost'], p2.fitness['cost']]
 		ax.scatter(selectedx, selectedy, c='blue')
@@ -232,6 +248,95 @@ class TestGASelectionMethods(unittest.TestCase):
 		plt.show()
 
 
+	def test_mutation(self):
+		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
+		for soln in pop:
+			soln.fitness = calculate_fitness(['time', 'cost'], soln)
+
+		random.seed(self.SEED)
+
+		p1 = binary_tournament(pop)
+		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9], [t.task.tid for t in p1.execution_order])
+
+		mutated_child = mutation(p1, self.wf,'swapping',seed=self.SEED)
+		mutated_order_swapped = [0,5,3,1,7,4,2,8,6,9]
+		self.assertSequenceEqual(mutated_order_swapped, [alloc.task.tid for alloc in mutated_child.execution_order])
+		selected_machine = None
+		for machine in mutated_child.machines:
+			if machine.id == 'cat2_m2':
+				selected_machine = machine
+		mutated_alloc = mutated_child.list_machine_allocations(selected_machine)
+		self.assertSequenceEqual([7,2,9],[alloc.task.tid for alloc in mutated_alloc])
+
+
+	def test_overall(self):
+		total_generations = 25
+		crossover_probability= 0.5
+		mutation_probability = 0.5
+		popsize = 25
+		pop = generate_population(self.wf, size=popsize,seed=self.SEED, skip_limit=5)
+		for soln in pop:
+			soln.fitness = calculate_fitness(['time','cost'],soln)
+
+		generations = []
+		x = [soln.fitness['time'] for soln in pop]
+		y = [soln.fitness['cost'] for soln in pop]
+		generations.append((x,y))
+
+		random.seed(self.SEED)
+		for gen in range(total_generations):
+			new_pop = []
+			while len(new_pop) < len(pop):
+				p1 = binary_tournament(pop)
+				p2 = binary_tournament(pop)
+
+				if random.random() < crossover_probability:
+					c1, c2 = crossover(p1,p2,self.wf)
+					new_pop.append(c1)
+					new_pop.append(c2)
+					print(len(new_pop))
+				elif random.random() < mutation_probability:
+					c1 = mutation(p1, self.wf, 'swapping',seed=self.SEED)
+					new_pop.append(c1)
+					print(len(new_pop))
+				else:
+					print('continue')
+					continue
+			tmp_pop = pop + new_pop
+			for soln in tmp_pop:
+				soln.fitness = calculate_fitness(['time', 'cost'],soln)
+				soln.total_fitness = soln.calc_total_fitness()
+
+			tmp_pop.sort(key=lambda solution: solution.total_fitness)
+			pop = tmp_pop[0:popsize]
+
+			x = [soln.fitness['time'] for soln in pop]
+			y = [soln.fitness['cost'] for soln in pop]
+			generations.append((x,y))
+			plt.draw()
+			plt.show()
+
+		for soln in pop:
+			logger.info(soln.fitness)
+
+		fig, ax = plt.subplots()
+		ax.set_xlim([90, 200])
+		ax.set_ylim([100, 170])
+		scatter = ax.scatter(generations[0][0], generations[0][1],c='red')
+
+		def animate(i):
+			scatter.set_offsets(np.c_[generations[i][0],generations[i][1]])
+			ax.set_xlabel('Runtime (s) \n Generation {0}'.format(i))
+			ax.set_ylabel('Cost ($)')
+
+
+		anim = FuncAnimation(
+			fig, animate, interval=100, frames=25)
+
+		plt.draw()
+
+		anim.save('filename.gif', fps=2)
+
 class TestNSGAIIMethods(unittest.TestCase):
 
 	def setUp(self):
@@ -240,7 +345,7 @@ class TestNSGAIIMethods(unittest.TestCase):
 		self.wf.add_environment(env)
 		self.SEED = 10
 
-	# These two are generated in the above tests, so we can garauntee their correctness
+		# These two are generated in the above tests, so we can garauntee their correctness
 	def test_dominates(self):
 		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=100)
 

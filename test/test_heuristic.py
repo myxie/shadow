@@ -110,7 +110,7 @@ class TestHeftMethods(unittest.TestCase):
 
 	def test_schedule(self):
 		solution = heft(self.wf)
-		self.assertTrue(solution.makespan == 80)
+		self.assertEqual(80, solution.makespan)
 
 
 class TestHeftMethodCalcTime(unittest.TestCase):
@@ -127,7 +127,7 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 
 	def test_schedule(self):
 		solution = heft(self.wf)
-		self.assertTrue(solution.makespan == 98)
+		self.assertEqual(98,solution.makespan)
 
 
 @unittest.SkipTest

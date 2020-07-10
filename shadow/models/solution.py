@@ -51,15 +51,17 @@ class Solution:
 		"""
 		return True
 
-	def add_allocation(self, task, machine):
+	def add_allocation(self, task, machine,sort=True):
 		a = Allocation(task, machine)
 		self.allocations[machine.id].append(a)
-		self.allocations[machine.id].sort(
-			key=lambda alloc: alloc.task.ast
-		)
-		self.task_allocations[task] = machine
+		if sort:
+			self.allocations[machine.id].sort(
+				key=lambda alloc: alloc.task.ast
+			)
+		self.task_allocations[task] = a
 		self.execution_order.append(a)
-		self.execution_order.sort(key=lambda alloc: alloc.task.ast)
+		if sort:
+			self.execution_order.sort(key=lambda alloc: alloc.task.ast)
 		if task.aft > self.makespan:
 			self.makespan = task.aft
 
