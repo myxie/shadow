@@ -180,7 +180,7 @@ def upward_rank(wf):
 	order of rank.
 	"""
 	for task in sorted(list(wf.tasks)):
-		rank_up(wf, task)
+		task.rank = rank_up(wf, task)
 
 
 def upward_oct_rank(wf, oct_rank_matrix):
@@ -212,15 +212,17 @@ def rank_up(wf, task):
 	"""
 	longest_rank = 0
 	for successor in wf.graph.successors(task):
+		successor_rank = -1
 		if successor.rank == -1:  # if we have not assigned a rank
-			rank_up(wf, successor)
+			successor_rank = rank_up(wf, successor)
 
 		longest_rank = max(
 			longest_rank, ave_comm_cost(wf, task, successor)
-						  + successor.rank
+						  + successor_rank
 		)
 
-	task.rank = task.calc_ave_runtime() + longest_rank
+	task_rank = task.calc_ave_runtime() + longest_rank
+	return task_rank
 
 
 def rank_up_random(wf, task):

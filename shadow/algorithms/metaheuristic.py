@@ -240,20 +240,23 @@ def binary_tournament(pop, seed=DEFAULT_SEED):
 	best = None
 	# Get two random solutions from the population
 	t1, t2 = random.sample(pop, k)
-	return compare_fitness(t1, t2, [0.5, 0.5])
+	return compare_fitness(t1, t2, [0.8, 0.2], 0.8)
 
 
-def compare_fitness(soln1, soln2, weights, comparison=min):
+def compare_fitness(soln1, soln2, weights, probfit, comparison=min):
 	if len(soln1.fitness) != len(soln2.fitness) or len(weights) != len(soln1.fitness):
 		raise ValueError("Solutions have diferent numbers of fitness scores")
 
-	s1fit = sum(soln1.fitness.values()) * weights[0]
-	s2fit = sum(soln1.fitness.values()) * weights[1]
+	fitlist = [soln1, soln2]
+	rev = False
+	if comparison is max:
+		rev = True
 
-	if comparison(s1fit, s2fit) == s1fit:
-		return soln1
+	fitlist.sort(key=lambda x: (x.fitness['time']*weights[0], x.fitness['cost']*(weights[1])), reverse=rev)
+	if random.random() < probfit:
+		return fitlist[0]
 	else:
-		return soln2
+		return random.sample(fitlist,1)[0]
 
 
 def crossover(parent1, parent2, workflow, seed=DEFAULT_SEED):
@@ -396,14 +399,17 @@ def mutation(solution, workflow, mutation_type='swapping', seed=None):
 	order_length = len(task_order)
 	selected_tasks = False
 	t1, t2 = None, None
-	selected_machine = random.sample(solution.machines,1)[0]
+	selected_machine = random.sample(solution.machines, 1)[0]
 
 	machine_allocations = solution.allocations[selected_machine.id]
-	alloc_order=[alloc.task.tid for alloc in machine_allocations]
+	alloc_order = [alloc.task.tid for alloc in machine_allocations]
 	alloc_length = len(machine_allocations)
-	while not selected_tasks:
-		i1 = random.randint(0, alloc_length-1)
-		i2 = random.randint(0, alloc_length -1)
+	# There is the potential for an infinite loop if we have selected a machine with no swapping possible
+	loop_cap = 2 * alloc_length - 1
+	i = 0
+	while not selected_tasks and i < loop_cap:
+		i1 = random.randint(0, alloc_length - 1)
+		i2 = random.randint(0, alloc_length - 1)
 		if i1 > i2:
 			tmp = i1
 			i1 = i2
@@ -412,8 +418,13 @@ def mutation(solution, workflow, mutation_type='swapping', seed=None):
 		curr_nodes = [nodes[i] for i in alloc_order]
 		curr_nodes.sort(key=lambda task: alloc_order.index(task.tid))
 		t1, t2 = curr_nodes[i1], curr_nodes[i2]
+		i += 1
 		if not nx.algorithms.shortest_paths.has_path(workflow.graph, t1, t2):
 			selected_tasks = True
+
+	if not selected_tasks:
+		return None
+
 
 	t1index = alloc_order.index(t1.tid)
 	t2index = alloc_order.index(t2.tid)
@@ -431,7 +442,7 @@ def mutation(solution, workflow, mutation_type='swapping', seed=None):
 
 	for task in task_order:
 		if task in pred:
-			i=task_order.index(task)
+			i = task_order.index(task)
 			t1i = task_order.index(t1.tid)
 			if i > t1i:
 				task_order[t1i] = task
@@ -446,7 +457,7 @@ def mutation(solution, workflow, mutation_type='swapping', seed=None):
 	succ = [t.tid for t in workflow.graph.successors(t1)]
 	for task in task_order:
 		if task in succ:
-			i=task_order.index(task)
+			i = task_order.index(task)
 			t1i = task_order.index(t1.tid)
 			if i < t1i:
 				task_order[t1i] = task
@@ -459,13 +470,13 @@ def mutation(solution, workflow, mutation_type='swapping', seed=None):
 	# 	if m is selected_machine:
 	# 		c1.allocations[selected_machine.id].sort(key=lambda alloc: alloc_order.index(alloc.task.tid))
 
-		# for alloc in parent1.list_machine_allocations(m):
-		# 	if alloc.task.tid in crossover_tasks:
-		# 		continue
-		# 	else:
-		# 		nalloc = copy.deepcopy(alloc)
-		# 		nalloc.reset()
-		# 		c1_tmp_alloc.append(nalloc)
+	# for alloc in parent1.list_machine_allocations(m):
+	# 	if alloc.task.tid in crossover_tasks:
+	# 		continue
+	# 	else:
+	# 		nalloc = copy.deepcopy(alloc)
+	# 		nalloc.reset()
+	# 		c1_tmp_alloc.append(nalloc)
 
 	tmp_alloc = copy.deepcopy(solution.allocations)
 	tmp_alloc[selected_machine.id].sort(key=lambda alloc: alloc_order.index(alloc.task.tid))
@@ -486,7 +497,7 @@ def mutation(solution, workflow, mutation_type='swapping', seed=None):
 			curr_allocations=c1.list_machine_allocations(m),
 			solution=c1
 		)
-		c1.add_allocation(alloc.task, alloc.machine,sort=False)
+		c1.add_allocation(alloc.task, alloc.machine, sort=False)
 		if t.aft > c1.makespan:
 			c1.makespan = t.aft
 
@@ -550,31 +561,6 @@ def generate_allocations(machines, task_order, wf, seed, solution_class=GASoluti
 	soln.solution_cost = calc_solution_cost(soln, wf)
 
 	return soln
-
-
-#
-# def solution_calculation_updates(workflow, solution, seed, solution_class=GASolution):
-# 	"""
-# 	This function is for when we crossover or mutate and need to recalculate
-# 	Machine assignments have been done, we just want to go through the order
-# 	and double check allocations.
-# 	"""
-#
-# 	rand_bounds = len(solution.machines)
-# 	random.seed(seed)
-# 	# taskorder = sorted(, key=lambda x: order.index(x))
-# 	task_order = [alloc.task.tid for alloc in solution.execution_order]
-# 	for task in task_order:
-# 		for allocation in solution.list_machine_allocations(m):
-# 			ast, aft = update_start_finish_times(allocation.task, allocation.machine, workflow,
-# 												 solution.list_machine_allocations(m))
-# 			allocation.ast = ast
-# 			allocation.aft = aft
-# 			if allocation.aft > solution.makespan:
-# 				solution.makespan = allocation.aft
-#
-# 	solution.solution_cost = calc_solution_cost(solution, workflow)
-# 	return None
 
 
 def calc_start_finish_times(task, machine, workflow, curr_allocations, solution=None):

@@ -20,6 +20,7 @@ import logging
 import random
 
 import numpy as np
+from collections import Counter
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
@@ -180,10 +181,12 @@ class TestGASelectionMethods(unittest.TestCase):
 		logger.debug(parent1.execution_order)
 		parent2 = binary_tournament(pop)
 		logger.debug(parent2.execution_order)
-		# self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9], [t.task.tid for t in parent1.execution_order])
+		self.assertSequenceEqual([0, 5, 3, 4, 2, 1, 6, 8, 7, 9], [t.task.tid for t in parent1.execution_order])
 		logger.debug("Fitness: {0}".format(parent1.fitness))
-		# self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.task.tid for t in parent2.execution_order])
+		self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.task.tid for t in parent2.execution_order])
 		logger.debug("Fitness: {0}".format(parent2.fitness))
+
+
 		fig, ax = plt.subplots()
 		x = [soln.fitness['time'] for soln in pop]
 		y = [soln.fitness['cost'] for soln in pop]
@@ -202,7 +205,7 @@ class TestGASelectionMethods(unittest.TestCase):
 		plt.show()
 
 	def test_crossover(self):
-		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
+		pop = generate_population(self.wf, size=50, seed=self.SEED, skip_limit=5)
 		for soln in pop:
 			soln.fitness = calculate_fitness(['time', 'cost'], soln)
 
@@ -271,8 +274,8 @@ class TestGASelectionMethods(unittest.TestCase):
 
 	def test_overall(self):
 		total_generations = 25
-		crossover_probability= 0.5
-		mutation_probability = 0.5
+		crossover_probability = 0.5
+		mutation_probability = 0.4
 		popsize = 25
 		pop = generate_population(self.wf, size=popsize,seed=self.SEED, skip_limit=5)
 		for soln in pop:
@@ -281,38 +284,52 @@ class TestGASelectionMethods(unittest.TestCase):
 		generations = []
 		x = [soln.fitness['time'] for soln in pop]
 		y = [soln.fitness['cost'] for soln in pop]
-		generations.append((x,y))
+		weights = [200 * i for i in Counter(x).values() for j in range(i)]
 
+		generations.append((x,y))
+		parents1 = []
+		parents2 = []
 		random.seed(self.SEED)
 		for gen in range(total_generations):
 			new_pop = []
+			parent1= None
+			parent2 = None
 			while len(new_pop) < len(pop):
 				p1 = binary_tournament(pop)
 				p2 = binary_tournament(pop)
-
+				parent1 = p1
+				parent2 = p2
 				if random.random() < crossover_probability:
 					c1, c2 = crossover(p1,p2,self.wf)
 					new_pop.append(c1)
 					new_pop.append(c2)
-					print(len(new_pop))
 				elif random.random() < mutation_probability:
 					c1 = mutation(p1, self.wf, 'swapping',seed=self.SEED)
+					if c1 is None:
+						# The mutation didn't occur due to selection issue
+						continue
 					new_pop.append(c1)
-					print(len(new_pop))
 				else:
-					print('continue')
+					new_pop.append(p1)
+					new_pop.append(p2)
 					continue
 			tmp_pop = pop + new_pop
 			for soln in tmp_pop:
 				soln.fitness = calculate_fitness(['time', 'cost'],soln)
-				soln.total_fitness = soln.calc_total_fitness()
-
-			tmp_pop.sort(key=lambda solution: solution.total_fitness)
+				# soln.total_fitness = soln.calc_total_fitness()
+			tmp_pop.sort(key=lambda x: (x.fitness['time'], x.fitness['cost']))
+			# tmp_pop.sort(key=lambda solution: solution.total_fitness)
 			pop = tmp_pop[0:popsize]
-
+			weights = [10*i for i in Counter(x).values() for j in range(i)]
 			x = [soln.fitness['time'] for soln in pop]
 			y = [soln.fitness['cost'] for soln in pop]
+			parent1_x = [parent1.fitness['time']]
+			parent1_y = [parent1.fitness['cost']]
+			parent2_x = [parent2.fitness['time']]
+			parent2_y = [parent2.fitness['cost']]
 			generations.append((x,y))
+			parents1.append((parent1_x,parent1_y))
+			parents2.append((parent2_x, parent2_y))
 			plt.draw()
 			plt.show()
 
@@ -321,21 +338,24 @@ class TestGASelectionMethods(unittest.TestCase):
 
 		fig, ax = plt.subplots()
 		ax.set_xlim([90, 200])
-		ax.set_ylim([100, 170])
-		scatter = ax.scatter(generations[0][0], generations[0][1],c='red')
+		ax.set_ylim([130, 170])
+		scatter = ax.scatter(generations[0][0], generations[0][1],c='blue',alpha=.2)
+		parent_scatter = ax.scatter(parents1[0][0], parents1[0][1], c='red', alpha=0.8)
+		parent2_scatter = ax.scatter(parents2[0][0], parents1[0][1], c='red', alpha=0.8)
 
 		def animate(i):
 			scatter.set_offsets(np.c_[generations[i][0],generations[i][1]])
+			parent_scatter.set_offsets(np.c_[parents1[i][0], parents1[i][1]])
+			parent2_scatter.set_offsets(np.c_[parents2[i][0], parents2[i][1]])
 			ax.set_xlabel('Runtime (s) \n Generation {0}'.format(i))
 			ax.set_ylabel('Cost ($)')
-
 
 		anim = FuncAnimation(
 			fig, animate, interval=100, frames=25)
 
 		plt.draw()
 
-		anim.save('filename.gif', fps=2)
+		anim.save('filename.mp4', fps=1)
 
 class TestNSGAIIMethods(unittest.TestCase):
 
