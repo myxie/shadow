@@ -1,0 +1,672 @@
+{
+  "header": {
+    "time": false
+  },
+  "graph": {
+    "directed": true,
+    "multigraph": false,
+    "graph": {
+      "name": "G"
+    },
+    "nodes": [
+      {
+        "comp": 538,
+        "id": 0
+      },
+      {
+        "comp": 408,
+        "id": 1
+      },
+      {
+        "comp": 454,
+        "id": 2
+      },
+      {
+        "comp": 495,
+        "id": 3
+      },
+      {
+        "comp": 467,
+        "id": 4
+      },
+      {
+        "comp": 496,
+        "id": 5
+      },
+      {
+        "comp": 597,
+        "id": 6
+      },
+      {
+        "comp": 556,
+        "id": 7
+      },
+      {
+        "comp": 589,
+        "id": 8
+      },
+      {
+        "comp": 585,
+        "id": 9
+      },
+      {
+        "comp": 456,
+        "id": 10
+      },
+      {
+        "comp": 505,
+        "id": 11
+      },
+      {
+        "comp": 511,
+        "id": 12
+      },
+      {
+        "comp": 486,
+        "id": 13
+      },
+      {
+        "comp": 530,
+        "id": 14
+      },
+      {
+        "comp": 553,
+        "id": 15
+      },
+      {
+        "comp": 447,
+        "id": 16
+      },
+      {
+        "comp": 401,
+        "id": 17
+      },
+      {
+        "comp": 585,
+        "id": 18
+      },
+      {
+        "comp": 465,
+        "id": 19
+      },
+      {
+        "comp": 439,
+        "id": 20
+      },
+      {
+        "comp": 524,
+        "id": 21
+      },
+      {
+        "comp": 430,
+        "id": 22
+      },
+      {
+        "comp": 410,
+        "id": 23
+      },
+      {
+        "comp": 467,
+        "id": 24
+      },
+      {
+        "comp": 470,
+        "id": 25
+      },
+      {
+        "comp": 593,
+        "id": 26
+      },
+      {
+        "comp": 472,
+        "id": 27
+      },
+      {
+        "comp": 516,
+        "id": 28
+      },
+      {
+        "comp": 477,
+        "id": 29
+      },
+      {
+        "comp": 528,
+        "id": 30
+      },
+      {
+        "comp": 472,
+        "id": 31
+      },
+      {
+        "comp": 512,
+        "id": 32
+      },
+      {
+        "comp": 483,
+        "id": 33
+      },
+      {
+        "comp": 436,
+        "id": 34
+      },
+      {
+        "comp": 523,
+        "id": 35
+      },
+      {
+        "comp": 520,
+        "id": 36
+      },
+      {
+        "comp": 585,
+        "id": 37
+      },
+      {
+        "comp": 465,
+        "id": 38
+      },
+      {
+        "comp": 532,
+        "id": 39
+      },
+      {
+        "comp": 504,
+        "id": 40
+      },
+      {
+        "comp": 428,
+        "id": 41
+      },
+      {
+        "comp": 552,
+        "id": 42
+      },
+      {
+        "comp": 419,
+        "id": 43
+      },
+      {
+        "comp": 553,
+        "id": 44
+      },
+      {
+        "comp": 570,
+        "id": 45
+      },
+      {
+        "comp": 548,
+        "id": 46
+      },
+      {
+        "comp": 400,
+        "id": 47
+      },
+      {
+        "comp": 597,
+        "id": 48
+      },
+      {
+        "comp": 575,
+        "id": 49
+      },
+      {
+        "comp": 443,
+        "id": 50
+      },
+      {
+        "comp": 579,
+        "id": 51
+      },
+      {
+        "comp": 434,
+        "id": 52
+      },
+      {
+        "comp": 422,
+        "id": 53
+      },
+      {
+        "comp": 422,
+        "id": 54
+      },
+      {
+        "comp": 599,
+        "id": 55
+      }
+    ],
+    "links": [
+      {
+        "_graphml_id": "e68",
+        "data_size": 225,
+        "source": 0,
+        "target": 1
+      },
+      {
+        "_graphml_id": "e67",
+        "data_size": 258,
+        "source": 0,
+        "target": 2
+      },
+      {
+        "_graphml_id": "e66",
+        "data_size": 280,
+        "source": 0,
+        "target": 3
+      },
+      {
+        "_graphml_id": "e65",
+        "data_size": 275,
+        "source": 0,
+        "target": 4
+      },
+      {
+        "_graphml_id": "e61",
+        "data_size": 203,
+        "source": 1,
+        "target": 9
+      },
+      {
+        "_graphml_id": "e60",
+        "data_size": 298,
+        "source": 2,
+        "target": 10
+      },
+      {
+        "_graphml_id": "e59",
+        "data_size": 234,
+        "source": 3,
+        "target": 11
+      },
+      {
+        "_graphml_id": "e58",
+        "data_size": 272,
+        "source": 4,
+        "target": 12
+      },
+      {
+        "_graphml_id": "e64",
+        "data_size": 235,
+        "source": 5,
+        "target": 6
+      },
+      {
+        "_graphml_id": "e63",
+        "data_size": 221,
+        "source": 7,
+        "target": 8
+      },
+      {
+        "_graphml_id": "e62",
+        "data_size": 246,
+        "source": 8,
+        "target": 0
+      },
+      {
+        "_graphml_id": "e57",
+        "data_size": 274,
+        "source": 9,
+        "target": 5
+      },
+      {
+        "_graphml_id": "e56",
+        "data_size": 287,
+        "source": 10,
+        "target": 5
+      },
+      {
+        "_graphml_id": "e55",
+        "data_size": 213,
+        "source": 11,
+        "target": 5
+      },
+      {
+        "_graphml_id": "e54",
+        "data_size": 275,
+        "source": 12,
+        "target": 5
+      },
+      {
+        "_graphml_id": "e53",
+        "data_size": 254,
+        "source": 13,
+        "target": 14
+      },
+      {
+        "_graphml_id": "e52",
+        "data_size": 269,
+        "source": 13,
+        "target": 15
+      },
+      {
+        "_graphml_id": "e51",
+        "data_size": 267,
+        "source": 13,
+        "target": 16
+      },
+      {
+        "_graphml_id": "e50",
+        "data_size": 211,
+        "source": 13,
+        "target": 17
+      },
+      {
+        "_graphml_id": "e49",
+        "data_size": 204,
+        "source": 13,
+        "target": 18
+      },
+      {
+        "_graphml_id": "e48",
+        "data_size": 222,
+        "source": 13,
+        "target": 19
+      },
+      {
+        "_graphml_id": "e47",
+        "data_size": 267,
+        "source": 13,
+        "target": 20
+      },
+      {
+        "_graphml_id": "e46",
+        "data_size": 215,
+        "source": 13,
+        "target": 21
+      },
+      {
+        "_graphml_id": "e45",
+        "data_size": 285,
+        "source": 13,
+        "target": 22
+      },
+      {
+        "_graphml_id": "e44",
+        "data_size": 258,
+        "source": 13,
+        "target": 23
+      },
+      {
+        "_graphml_id": "e43",
+        "data_size": 288,
+        "source": 13,
+        "target": 24
+      },
+      {
+        "_graphml_id": "e42",
+        "data_size": 294,
+        "source": 13,
+        "target": 25
+      },
+      {
+        "_graphml_id": "e38",
+        "data_size": 241,
+        "source": 14,
+        "target": 31
+      },
+      {
+        "_graphml_id": "e37",
+        "data_size": 206,
+        "source": 15,
+        "target": 32
+      },
+      {
+        "_graphml_id": "e36",
+        "data_size": 223,
+        "source": 16,
+        "target": 33
+      },
+      {
+        "_graphml_id": "e35",
+        "data_size": 272,
+        "source": 17,
+        "target": 34
+      },
+      {
+        "_graphml_id": "e34",
+        "data_size": 270,
+        "source": 18,
+        "target": 35
+      },
+      {
+        "_graphml_id": "e33",
+        "data_size": 258,
+        "source": 19,
+        "target": 36
+      },
+      {
+        "_graphml_id": "e32",
+        "data_size": 218,
+        "source": 20,
+        "target": 37
+      },
+      {
+        "_graphml_id": "e31",
+        "data_size": 283,
+        "source": 21,
+        "target": 38
+      },
+      {
+        "_graphml_id": "e30",
+        "data_size": 278,
+        "source": 22,
+        "target": 39
+      },
+      {
+        "_graphml_id": "e29",
+        "data_size": 228,
+        "source": 23,
+        "target": 40
+      },
+      {
+        "_graphml_id": "e28",
+        "data_size": 242,
+        "source": 24,
+        "target": 41
+      },
+      {
+        "_graphml_id": "e27",
+        "data_size": 205,
+        "source": 25,
+        "target": 42
+      },
+      {
+        "_graphml_id": "e71",
+        "data_size": 200,
+        "source": 26,
+        "target": 7
+      },
+      {
+        "_graphml_id": "e70",
+        "data_size": 260,
+        "source": 26,
+        "target": 27
+      },
+      {
+        "_graphml_id": "e9",
+        "data_size": 272,
+        "source": 27,
+        "target": 50
+      },
+      {
+        "_graphml_id": "e41",
+        "data_size": 267,
+        "source": 28,
+        "target": 26
+      },
+      {
+        "_graphml_id": "e40",
+        "data_size": 257,
+        "source": 29,
+        "target": 30
+      },
+      {
+        "_graphml_id": "e39",
+        "data_size": 229,
+        "source": 30,
+        "target": 13
+      },
+      {
+        "_graphml_id": "e26",
+        "data_size": 240,
+        "source": 31,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e25",
+        "data_size": 261,
+        "source": 32,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e24",
+        "data_size": 293,
+        "source": 33,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e23",
+        "data_size": 263,
+        "source": 34,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e22",
+        "data_size": 218,
+        "source": 35,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e21",
+        "data_size": 219,
+        "source": 36,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e20",
+        "data_size": 228,
+        "source": 37,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e19",
+        "data_size": 208,
+        "source": 38,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e18",
+        "data_size": 209,
+        "source": 39,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e17",
+        "data_size": 239,
+        "source": 40,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e16",
+        "data_size": 214,
+        "source": 41,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e15",
+        "data_size": 286,
+        "source": 42,
+        "target": 28
+      },
+      {
+        "_graphml_id": "e14",
+        "data_size": 278,
+        "source": 43,
+        "target": 44
+      },
+      {
+        "_graphml_id": "e13",
+        "data_size": 246,
+        "source": 43,
+        "target": 45
+      },
+      {
+        "_graphml_id": "e12",
+        "data_size": 234,
+        "source": 43,
+        "target": 46
+      },
+      {
+        "_graphml_id": "e11",
+        "data_size": 223,
+        "source": 43,
+        "target": 47
+      },
+      {
+        "_graphml_id": "e7",
+        "data_size": 206,
+        "source": 44,
+        "target": 51
+      },
+      {
+        "_graphml_id": "e6",
+        "data_size": 213,
+        "source": 45,
+        "target": 52
+      },
+      {
+        "_graphml_id": "e5",
+        "data_size": 209,
+        "source": 46,
+        "target": 53
+      },
+      {
+        "_graphml_id": "e4",
+        "data_size": 251,
+        "source": 47,
+        "target": 54
+      },
+      {
+        "_graphml_id": "e10",
+        "data_size": 260,
+        "source": 48,
+        "target": 49
+      },
+      {
+        "_graphml_id": "e8",
+        "data_size": 260,
+        "source": 50,
+        "target": 43
+      },
+      {
+        "_graphml_id": "e3",
+        "data_size": 216,
+        "source": 51,
+        "target": 48
+      },
+      {
+        "_graphml_id": "e2",
+        "data_size": 275,
+        "source": 52,
+        "target": 48
+      },
+      {
+        "_graphml_id": "e1",
+        "data_size": 254,
+        "source": 53,
+        "target": 48
+      },
+      {
+        "_graphml_id": "e0",
+        "data_size": 209,
+        "source": 54,
+        "target": 48
+      },
+      {
+        "_graphml_id": "e69",
+        "data_size": 219,
+        "source": 55,
+        "target": 29
+      }
+    ]
+  }
+}
