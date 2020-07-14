@@ -94,7 +94,8 @@ def daliugeimport(graph,
 
 		# Storing the nodes and edges from the unrolled DALiuGE graph
 		unrolled_nx = nx.DiGraph()
-
+		
+		# There is something about this simple.SleepApp that is a bug in the old DALiuGE Translator
 		for val in graphdict:
 			if 'app' in val.keys():
 				if val['app'] == "dlg.apps.simple.SleepApp":
