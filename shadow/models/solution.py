@@ -85,7 +85,11 @@ class Solution:
 
 	def latest_allocation_on_machine(self, machine):
 		final = len(self.allocations[machine.id])
-		return self.allocations[machine.id][final - 1]
+		if final == 0:
+			return None
+		else:
+			last_alloc = self.allocations[machine.id][final - 1]
+			return last_alloc
 
 	def list_all_allocations(self):
 		return self.allocations

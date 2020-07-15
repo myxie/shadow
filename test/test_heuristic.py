@@ -20,8 +20,8 @@ import os
 import logging
 
 from test import config as cfg
-from shadow.algorithms.heuristic import upward_rank, upward_oct_rank, \
-	heft, pheft, _check_machine_availability, fcfs
+from shadow.algorithms.heuristic import heft, pheft, _check_machine_availability, fcfs, generate_ranking_matrix,\
+	calculate_upward_ranks
 from shadow.models.workflow import Workflow, Task
 from shadow.models.environment import Environment
 from shadow.models.solution import Solution, Allocation
@@ -39,9 +39,9 @@ current_dir = os.path.abspath('.')
 class TestFCFS(unittest.TestCase):
 
 	def setUp(self):
-		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_heuristic_data['topcuoglu_graph']))
+		self.workflow = Workflow("{0}/{1}".format(current_dir, cfg.test_heuristic_data['topcuoglu_graph']))
 		self.env = Environment("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph_system']))
-		self.wf.add_environment(self.env)
+		self.workflow.add_environment(self.env)
 
 	def test_machine_availability(self):
 		solution = Solution(self.env.machines)
@@ -76,8 +76,8 @@ class TestFCFS(unittest.TestCase):
 
 	def test_fcfs_allocations(self):
 		# The order should be [0, 5, 4, 3, 2, 6, 1, 8, 7, 9]
-		solution = fcfs(workflow=self.wf)
-		for t in self.wf.tasks:
+		solution = fcfs(workflow=self.workflow)
+		for t in self.workflow.tasks:
 			if t.tid == 0:
 				self.assertEqual(0, t.ast)
 				self.assertEqual(11, t.aft)
@@ -93,40 +93,44 @@ class TestHeftMethods(unittest.TestCase):
 	"""
 
 	def setUp(self):
-		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_heuristic_data['topcuoglu_graph_nocalc']))
+		self.workflow = Workflow("{0}/{1}".format(current_dir, cfg.test_heuristic_data['topcuoglu_graph_nocalc']))
 		env = Environment("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph_system']))
-		self.wf.add_environment(env)
+		self.workflow.add_environment(env)
 
-	# self.wf.load_attributes(cfg.test_heuristic_data['heft_attr'],calc_time=False)
+	# self.workflow.load_attributes(cfg.test_heuristic_data['heft_attr'],calc_time=False)
 
 	def test_rank(self):
 		rank_values = [108, 77, 79, 80, 69, 63, 42, 35, 44, 14]
-		upward_rank(self.wf)
-		sorted_tasks = self.wf.sort_tasks('rank')
-		json = nx.readwrite.json_graph.node_link_data(self.wf.graph)
+		# for task in self.workflow.tasks:
+		# 	task.rank = rank_up(self.workflow, task)
+		task_ranks = calculate_upward_ranks(self.workflow)
+		# upward_rank(self.workflow)
+		for task in self.workflow.tasks:
+			task.rank = task_ranks[task]
+		sorted_tasks = self.workflow.sort_tasks('rank')
 
 		for node in sorted_tasks:
 			self.assertTrue(rank_values[node.tid] == int(node.rank))
 
 	def test_schedule(self):
-		solution = heft(self.wf)
+		solution = heft(self.workflow)
 		self.assertEqual(80, solution.makespan)
 
 
 class TestHeftMethodCalcTime(unittest.TestCase):
 	def setUp(self):
-		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph']))
+		self.workflow = Workflow("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph']))
 		env = Environment("{0}/{1}".format(current_dir, cfg.test_workflow_data['topcuoglu_graph_system']))
 
-		# self.wf = Workfow(cfg.test_heuristic_data['topcuoglu_graph'],
+		# self.workflow = Workfow(cfg.test_heuristic_data['topcuoglu_graph'],
 		# cfg.test_heuristic_data['topcuoglu_graph_system'])
 
-		self.wf.add_environment(env)
+		self.workflow.add_environment(env)
 
-	# self.wf.load_attributes(cfg.test_heuristic_data['flops_test_attr'])
+	# self.workflow.load_attributes(cfg.test_heuristic_data['flops_test_attr'])
 
 	def test_schedule(self):
-		solution = heft(self.wf)
+		solution = heft(self.workflow)
 		self.assertEqual(98,solution.makespan)
 
 
@@ -134,23 +138,23 @@ class TestHeftMethodCalcTime(unittest.TestCase):
 class TestHeftMethodLargeGraph(unittest.TestCase):
 
 	def test_large_workflow(self):
-		self.wf = Workflow(
+		self.workflow = Workflow(
 			"/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/3000Node.json"
 		)
 		env = Environment(
 			"/home/rwb/Dropbox/PhD/writeups/observation_graph-model/json/3000Node_sys.json"
 		)
-		self.wf.add_environment(env)
-		heft(self.wf)
+		self.workflow.add_environment(env)
+		heft(self.workflow)
 
 
 # @unittest.skip('For now')
 class TestPHeftMethods(unittest.TestCase):
 
 	def setUp(self):
-		self.wf = Workflow(cfg.test_heuristic_data['pheft_graph'])
+		self.workflow = Workflow(cfg.test_heuristic_data['pheft_graph'])
 		env = Environment(cfg.test_workflow_data['topcuoglu_graph_system'])
-		self.wf.add_environment(env)
+		self.workflow.add_environment(env)
 		self.up_oct_rank_values = [72, 41, 37, 43, 31, 41, 17, 20, 16, 0]
 		self.up_rank_values = [169, 114, 102, 110, 129, 119, 52, 92, 42, 20]
 
@@ -158,28 +162,41 @@ class TestPHeftMethods(unittest.TestCase):
 		return -1
 
 	def test_up_rank(self):
-		upward_rank(self.wf)
-		sorted_tasks = self.wf.sort_tasks('rank')
+		task_ranks = calculate_upward_ranks(self.workflow)
+		# upward_rank(self.workflow)
+		for task in self.workflow.tasks:
+			task.rank = task_ranks[task]
+		sorted_tasks = self.workflow.sort_tasks('rank')
 		for node in sorted_tasks:
 			self.assertTrue(int(node.rank) ==
 							self.up_rank_values[node.tid])
 
 	def test_oct_rank(self):
-		oct_rank_matrix = dict()
-		upward_oct_rank(self.wf, oct_rank_matrix)
-		sorted_tasks = self.wf.sort_tasks('rank')
+		oct_rank_matrix = generate_ranking_matrix(self.workflow)
+		# upward_oct_rank(self.workflow, oct_rank_matrix)
+		for task in self.workflow.tasks:
+			sum = 0
+			for (t, p) in oct_rank_matrix:
+				if t is task:
+					sum += oct_rank_matrix[(t, p)]
+
+			rank = int(sum / len(self.workflow.env.machines))
+			task.rank = rank
+
+		sorted_tasks = self.workflow.sort_tasks('rank')
+
 		for node in sorted_tasks:
-			self.assertTrue(node.rank ==
-							self.up_oct_rank_values[node.tid])
+			self.assertEqual(self.up_oct_rank_values[node.tid],
+							 node.rank)
 
 	def test_heft_schedule(self):
-		# upward_rank(self.wf)
-		solution = heft(self.wf)
+		# upward_rank(self.workflow)
+		solution = heft(self.workflow)
 		self.assertTrue(solution.makespan == 133)
 
 	def test_pheft_schedule(self):
-		# upward_rank(self.wf)
-		solution = pheft(self.wf)
+		# upward_rank(self.workflow)
+		solution = pheft(self.workflow)
 		self.assertTrue(solution.makespan == 122)
 
 
@@ -187,7 +204,7 @@ class TestPHeftMethods(unittest.TestCase):
 class TestDALiuGEGraph(unittest.TestCase):
 
 	def setUp(self):
-		self.wf = Workflow('test/data/daliugesample.json',
+		self.workflow = Workflow('test/data/daliugesample.json',
 						cfg.test_heuristic_data['topcuoglu_graph_system'],
 						calc_time=False)
 		self.dense = Workflow('test/data/ggen_out_4-denselu.json',
@@ -201,7 +218,7 @@ class TestDALiuGEGraph(unittest.TestCase):
 		pass
 
 	def test_it_works(self):
-		# print(heft(self.wf))
+		# print(heft(self.workflow))
 		print(heft(self.dense))
 		self.dense.pretty_print_allocation()
 
