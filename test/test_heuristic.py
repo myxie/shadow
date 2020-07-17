@@ -47,11 +47,11 @@ class TestFCFS(unittest.TestCase):
 		solution = Solution(self.env.machines)
 		m = list(self.env.machines)[1]  # second machine
 		t = Task(1)
-		t.ast = 3
-		t.aft = 11
-		t.machine = m
+		ast = 3
+		aft = 11
+		machine = m
 		t.calculated_runtime[m] = 5
-		solution.add_allocation(t, m)
+		solution.add_allocation(t, m, ast=ast, aft=aft)
 
 		# Start time is 5, so machine should be unavailable
 		self.assertFalse(_check_machine_availability(solution, m, start_time=5, task=t))
@@ -63,11 +63,11 @@ class TestFCFS(unittest.TestCase):
 		# Add a spanner in the works and have TWO allocations
 
 		u = Task(2)
-		u.ast = 14
-		u.aft = 17
-		u.machine = m
+		ast = 14
+		aft = 17
+		machine = m
 		u.calculated_runtime[m] = 4
-		solution.add_allocation(u, m)
+		solution.add_allocation(u, m, ast, aft)
 		# THis should be false, as start-time+runtime overlaps with 14-17
 		self.assertFalse(_check_machine_availability(solution, m, start_time=13, task=u))
 		# If we change the runtime, however, and start a little earlier, this should 'slot' inbetween the two allocations
@@ -79,8 +79,9 @@ class TestFCFS(unittest.TestCase):
 		solution = fcfs(workflow=self.workflow)
 		for t in self.workflow.tasks:
 			if t.tid == 0:
-				self.assertEqual(0, t.ast)
-				self.assertEqual(11, t.aft)
+				alloc = solution.task_allocations[t]
+				self.assertEqual(0, alloc.ast)
+				self.assertEqual(11, alloc.aft)
 			if t.tid == 4:
 				continue
 		self.assertEqual(solution.makespan, 110)

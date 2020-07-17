@@ -19,16 +19,20 @@ class Allocation:
 	A simple storage class to save an allocation to a solution
 	"""
 
-	def __init__(self, task, machine):
+	def __init__(self, task, machine, ast=None, aft=None):
 		self.machine = machine
 		self.task = task
+		self.ast = ast
+		self.aft = aft
 
 	def __repr__(self):
 		return str(self.task)
 
 	def reset(self):
 		self.task.ast = -1
+		self.ast = -1
 		self.task.aft = -1
+		self.aft = -1
 
 
 class Solution:
@@ -45,23 +49,18 @@ class Solution:
 		self.execution_order = []
 		self.makespan = 0
 
-	def _is_feasible(self, task_order):
-		"""
-		Check that task_order is a valid topological sort
-		"""
-		return True
 
-	def add_allocation(self, task, machine,sort=True):
-		a = Allocation(task, machine)
+	def add_allocation(self, task, machine, ast=None, aft=None,sort=True):
+		a = Allocation(task, machine, ast, aft)
 		self.allocations[machine.id].append(a)
 		if sort:
 			self.allocations[machine.id].sort(
-				key=lambda alloc: alloc.task.ast
+				key=lambda alloc: alloc.ast
 			)
 		self.task_allocations[task] = a
 		self.execution_order.append(a)
 		if sort:
-			self.execution_order.sort(key=lambda alloc: alloc.task.ast)
+			self.execution_order.sort(key=lambda alloc: alloc.ast)
 		if task.aft > self.makespan:
 			self.makespan = task.aft
 

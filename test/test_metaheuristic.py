@@ -339,9 +339,10 @@ class TestGASelectionMethods(unittest.TestCase):
 		fig, ax = plt.subplots()
 		ax.set_xlim([90, 200])
 		ax.set_ylim([130, 170])
-		scatter = ax.scatter(generations[0][0], generations[0][1],c='blue',alpha=.2)
-		parent_scatter = ax.scatter(parents1[0][0], parents1[0][1], c='red', alpha=0.8)
-		parent2_scatter = ax.scatter(parents2[0][0], parents1[0][1], c='red', alpha=0.8)
+		scatter = ax.scatter(generations[0][0], generations[0][1],c='blue',alpha=.2, label='New Pop')
+		parent_scatter = ax.scatter(parents1[0][0], parents1[0][1], c='red', alpha=0.8, label='Parent 1')
+		parent2_scatter = ax.scatter(parents2[0][0], parents1[0][1], c='red', alpha=0.8, label = 'Parent 2')
+		ax.legend()
 
 		def animate(i):
 			scatter.set_offsets(np.c_[generations[i][0],generations[i][1]])
