@@ -1,45 +1,9 @@
 {
     "linkDataArray": [
         {
-            "from": -6,
-            "fromPort": "9de73990-29c3-4368-8e26-f594ba422fb4",
-            "to": -8,
-            "toPort": "29b034a3-4a7d-4cab-ba84-2b90650113d0"
-        },
-        {
-            "from": -8,
-            "fromPort": "910e73fc-8688-4688-b211-90bdbbb6c1db",
-            "to": -11,
-            "toPort": "b116e038-b40f-48db-93f3-919774b374bb"
-        },
-        {
-            "from": -11,
-            "fromPort": "9de73990-29c3-4368-8e26-f594ba422fb4",
-            "to": -9,
-            "toPort": "04e12273-9694-42ce-bcf9-d0316a53c1fd"
-        },
-        {
-            "from": -5,
-            "fromPort": "586c0975-d24f-4826-bcf0-75c1c25cf559",
-            "to": -12,
-            "toPort": "b116e038-b40f-48db-93f3-919774b374bb"
-        },
-        {
-            "from": -12,
-            "fromPort": "9de73990-29c3-4368-8e26-f594ba422fb4",
-            "to": -9,
-            "toPort": "04e12273-9694-42ce-bcf9-d0316a53c1fd"
-        },
-        {
             "from": -9,
             "fromPort": "43234b3d-8223-4ff8-9fc1-70c964fda513",
             "to": -4,
-            "toPort": "b116e038-b40f-48db-93f3-919774b374bb"
-        },
-        {
-            "from": -8,
-            "fromPort": "910e73fc-8688-4688-b211-90bdbbb6c1db",
-            "to": -13,
             "toPort": "b116e038-b40f-48db-93f3-919774b374bb"
         },
         {
@@ -103,12 +67,6 @@
             "toPort": "5d4532c8-6f57-4a26-a86b-3deece65b451"
         },
         {
-            "from": -2,
-            "fromPort": "3f0341f9-8ed4-4768-8b6b-5f9baafe4001",
-            "to": -6,
-            "toPort": "b116e038-b40f-48db-93f3-919774b374bb"
-        },
-        {
             "from": -4,
             "fromPort": "9de73990-29c3-4368-8e26-f594ba422fb4",
             "to": -26,
@@ -157,16 +115,40 @@
             "toPort": "b116e038-b40f-48db-93f3-919774b374bb"
         },
         {
+            "from": -2,
+            "fromPort": "3f0341f9-8ed4-4768-8b6b-5f9baafe4001",
+            "to": -5,
+            "toPort": "c02630c4-0863-4679-84ab-c58784af5d15"
+        },
+        {
+            "from": -5,
+            "fromPort": "d5c22486-2c72-4cdf-b77c-46813587ec45",
+            "to": -8,
+            "toPort": "29b034a3-4a7d-4cab-ba84-2b90650113d0"
+        },
+        {
+            "from": -6,
+            "fromPort": "d5c22486-2c72-4cdf-b77c-46813587ec45",
+            "to": -9,
+            "toPort": "04e12273-9694-42ce-bcf9-d0316a53c1fd"
+        },
+        {
             "from": -26,
             "fromPort": "68be5272-ab05-42ad-91cf-ff77f2c94813",
             "to": -17,
             "toPort": "b116e038-b40f-48db-93f3-919774b374bb"
         },
         {
-            "from": -13,
-            "fromPort": "9de73990-29c3-4368-8e26-f594ba422fb4",
-            "to": -17,
-            "toPort": "b116e038-b40f-48db-93f3-919774b374bb"
+            "from": -8,
+            "fromPort": "910e73fc-8688-4688-b211-90bdbbb6c1db",
+            "to": -11,
+            "toPort": "c02630c4-0863-4679-84ab-c58784af5d15"
+        },
+        {
+            "from": -11,
+            "fromPort": "d5c22486-2c72-4cdf-b77c-46813587ec45",
+            "to": -9,
+            "toPort": "04e12273-9694-42ce-bcf9-d0316a53c1fd"
         }
     ],
     "modelData": {
@@ -215,6 +197,7 @@
                     "value": ""
                 }
             ],
+            "group": -7,
             "inputAppFields": [],
             "inputAppName": "",
             "inputApplication": "Unknown",
@@ -223,7 +206,7 @@
             "isData": true,
             "isGroup": false,
             "key": -2,
-            "loc": "136 210",
+            "loc": "731 43",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -288,7 +271,7 @@
             "isData": true,
             "isGroup": false,
             "key": -3,
-            "loc": "3833 676",
+            "loc": "4078 661",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -343,7 +326,7 @@
             "isData": false,
             "isGroup": false,
             "key": -1,
-            "loc": "3323 315",
+            "loc": "3714 624",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -357,113 +340,6 @@
             "streaming": false,
             "subject": null,
             "text": "UpdateGSM"
-        },
-        {
-            "canHaveInputs": true,
-            "canHaveOutputs": true,
-            "category": "Memory",
-            "categoryType": "Data",
-            "collapsed": false,
-            "colour": "#394BB2",
-            "description": "",
-            "drawOrderHint": 0,
-            "exitAppName": "",
-            "fields": [
-                {
-                    "name": "data_volume",
-                    "text": "Data volume",
-                    "value": "5"
-                },
-                {
-                    "name": "group_end",
-                    "text": "Group end",
-                    "value": "0"
-                }
-            ],
-            "group": -7,
-            "inputAppFields": [],
-            "inputAppName": "",
-            "inputApplication": "Unknown",
-            "inputLocalPorts": [],
-            "inputPorts": [],
-            "isData": true,
-            "isGroup": false,
-            "key": -5,
-            "loc": "1240.3076923076928 -13.846153846153829",
-            "outputAppFields": [],
-            "outputAppName": "",
-            "outputApplication": "Unknown",
-            "outputLocalPorts": [],
-            "outputPorts": [
-                {
-                    "Id": "586c0975-d24f-4826-bcf0-75c1c25cf559",
-                    "IdText": "event"
-                }
-            ],
-            "streaming": false,
-            "subject": null,
-            "text": "LSM"
-        },
-        {
-            "canHaveInputs": true,
-            "canHaveOutputs": true,
-            "category": "DynlibApp",
-            "categoryType": "Application",
-            "collapsed": false,
-            "colour": "#3470AA",
-            "description": "An application component run from a dynamic library",
-            "drawOrderHint": 0,
-            "exitAppName": "",
-            "fields": [
-                {
-                    "name": "execution_time",
-                    "text": "Execution time",
-                    "value": "5"
-                },
-                {
-                    "name": "num_cpus",
-                    "text": "Num CPUs",
-                    "value": "1"
-                },
-                {
-                    "name": "group_start",
-                    "text": "Group start",
-                    "value": "1"
-                },
-                {
-                    "name": "libpath",
-                    "text": "Library path",
-                    "value": "'home'"
-                }
-            ],
-            "group": -7,
-            "inputAppFields": [],
-            "inputAppName": "",
-            "inputApplication": "Unknown",
-            "inputLocalPorts": [],
-            "inputPorts": [
-                {
-                    "Id": "b116e038-b40f-48db-93f3-919774b374bb",
-                    "IdText": "event"
-                }
-            ],
-            "isData": false,
-            "isGroup": false,
-            "key": -6,
-            "loc": "1231.3076923076928 154.1538461538463",
-            "outputAppFields": [],
-            "outputAppName": "",
-            "outputApplication": "Unknown",
-            "outputLocalPorts": [],
-            "outputPorts": [
-                {
-                    "Id": "9de73990-29c3-4368-8e26-f594ba422fb4",
-                    "IdText": "event"
-                }
-            ],
-            "streaming": false,
-            "subject": null,
-            "text": "Predict"
         },
         {
             "canHaveInputs": true,
@@ -511,7 +387,7 @@
             "isData": false,
             "isGroup": false,
             "key": -8,
-            "loc": "1483.3846153846162 131.923076923077",
+            "loc": "1342 57",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -572,7 +448,7 @@
             "isData": false,
             "isGroup": false,
             "key": -4,
-            "loc": "2291.307692307693 121.15384615384619",
+            "loc": "2152 47",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -633,7 +509,7 @@
             "isData": false,
             "isGroup": false,
             "key": -10,
-            "loc": "2571.153846153848 485.30769230769164",
+            "loc": "2345 302",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -647,67 +523,6 @@
             "streaming": false,
             "subject": null,
             "text": "Grid"
-        },
-        {
-            "canHaveInputs": true,
-            "canHaveOutputs": true,
-            "category": "DynlibApp",
-            "categoryType": "Application",
-            "collapsed": false,
-            "colour": "#3470AA",
-            "description": "An application component run from a dynamic library",
-            "drawOrderHint": 0,
-            "exitAppName": "",
-            "fields": [
-                {
-                    "name": "execution_time",
-                    "text": "Execution time",
-                    "value": "5"
-                },
-                {
-                    "name": "num_cpus",
-                    "text": "Num CPUs",
-                    "value": "1"
-                },
-                {
-                    "name": "group_start",
-                    "text": "Group start",
-                    "value": "0"
-                },
-                {
-                    "name": "libpath",
-                    "text": "Library path",
-                    "value": "'home'"
-                }
-            ],
-            "group": -7,
-            "inputAppFields": [],
-            "inputAppName": "",
-            "inputApplication": "Unknown",
-            "inputLocalPorts": [],
-            "inputPorts": [
-                {
-                    "Id": "b116e038-b40f-48db-93f3-919774b374bb",
-                    "IdText": "event"
-                }
-            ],
-            "isData": false,
-            "isGroup": false,
-            "key": -11,
-            "loc": "1766.307692307693 130.15384615384622",
-            "outputAppFields": [],
-            "outputAppName": "",
-            "outputApplication": "Unknown",
-            "outputLocalPorts": [],
-            "outputPorts": [
-                {
-                    "Id": "9de73990-29c3-4368-8e26-f594ba422fb4",
-                    "IdText": "event"
-                }
-            ],
-            "streaming": false,
-            "subject": null,
-            "text": "Correct"
         },
         {
             "canHaveInputs": true,
@@ -755,7 +570,7 @@
             "isData": false,
             "isGroup": false,
             "key": -9,
-            "loc": "2029.307692307693 122.15384615384619",
+            "loc": "1888 48",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -769,128 +584,6 @@
             "streaming": false,
             "subject": null,
             "text": "Subtract"
-        },
-        {
-            "canHaveInputs": true,
-            "canHaveOutputs": true,
-            "category": "DynlibApp",
-            "categoryType": "Application",
-            "collapsed": false,
-            "colour": "#3470AA",
-            "description": "An application component run from a dynamic library",
-            "drawOrderHint": 0,
-            "exitAppName": "",
-            "fields": [
-                {
-                    "name": "execution_time",
-                    "text": "Execution time",
-                    "value": "5"
-                },
-                {
-                    "name": "num_cpus",
-                    "text": "Num CPUs",
-                    "value": "1"
-                },
-                {
-                    "name": "group_start",
-                    "text": "Group start",
-                    "value": "0"
-                },
-                {
-                    "name": "libpath",
-                    "text": "Library path",
-                    "value": "'home'"
-                }
-            ],
-            "group": -7,
-            "inputAppFields": [],
-            "inputAppName": "",
-            "inputApplication": "Unknown",
-            "inputLocalPorts": [],
-            "inputPorts": [
-                {
-                    "Id": "b116e038-b40f-48db-93f3-919774b374bb",
-                    "IdText": "event"
-                }
-            ],
-            "isData": false,
-            "isGroup": false,
-            "key": -12,
-            "loc": "1744.307692307693 -10.846153846153843",
-            "outputAppFields": [],
-            "outputAppName": "",
-            "outputApplication": "Unknown",
-            "outputLocalPorts": [],
-            "outputPorts": [
-                {
-                    "Id": "9de73990-29c3-4368-8e26-f594ba422fb4",
-                    "IdText": "event"
-                }
-            ],
-            "streaming": false,
-            "subject": null,
-            "text": "Predict"
-        },
-        {
-            "canHaveInputs": true,
-            "canHaveOutputs": true,
-            "category": "DynlibApp",
-            "categoryType": "Application",
-            "collapsed": false,
-            "colour": "#3470AA",
-            "description": "An application component run from a dynamic library",
-            "drawOrderHint": 0,
-            "exitAppName": "",
-            "fields": [
-                {
-                    "name": "execution_time",
-                    "text": "Execution time",
-                    "value": "5"
-                },
-                {
-                    "name": "num_cpus",
-                    "text": "Num CPUs",
-                    "value": "1"
-                },
-                {
-                    "name": "group_start",
-                    "text": "Group start",
-                    "value": "0"
-                },
-                {
-                    "name": "libpath",
-                    "text": "Library path",
-                    "value": "'home'"
-                }
-            ],
-            "group": -7,
-            "inputAppFields": [],
-            "inputAppName": "",
-            "inputApplication": "Unknown",
-            "inputLocalPorts": [],
-            "inputPorts": [
-                {
-                    "Id": "b116e038-b40f-48db-93f3-919774b374bb",
-                    "IdText": "event"
-                }
-            ],
-            "isData": false,
-            "isGroup": false,
-            "key": -13,
-            "loc": "1759.000000000001 245.92307692307705",
-            "outputAppFields": [],
-            "outputAppName": "",
-            "outputApplication": "Unknown",
-            "outputLocalPorts": [],
-            "outputPorts": [
-                {
-                    "Id": "9de73990-29c3-4368-8e26-f594ba422fb4",
-                    "IdText": "event"
-                }
-            ],
-            "streaming": false,
-            "subject": null,
-            "text": "CalibrationParams"
         },
         {
             "canHaveInputs": true,
@@ -938,7 +631,7 @@
             "isData": false,
             "isGroup": false,
             "key": -14,
-            "loc": "1575.6923076923083 556.6923076923076",
+            "loc": "1349 373",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -999,7 +692,7 @@
             "isData": false,
             "isGroup": false,
             "key": -15,
-            "loc": "1871.384615384616 561.6923076923076",
+            "loc": "1645 378",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1060,7 +753,7 @@
             "isData": false,
             "isGroup": false,
             "key": -16,
-            "loc": "2181.6923076923076 528.6923076923077",
+            "loc": "1955 345",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1121,7 +814,7 @@
             "isData": false,
             "isGroup": false,
             "key": -17,
-            "loc": "1222.6923076923088 534.6923076923077",
+            "loc": "994 364",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1182,7 +875,7 @@
             "isData": false,
             "isGroup": false,
             "key": -18,
-            "loc": "1305.4615384615397 896.5384615384608",
+            "loc": "1110 708",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1243,7 +936,7 @@
             "isData": false,
             "isGroup": false,
             "key": -19,
-            "loc": "1677.461538461539 787.5384615384611",
+            "loc": "1471 633",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1304,7 +997,7 @@
             "isData": false,
             "isGroup": false,
             "key": -20,
-            "loc": "1677.0769230769233 958.3846153846146",
+            "loc": "1510 813",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1328,8 +1021,8 @@
             "colour": "#512E5F",
             "description": "Placeholder 'loop' description",
             "desiredSize": {
-                "height": 1313.4615384615379,
-                "width": 2171.1538461538457
+                "height": 1851.7726137475483,
+                "width": 2264.773163594891
             },
             "drawOrderHint": 0,
             "exitAppName": "UpdateLSM",
@@ -1337,7 +1030,7 @@
                 {
                     "name": "num_of_iter",
                     "text": "Number loops",
-                    "value": "5"
+                    "value": "1"
                 },
                 {
                     "name": "group_start",
@@ -1363,7 +1056,7 @@
             "isData": false,
             "isGroup": true,
             "key": -7,
-            "loc": "856.3076923076923 -52.84615384615383",
+            "loc": "715 -125",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "",
@@ -1401,7 +1094,7 @@
                 {
                     "name": "num_of_iter",
                     "text": "Number loops",
-                    "value": "5"
+                    "value": "1"
                 }
             ],
             "group": -7,
@@ -1423,7 +1116,7 @@
             "isData": false,
             "isGroup": true,
             "key": -21,
-            "loc": "968.6923076923078 355.69230769230757",
+            "loc": "742 172",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "",
@@ -1452,8 +1145,8 @@
             "colour": "#512E5F",
             "description": "Placeholder 'loop' description",
             "desiredSize": {
-                "height": 336.5384615384616,
-                "width": 1098.0769230769226
+                "height": 410.79814061690774,
+                "width": 1105.6737335183204
             },
             "drawOrderHint": 0,
             "exitAppName": "",
@@ -1461,10 +1154,10 @@
                 {
                     "name": "num_of_iter",
                     "text": "Number loops",
-                    "value": "5"
+                    "value": "1"
                 }
             ],
-            "group": -21,
+            "group": -12,
             "inputAppFields": [],
             "inputAppName": "",
             "inputApplication": "",
@@ -1483,7 +1176,7 @@
             "isData": false,
             "isGroup": true,
             "key": -22,
-            "loc": "1156.4615384615392 727.5384615384617",
+            "loc": "961 539",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "",
@@ -1535,6 +1228,7 @@
                     "value": "'home'"
                 }
             ],
+            "group": -7,
             "inputAppFields": [],
             "inputAppName": "",
             "inputApplication": "Unknown",
@@ -1548,7 +1242,7 @@
             "isData": false,
             "isGroup": false,
             "key": -23,
-            "loc": "985.3076923076924 1568.769230769231",
+            "loc": "975 1388",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1595,6 +1289,7 @@
                     "value": "test.graphsRepository"
                 }
             ],
+            "group": -7,
             "inputAppFields": [],
             "inputAppName": "",
             "inputApplication": "Unknown",
@@ -1608,7 +1303,7 @@
             "isData": false,
             "isGroup": false,
             "key": -24,
-            "loc": "1564.2307692307695 1541.7692307692303",
+            "loc": "1676 1410",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1655,6 +1350,7 @@
                     "value": "test.graphsRepository"
                 }
             ],
+            "group": -7,
             "inputAppFields": [],
             "inputAppName": "",
             "inputApplication": "Unknown",
@@ -1668,7 +1364,7 @@
             "isData": false,
             "isGroup": false,
             "key": -25,
-            "loc": "2500.6923076923076 1628.2307692307686",
+            "loc": "2217 1408",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1719,7 +1415,7 @@
             "isData": true,
             "isGroup": false,
             "key": -26,
-            "loc": "2309.3076923076933 243.15384615384625",
+            "loc": "2168 169",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1756,6 +1452,7 @@
                     "value": "1"
                 }
             ],
+            "group": -7,
             "inputAppFields": [],
             "inputAppName": "",
             "inputApplication": "Unknown",
@@ -1769,7 +1466,7 @@
             "isData": true,
             "isGroup": false,
             "key": -34,
-            "loc": "2968.230769230769 1707.384615384615",
+            "loc": "2902 1407",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1820,7 +1517,7 @@
             "isData": true,
             "isGroup": false,
             "key": -27,
-            "loc": "2024.6153846153836 849.9999999999997",
+            "loc": "1828 820",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1881,7 +1578,7 @@
             "isData": false,
             "isGroup": false,
             "key": -28,
-            "loc": "2550.0000000000027 696.1538461538464",
+            "loc": "2324 513",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1932,7 +1629,7 @@
             "isData": true,
             "isGroup": false,
             "key": -29,
-            "loc": "2590.384615384616 950",
+            "loc": "2364 767",
             "outputAppFields": [],
             "outputAppName": "",
             "outputApplication": "Unknown",
@@ -1946,6 +1643,254 @@
             "streaming": false,
             "subject": null,
             "text": "Memory"
+        },
+        {
+            "canHaveInputs": true,
+            "canHaveOutputs": true,
+            "category": "Component",
+            "categoryType": "Application",
+            "collapsed": false,
+            "colour": "#3498DB",
+            "description": "An application component in the form of a Python app",
+            "drawOrderHint": 0,
+            "exitAppName": "",
+            "fields": [
+                {
+                    "name": "execution_time",
+                    "text": "Execution time",
+                    "value": "5"
+                },
+                {
+                    "name": "num_cpus",
+                    "text": "Num CPUs",
+                    "value": "1"
+                },
+                {
+                    "name": "group_start",
+                    "text": "Group start",
+                    "value": "1"
+                },
+                {
+                    "name": "appclass",
+                    "text": "Appclass",
+                    "value": "test.graphsRepository"
+                }
+            ],
+            "group": -7,
+            "inputAppFields": [],
+            "inputAppName": "",
+            "inputApplication": "Unknown",
+            "inputLocalPorts": [],
+            "inputPorts": [
+                {
+                    "Id": "c02630c4-0863-4679-84ab-c58784af5d15",
+                    "IdText": "event"
+                }
+            ],
+            "isData": false,
+            "isGroup": false,
+            "key": -5,
+            "loc": "1024 59",
+            "outputAppFields": [],
+            "outputAppName": "",
+            "outputApplication": "Unknown",
+            "outputLocalPorts": [],
+            "outputPorts": [
+                {
+                    "Id": "d5c22486-2c72-4cdf-b77c-46813587ec45",
+                    "IdText": "event"
+                }
+            ],
+            "streaming": false,
+            "subject": null,
+            "text": "Predict"
+        },
+        {
+            "canHaveInputs": true,
+            "canHaveOutputs": true,
+            "category": "Component",
+            "categoryType": "Application",
+            "collapsed": false,
+            "colour": "#3498DB",
+            "description": "An application component in the form of a Python app",
+            "drawOrderHint": 0,
+            "exitAppName": "",
+            "fields": [
+                {
+                    "name": "execution_time",
+                    "text": "Execution time",
+                    "value": "5"
+                },
+                {
+                    "name": "num_cpus",
+                    "text": "Num CPUs",
+                    "value": "1"
+                },
+                {
+                    "name": "group_start",
+                    "text": "Group start",
+                    "value": "0"
+                },
+                {
+                    "name": "appclass",
+                    "text": "Appclass",
+                    "value": "test.graphsRepository"
+                }
+            ],
+            "group": -7,
+            "inputAppFields": [],
+            "inputAppName": "",
+            "inputApplication": "Unknown",
+            "inputLocalPorts": [],
+            "inputPorts": [
+                {
+                    "Id": "c02630c4-0863-4679-84ab-c58784af5d15",
+                    "IdText": "event"
+                }
+            ],
+            "isData": false,
+            "isGroup": false,
+            "key": -6,
+            "loc": "1626 -72",
+            "outputAppFields": [],
+            "outputAppName": "",
+            "outputApplication": "Unknown",
+            "outputLocalPorts": [],
+            "outputPorts": [
+                {
+                    "Id": "d5c22486-2c72-4cdf-b77c-46813587ec45",
+                    "IdText": "event"
+                }
+            ],
+            "streaming": false,
+            "subject": null,
+            "text": "Predict"
+        },
+        {
+            "canHaveInputs": true,
+            "canHaveOutputs": true,
+            "category": "Component",
+            "categoryType": "Application",
+            "collapsed": false,
+            "colour": "#3498DB",
+            "description": "An application component in the form of a Python app",
+            "drawOrderHint": 0,
+            "exitAppName": "",
+            "fields": [
+                {
+                    "name": "execution_time",
+                    "text": "Execution time",
+                    "value": "5"
+                },
+                {
+                    "name": "num_cpus",
+                    "text": "Num CPUs",
+                    "value": "1"
+                },
+                {
+                    "name": "group_start",
+                    "text": "Group start",
+                    "value": "0"
+                },
+                {
+                    "name": "appclass",
+                    "text": "Appclass",
+                    "value": "test.graphsRepository"
+                }
+            ],
+            "group": -7,
+            "inputAppFields": [],
+            "inputAppName": "",
+            "inputApplication": "Unknown",
+            "inputLocalPorts": [],
+            "inputPorts": [
+                {
+                    "Id": "c02630c4-0863-4679-84ab-c58784af5d15",
+                    "IdText": "event"
+                }
+            ],
+            "isData": false,
+            "isGroup": false,
+            "key": -11,
+            "loc": "1611 58",
+            "outputAppFields": [],
+            "outputAppName": "",
+            "outputApplication": "Unknown",
+            "outputLocalPorts": [],
+            "outputPorts": [
+                {
+                    "Id": "d5c22486-2c72-4cdf-b77c-46813587ec45",
+                    "IdText": "event"
+                }
+            ],
+            "streaming": false,
+            "subject": null,
+            "text": "Compute"
+        },
+        {
+            "canHaveInputs": true,
+            "canHaveOutputs": true,
+            "category": "GroupBy",
+            "categoryType": "Group",
+            "collapsed": false,
+            "colour": "#7F8C8D",
+            "description": "Placeholder 'group by' description",
+            "desiredSize": {
+                "height": 391.79814061690774,
+                "width": 910.6737335183207
+            },
+            "drawOrderHint": 0,
+            "exitAppName": "",
+            "fields": [
+                {
+                    "name": "group_key",
+                    "text": "Group key",
+                    "value": "1"
+                },
+                {
+                    "name": "group_axis",
+                    "text": "Group axis",
+                    "value": "frequency"
+                }
+            ],
+            "group": -21,
+            "inputAppFields": [],
+            "inputAppName": "",
+            "inputApplication": "",
+            "inputLocalPorts": [
+                {
+                    "Id": "96c0d633-31b5-4cd3-b571-bc4b7f534e47",
+                    "IdText": "event"
+                }
+            ],
+            "inputPorts": [
+                {
+                    "Id": "c73d6363-4546-4790-9896-1943c11733a2",
+                    "IdText": "event"
+                }
+            ],
+            "isData": false,
+            "isGroup": true,
+            "key": -12,
+            "loc": "937 443",
+            "outputAppFields": [],
+            "outputAppName": "",
+            "outputApplication": "",
+            "outputLocalPorts": [
+                {
+                    "Id": "48cd1881-4cb2-4651-b6ca-40fb8c659dde",
+                    "IdText": "event"
+                }
+            ],
+            "outputPorts": [
+                {
+                    "Id": "d2c80d03-e582-49aa-87f9-5c1878876acb",
+                    "IdText": "event"
+                }
+            ],
+            "streaming": false,
+            "subject": null,
+            "text": "Group By"
         }
     ]
 }

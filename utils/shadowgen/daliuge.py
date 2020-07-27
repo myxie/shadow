@@ -18,7 +18,7 @@ import json
 import sys
 import datetime
 import networkx as nx
-from shadowgen_config import CURR_DIR, JSON_DIR, DOTS_DIR
+# from shadowgen_config import CURR_DIR, JSON_DIR, DOTS_DIR
 from generator import generate_graph_costs, generate_system_machines
 import random
 
@@ -47,16 +47,11 @@ def edit_channels(graph_name, suffix, extension):
 
 
 def unroll_graph(graph):
-	if os.path.exists(graph):
-		print(graph)
-
-		cmd_list = ['dlg', 'unroll-and-partition', '-fv', '-a', 'mysarkar', '-L', graph]
-		jgraph_path = "{0}.json".format(graph[:-6])
-		with open(format(jgraph_path), 'w+') as f:
-			subprocess.call(cmd_list, stdout=f)
-		return jgraph_path
-	else:
-		print("Failure to find path {0}".format(graph))
+	cmd_list = ['dlg', 'unroll-and-partition', '-fv', '-a', 'mysarkar', '-L', graph]
+	jgraph_path = "{0}.json".format(graph[:-6])
+	with open(format(jgraph_path), 'w+') as f:
+		subprocess.call(cmd_list, stdout=f)
+	return jgraph_path
 
 
 def generate_dot_from_networkx_graph(graph, output):
