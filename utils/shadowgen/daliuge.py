@@ -22,10 +22,8 @@ from shadowgen_config import CURR_DIR, JSON_DIR, DOTS_DIR
 from generator import generate_graph_costs, generate_system_machines
 import random
 
-
-
 EAGLE_EXT = ".graph"
-EAGLE_GRAPH = 'test/data/shadowgen/TestAskapCont.graph'
+EAGLE_GRAPH = 'test/data/shadowgen/SDPContinuumPipeline.graph'
 CHANNELS = 10
 CHANNEL_SUFFIX = "_channels-{0}".format(CHANNELS)
 SEED = 20
@@ -47,11 +45,12 @@ def edit_channels(graph_name, suffix, extension):
 	f.close()
 	return ngraph
 
+
 def unroll_graph(graph):
 	if os.path.exists(graph):
 		print(graph)
 
-		cmd_list = ['dlg', 'unroll-and-partition', '-fv', '-L', graph]
+		cmd_list = ['dlg', 'unroll-and-partition', '-fv', '-a', 'mysarkar', '-L', graph]
 		jgraph_path = "{0}.json".format(graph[:-6])
 		with open(format(jgraph_path), 'w+') as f:
 			subprocess.call(cmd_list, stdout=f)
@@ -61,27 +60,26 @@ def unroll_graph(graph):
 
 
 def generate_dot_from_networkx_graph(graph, output):
-	if os.path.exists(graph):
-		dot_path = "{0}.dot".format(output)
-		nx.drawing.nx_pydot.write_dot(graph, dot_path)
-		cmd_list = [
-			'graphviz',
-			'-Tpdf',
-			'{0}.dot'.format(output)
-			]
+	dot_path = "{0}.dot".format(output)
+	nx.drawing.nx_pydot.write_dot(graph, dot_path)
+	cmd_list = [
+		'dot',
+		'-Tpdf',
+		'{0}.dot'.format(output)
+	]
 
-		dot_pdf = "{0}.pdf".format(output)
-		with open(dot_pdf, 'w') as f:
-			subprocess.call(cmd_list, stdout=f)
-			return dot_path
+	dot_pdf = "{0}.pdf".format(output)
+	with open(dot_pdf, 'w') as f:
+		subprocess.call(cmd_list, stdout=f)
+		return dot_path
 
 
 def daliugeimport(graph,
-				mean,
-				uniform_range,
-				multiplier,
-				ccr,
-				seed=20):
+				  mean,
+				  uniform_range,
+				  multiplier,
+				  ccr,
+				  seed=20):
 	"""
 	Daliuge import will use
 	:return:
@@ -94,7 +92,7 @@ def daliugeimport(graph,
 
 		# Storing the nodes and edges from the unrolled DALiuGE graph
 		unrolled_nx = nx.DiGraph()
-		
+
 		# There is something about this simple.SleepApp that is a bug in the old DALiuGE Translator
 		for val in graphdict:
 			if 'app' in val.keys():
@@ -115,7 +113,7 @@ def daliugeimport(graph,
 					unrolled_nx.add_edge(val['oid'], item)
 
 		for node in unrolled_nx.nodes():
-			unrolled_nx.nodes[node]['label'] = str(node)
+			unrolled_nx.nodes[node]['label'] = unrolled_nx.nodes[node]['nm']  
 
 		translate = {}
 		count = 0
@@ -162,9 +160,11 @@ def daliugeimport(graph,
 		save = "{0}_shadow.json".format(graph[:-5])
 		with open("{0}".format(save), 'w') as jfile:
 			json.dump(jgraph, jfile, indent=2)
+		return unrolled_nx
 
 
 if __name__ == '__main__':
-	edited_graph = edit_channels(EAGLE_GRAPH, CHANNEL_SUFFIX, EAGLE_EXT)
-	unrolled_graph = unroll_graph(edited_graph)
-	daliugeimport(unrolled_graph, MEAN, UNIFORM_RANGE, MULTIPLIER, CCR)
+	# edited_graph = edit_channels(EAGLE_GRAPH, CHANNEL_SUFFIX, EAGLE_EXT)
+	unrolled_graph = unroll_graph(EAGLE_GRAPH)
+	nxgraph = daliugeimport(unrolled_graph, MEAN, UNIFORM_RANGE, MULTIPLIER, CCR)
+	generate_dot_from_networkx_graph(nxgraph, 'output')

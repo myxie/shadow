@@ -142,7 +142,7 @@
             "application": "Component",
             "canHaveInputs": true,
             "canHaveOutputs": true,
-            "category": "SplitData",
+            "category": "Scatter",
             "categoryType": "GroupComponent",
             "colour": " #DDAD00",
             "desiredSize": {
@@ -196,7 +196,7 @@
         {
             "canHaveInputs": true,
             "canHaveOutputs": true,
-            "category": "memory",
+            "category": "Memory",
             "categoryType": "DataDrop",
             "colour": " #394BB2",
             "fields": [
@@ -348,7 +348,7 @@
         {
             "canHaveInputs": true,
             "canHaveOutputs": true,
-            "category": "file",
+            "category": "File",
             "categoryType": "DataDrop",
             "colour": " #394BB2",
             "fields": [
@@ -607,7 +607,7 @@
         {
             "canHaveInputs": true,
             "canHaveOutputs": true,
-            "category": "file",
+            "category": "File",
             "categoryType": "DataDrop",
             "colour": " #394BB2",
             "fields": [
@@ -655,7 +655,7 @@
         {
             "canHaveInputs": true,
             "canHaveOutputs": true,
-            "category": "memory",
+            "category": "Memory",
             "categoryType": "DataDrop",
             "colour": " #394BB2",
             "fields": [

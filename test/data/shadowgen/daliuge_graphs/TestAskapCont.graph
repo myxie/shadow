@@ -142,7 +142,7 @@
             "application": "Component",
             "canHaveInputs": true,
             "canHaveOutputs": true,
-            "category": "SplitData",
+            "category": "Scatter",
             "categoryType": "GroupComponent",
             "colour": " #DDAD00",
             "desiredSize": {
