@@ -44,30 +44,33 @@ def critical_path_min(workflow):
 
 	for u in top_sort:
 		for v in list(workflow.graph.edges(u)):
-			if dist[v[1].tid] < dist[u.tid] + min(workflow.tasks[v].calculated_runtime.values()):
-				dist[v[1].tid] = dist[u.tid] + min(workflow.tasks[v].calculated_runtime.values())
+			(edge_u, edge_v) = v
+			if dist[edge_v] < dist[u] + min(workflow.tasks[v].calculated_runtime.values()):
+				dist[edge_v] = dist[u] + min(workflow.tasks[v].calculated_runtime.values())
 
-	final_dist = dist[len(list(workflow.tasks)) -1]
-	critical_path.append(len(list(list(graph.nodes()))) - 1)
+	workflow_size = len(list(workflow.tasks))
+	final_dist = dist[workflow_size - 1]
+	# critical_path.append(len(list(list(graph.nodes()))) - 1)
+	critical_path.append(workflow_size-1)
 	q = Queue()
-	q.put(len(list(self.graph.nodes())) - 1)
+	q.put(workflow_size - 1)
 
 	while not q.empty():
 		u = q.get()
 		tmp_max = 0
 		for v in list(workflow.graph.predecessors(Task(u))):
-			if dist[v.tid] > tmp_max:
-				tmp_max = dist[v.tid
-				tmp_v = v.tid
+			if dist[v] > tmp_max:
+				tmp_max = dist[v]
+				tmp_v = v
 				if tmp_v not in critical_path:
 					critical_path.append(tmp_v)
 				q.put(tmp_v)
-			elif dist[v.tid] is 0:
+			elif dist[v] is 0:
 				tmp_v = 0  # this is the first node in the graph
 				if tmp_v not in critical_path:
 					critical_path.append(tmp_v)
 	cp_min = 0
-	for x in critical_path:
-		cp_min = cp_min + min(self.comp_matrix[x])
+	# for x in critical_path:
+	# 	cp_min = cp_min + min(self.comp_matrix[x])
 
 	return cp_min

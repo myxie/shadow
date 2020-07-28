@@ -15,7 +15,7 @@
 import argparse
 import logging
 
-from utils.shadowgen import daligue as dlg
+from utils.shadowgen import daliuge as dlg
 
 
 logger = logging.getLogger(__name__)

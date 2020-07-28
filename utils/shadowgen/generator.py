@@ -23,11 +23,11 @@ import networkx as nx
 
 
 def generate_system_machines(config_path,
-							num_machines,
-							magnitude='giga',
-							heterogeneity=(10, 20),
-							specrange=None,
-							seed=20):
+							 num_machines,
+							 magnitude='giga',
+							 heterogeneity=None,
+							 specrange=None,
+							 seed=20):
 	# TODO move the necessary information from generate_graph_costs here for system configuration
 	"""
 	:param seed: 
@@ -103,8 +103,53 @@ def generate_system_machines(config_path,
 	with open(config_path, 'w+') as jfile:
 		json.dump(system, jfile, indent=2)
 
+	return config_path
 
-def generate_graph_costs(dot_path, json_path, ccr, mean, uniform_range, magnitude='giga', seed=20):
+
+def genereate_data_costs(
+		graph_edges,
+		mean,
+		uniform_range,
+		multiplier,
+		ccr
+):
+	edgedict = {}
+	comm_mean = int(mean * ccr)
+	comm_min = (comm_mean - (uniform_range * ccr)) * multiplier
+	comm_max = (comm_mean + (uniform_range * ccr)) * multiplier
+	for edge in graph_edges:
+		rnd = int(random.uniform(comm_min, comm_max))
+		edgedict[edge] = rnd
+
+	return edgedict
+
+
+def generate_comp_costs(
+		graph_nodes,
+		mean,
+		uniform_range,
+		multiplier
+):
+	cmpdict = {}
+	comp_min = (mean - uniform_range) * multiplier
+	comp_max = (mean + uniform_range) * multiplier
+
+	for node in graph_nodes:
+		rnd = int(random.uniform(comp_min, comp_max))
+		cmpdict[node] = rnd - (rnd % multiplier)
+
+	return cmpdict
+
+
+def generate_graph_costs(
+		dot_path,
+		json_path,
+		ccr,
+		mean,
+		uniform_range,
+		magnitude='giga',
+		seed=20
+):
 	"""
 	:param seed: 
 	:param heterogeneity:

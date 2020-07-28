@@ -1,0 +1,72 @@
+{
+  "header": {
+    "time": "false"
+  },
+  "system": {
+    "resources": {
+      "cat0_m0": {
+        "flops": 381.0
+      },
+      "cat0_m1": {
+        "flops": 381.0
+      },
+      "cat0_m2": {
+        "flops": 381.0
+      },
+      "cat0_m3": {
+        "flops": 381.0
+      },
+      "cat0_m4": {
+        "flops": 381.0
+      },
+      "cat0_m5": {
+        "flops": 381.0
+      },
+      "cat0_m6": {
+        "flops": 381.0
+      },
+      "cat0_m7": {
+        "flops": 381.0
+      },
+      "cat0_m8": {
+        "flops": 381.0
+      },
+      "cat0_m9": {
+        "flops": 381.0
+      },
+      "cat0_m10": {
+        "flops": 381.0
+      },
+      "cat0_m11": {
+        "flops": 381.0
+      },
+      "cat0_m12": {
+        "flops": 381.0
+      },
+      "cat0_m13": {
+        "flops": 381.0
+      },
+      "cat0_m14": {
+        "flops": 381.0
+      },
+      "cat0_m15": {
+        "flops": 381.0
+      },
+      "cat0_m16": {
+        "flops": 381.0
+      },
+      "cat0_m17": {
+        "flops": 381.0
+      },
+      "cat0_m18": {
+        "flops": 381.0
+      },
+      "cat0_m19": {
+        "flops": 381.0
+      }
+    },
+    "rates": {
+      "cat0": 7.0
+    }
+  }
+}

@@ -17,13 +17,14 @@ import os
 import json
 import sys
 import datetime
-import networkx as nx
-# from shadowgen_config import CURR_DIR, JSON_DIR, DOTS_DIR
-from generator import generate_graph_costs, generate_system_machines
 import random
 
-EAGLE_EXT = ".graph"
-EAGLE_GRAPH = 'test/data/shadowgen/SDPContinuumPipelineNoOuter.graph'
+import networkx as nx
+
+import generator
+
+EAGLE_EXT = ".input"
+EAGLE_GRAPH = 'test/data/shadowgen/SDPContinuumPipelineNoOuter.input'
 CHANNELS = 10
 CHANNEL_SUFFIX = "_channels-{0}".format(CHANNELS)
 SEED = 20
@@ -46,7 +47,7 @@ def edit_channels(graph_name, suffix, extension):
 	return ngraph
 
 
-def unroll_graph(graph):
+def unroll_logical_graph(graph):
 	cmd_list = ['dlg', 'unroll-and-partition', '-fv', '-a', 'mysarkar', '-L', graph]
 	jgraph_path = "{0}.json".format(graph[:-6])
 	with open(format(jgraph_path), 'w+') as f:
@@ -69,23 +70,24 @@ def generate_dot_from_networkx_graph(graph, output):
 		return dot_path
 
 
-def daliugeimport(graph,
-				  mean,
-				  uniform_range,
-				  multiplier,
-				  ccr,
-				  seed=20):
+def json_to_shadow(
+		daliuge_json,
+		mean,
+		uniform_range,
+		multiplier,
+		ccr,
+		seed=20):
 	"""
 	Daliuge import will use
 	:return:
 	"""
 	random.seed(seed)
-	if os.path.exists(graph) and (os.stat(graph).st_size != 0):
+	if os.path.exists(daliuge_json) and (os.stat(daliuge_json).st_size != 0):
 
-		with open(graph) as f:
+		with open(daliuge_json) as f:
 			graphdict = json.load(f)
 
-		# Storing the nodes and edges from the unrolled DALiuGE graph
+		# Storing the nodes and edges from the unrolled DALiuGE input
 		unrolled_nx = nx.DiGraph()
 
 		# There is something about this simple.SleepApp that is a bug in the old DALiuGE Translator
@@ -107,59 +109,71 @@ def daliugeimport(graph,
 				for item in val['consumers']:
 					unrolled_nx.add_edge(val['oid'], item)
 
-		for node in unrolled_nx.nodes():
-			unrolled_nx.nodes[node]['label'] = unrolled_nx.nodes[node]['nm']  
+		comp_dict = generator.generate_comp_costs(
+			unrolled_nx.nodes, mean, uniform_range, multiplier
+		)
 
-		translate = {}
+		for node in unrolled_nx.nodes():
+			unrolled_nx.nodes[node]['label'] = unrolled_nx.nodes[node]['nm']
+			unrolled_nx.nodes[node]['flops'] = comp_dict[node]
+
+		edge_dict = generator.genereate_data_costs(
+			unrolled_nx.edges,mean,uniform_range,multiplier,ccr
+		)
+
+		for edge in unrolled_nx.edges():
+			unrolled_nx.edges[edge]['data_size'] = edge_dict[edge]
+
+		translation_dict = {}
 		count = 0
 
 		for node in nx.topological_sort(unrolled_nx):
-			translate[node] = count
+			translation_dict[node] = count
 			count = count + 1
 
-		for key, val in translate.items():
+		for key, val in translation_dict.items():
 			print(str(key) + ' :' + str(val))
 
 		translated_graph = nx.DiGraph()
-		for key in translate:
-			translated_graph.add_node(translate[key])
+		for key in translation_dict:
+			translated_graph.add_node(translation_dict[key])
 
 		for edge in unrolled_nx.edges():
-			translated_graph.add_edge(translate[edge[0]], translate[edge[1]])
+			(u,v) = edge
+			translated_graph.add_edge(translation_dict[u], translation_dict[v])
 
 		for node in translated_graph.nodes():
 			translated_graph.nodes[node]['label'] = str(node)
-
-		comp_min = (mean - uniform_range) * multiplier
-		comp_max = (mean + uniform_range) * multiplier
-
-		for node in translated_graph:
-			rnd = int(random.uniform(comp_min, comp_max))
-			translated_graph.nodes[node]['comp'] = rnd - (rnd % multiplier)
+			translated_graph.nodes[node]['comp'] = unrolled_nx.nodes[node]['flops']
 
 		# Generate data loads between edges and data-link transfer rates
-		comm_mean = int(mean * ccr)
-		comm_min = (comm_mean - (uniform_range * ccr)) * multiplier
-		comm_max = (comm_mean + (uniform_range * ccr)) * multiplier
+
 		for edge in translated_graph.edges:
-			rnd = int(random.uniform(comm_min, comm_max))
-			translated_graph.edges[edge]['data_size'] = rnd - (rnd % multiplier)
+			translated_graph.edges[edge]['data_size'] = unrolled_nx.nodes[edge]['data_size']
 
 		jgraph = {
 			"header": {
-				"time": False
+				"time": False,
+				"gen_specs":{
+					'file':daliuge_json,
+					'mean': mean,
+					'range':"+{0}".format(uniform_range),
+					'seed': seed,
+					'ccr':ccr,
+					'multiplier':multiplier
+				},
 			},
-			'graph': nx.readwrite.node_link_data(unrolled_nx)
+			'input': nx.readwrite.node_link_data(translated_graph)
 		}
 
-		save = "{0}_shadow.json".format(graph[:-5])
+		save = "{0}_shadow.json".format(daliuge_json[:-5])
 		with open("{0}".format(save), 'w') as jfile:
 			json.dump(jgraph, jfile, indent=2)
-		return unrolled_nx
+		return unrolled_nx, save
 
 
 if __name__ == '__main__':
 	# edited_graph = edit_channels(EAGLE_GRAPH, CHANNEL_SUFFIX, EAGLE_EXT)
 	unrolled_graph = unroll_graph(EAGLE_GRAPH)
-	nxgraph = daliugeimport(unrolled_graph, MEAN, UNIFORM_RANGE, MULTIPLIER, CCR)
-	generate_dot_from_networkx_graph(nxgraph, 'output')
+	nxgraph = json_to_shadow(unrolled_graph, MEAN, UNIFORM_RANGE, MULTIPLIER, CCR)
+	retval = generate_dot_from_networkx_graph(nxgraph, 'output')

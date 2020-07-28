@@ -154,7 +154,7 @@
                 {
                     "name": "num_of_copies",
                     "text": "Number of copies",
-                    "value": "3000"
+                    "value": "25"
                 },
                 {
                     "name": "scatter_axis",
