@@ -21,7 +21,7 @@ import random
 
 import networkx as nx
 
-import generator
+import utils.shadowgen.generator as generator
 
 EAGLE_EXT = ".input"
 EAGLE_GRAPH = 'test/data/shadowgen/SDPContinuumPipelineNoOuter.input'
@@ -72,6 +72,7 @@ def generate_dot_from_networkx_graph(graph, output):
 
 def json_to_shadow(
 		daliuge_json,
+		output_file,
 		mean,
 		uniform_range,
 		multiplier,
@@ -166,14 +167,13 @@ def json_to_shadow(
 			'input': nx.readwrite.node_link_data(translated_graph)
 		}
 
-		save = "{0}_shadow.json".format(daliuge_json[:-5])
-		with open("{0}".format(save), 'w') as jfile:
+		with open("{0}".format(output_file), 'w') as jfile:
 			json.dump(jgraph, jfile, indent=2)
-		return unrolled_nx, save
+		return unrolled_nx, output_file
 
 
 if __name__ == '__main__':
 	# edited_graph = edit_channels(EAGLE_GRAPH, CHANNEL_SUFFIX, EAGLE_EXT)
-	unrolled_graph = unroll_graph(EAGLE_GRAPH)
-	nxgraph = json_to_shadow(unrolled_graph, MEAN, UNIFORM_RANGE, MULTIPLIER, CCR)
+	unrolled_graph = unroll_logical_graph(EAGLE_GRAPH)
+	nxgraph = json_to_shadow(unrolled_graph,'output.json', MEAN, UNIFORM_RANGE, MULTIPLIER, CCR)
 	retval = generate_dot_from_networkx_graph(nxgraph, 'output')
