@@ -23,7 +23,7 @@ from generator import generate_graph_costs, generate_system_machines
 import random
 
 EAGLE_EXT = ".graph"
-EAGLE_GRAPH = 'test/data/shadowgen/SDPContinuumPipeline.graph'
+EAGLE_GRAPH = 'test/data/shadowgen/SDPContinuumPipelineNoOuter.graph'
 CHANNELS = 10
 CHANNEL_SUFFIX = "_channels-{0}".format(CHANNELS)
 SEED = 20
