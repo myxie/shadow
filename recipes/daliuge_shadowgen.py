@@ -35,7 +35,7 @@ SYSTEM_OUTPUT_PATH = 'recipes/routput/system_spec_{0}_{1}_{2}'.format(
 )
 
 # Graph Reqs.
-LOGICAL_GRAPH = 'recipes/rdata/TestAskapCont.graph'
+LOGICAL_GRAPH = 'recipes/rdata/SDPContinuumPipelineNoOuter.graph'
 # DALIUGE_GRAPH = 'TestAskapCont.graph'
 SHADOW_OUTPUT = 'recipes/routput/shadow_TestAskapCont.json'
 MEAN = 5000  # Mean of 5000/range of 500 gives us a distribution between 4500-5500
@@ -52,6 +52,6 @@ logger.info(system_config_path)
 # Generating graph costs
 unrolled_graph_json = daliuge.unroll_logical_graph(LOGICAL_GRAPH)
 nxgraph,output_graph_path = daliuge.json_to_shadow(unrolled_graph_json, SHADOW_OUTPUT, MEAN, UNIFORM_RANGE, MULTIPLIER, CCR)
-# retval = daliuge.generate_dot_from_networkx_graph(nxgraph, )
+daliuge.generate_dot_from_networkx_graph(nxgraph,'output')
 logger.info(output_graph_path)
 

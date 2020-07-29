@@ -80,12 +80,48 @@ def json_to_shadow(
 		seed=20):
 	"""
 	Daliuge import will use
-	:return:
+	:return: The NetworkX graph for visualisation purposed;
+	The path of the output file; None if the process fails
 	"""
 	random.seed(seed)
-	if os.path.exists(daliuge_json) and (os.stat(daliuge_json).st_size != 0):
+	# Process DALiuGE JSON graph
+	unrolled_nx = _daliuge_to_nx(daliuge_json)
 
-		with open(daliuge_json) as f:
+	translated_graph = _add_generated_values_to_graph(
+		unrolled_nx, mean, uniform_range, ccr, multiplier
+	)
+	# Convering DALiuGE nodes to readable nodes
+
+	jgraph = {
+		"header": {
+			"time": False,
+			"gen_specs": {
+				'file': daliuge_json,
+				'mean': mean,
+				'range': "+-{0}".format(uniform_range),
+				'seed': seed,
+				'ccr': ccr,
+				'multiplier': multiplier
+			},
+		},
+		'input': nx.readwrite.node_link_data(translated_graph)
+	}
+
+	with open("{0}".format(output_file), 'w') as jfile:
+		json.dump(jgraph, jfile, indent=2)
+
+	return unrolled_nx, output_file
+
+
+def _daliuge_to_nx(input_file):
+	"""
+	Take a daliuge json file and read it into a NetworkX file
+	:param input_file: the DALiuGE file we are translating 
+	:return: A NetworkX DiGraph.  
+	"""
+	if os.path.exists(input_file) and (os.stat(input_file).st_size != 0):
+
+		with open(input_file) as f:
 			graphdict = json.load(f)
 
 		# Storing the nodes and edges from the unrolled DALiuGE input
@@ -110,70 +146,51 @@ def json_to_shadow(
 				for item in val['consumers']:
 					unrolled_nx.add_edge(val['oid'], item)
 
-		comp_dict = generator.generate_comp_costs(
-			unrolled_nx.nodes, mean, uniform_range, multiplier
-		)
-
 		for node in unrolled_nx.nodes():
 			unrolled_nx.nodes[node]['label'] = unrolled_nx.nodes[node]['nm']
-			unrolled_nx.nodes[node]['flops'] = comp_dict[node]
 
-		edge_dict = generator.genereate_data_costs(
-			unrolled_nx.edges,mean,uniform_range,multiplier,ccr
-		)
-
-		for edge in unrolled_nx.edges():
-			unrolled_nx.edges[edge]['data_size'] = edge_dict[edge]
-
-		translation_dict = {}
-		count = 0
-
-		for node in nx.topological_sort(unrolled_nx):
-			translation_dict[node] = count
-			count = count + 1
-
-		for key, val in translation_dict.items():
-			print(str(key) + ' :' + str(val))
-
-		translated_graph = nx.DiGraph()
-		for key in translation_dict:
-			translated_graph.add_node(translation_dict[key])
-
-		for edge in unrolled_nx.edges():
-			(u,v) = edge
-			translated_graph.add_edge(translation_dict[u], translation_dict[v])
-
-		for node in translated_graph.nodes():
-			translated_graph.nodes[node]['label'] = str(node)
-			translated_graph.nodes[node]['comp'] = unrolled_nx.nodes[node]['flops']
-
-		# Generate data loads between edges and data-link transfer rates
-
-		for edge in translated_graph.edges:
-			translated_graph.edges[edge]['data_size'] = unrolled_nx.nodes[edge]['data_size']
-
-		jgraph = {
-			"header": {
-				"time": False,
-				"gen_specs":{
-					'file':daliuge_json,
-					'mean': mean,
-					'range':"+{0}".format(uniform_range),
-					'seed': seed,
-					'ccr':ccr,
-					'multiplier':multiplier
-				},
-			},
-			'input': nx.readwrite.node_link_data(translated_graph)
-		}
-
-		with open("{0}".format(output_file), 'w') as jfile:
-			json.dump(jgraph, jfile, indent=2)
-		return unrolled_nx, output_file
+		return unrolled_nx
 
 
-if __name__ == '__main__':
-	# edited_graph = edit_channels(EAGLE_GRAPH, CHANNEL_SUFFIX, EAGLE_EXT)
-	unrolled_graph = unroll_logical_graph(EAGLE_GRAPH)
-	nxgraph = json_to_shadow(unrolled_graph,'output.json', MEAN, UNIFORM_RANGE, MULTIPLIER, CCR)
-	retval = generate_dot_from_networkx_graph(nxgraph, 'output')
+def _add_generated_values_to_graph(
+		nxgraph,
+		mean,
+		uniform_range,
+		ccr,
+		multiplier
+):
+	"""
+	Produces a new graph that converts the DALiuGE Node labels into easier-to-read values, 
+	and adds the generated computation and data values to the nodes and edges respectively.
+	:param nxgraph: The NetworkX DiGraph that is with raw DALiuGE node information
+	:return: A NetworkX DiGraph 
+	"""
+	translation_dict = {}
+	for i, node in enumerate(nx.topological_sort(nxgraph)):
+		translation_dict[node] = i
+
+	translated_graph = nx.DiGraph()
+	for key in translation_dict:
+		translated_graph.add_node(translation_dict[key])
+
+	for edge in nxgraph.edges():
+		(u, v) = edge
+		translated_graph.add_edge(translation_dict[u], translation_dict[v])
+
+	comp_dict = generator.generate_comp_costs(
+		translated_graph.nodes, mean, uniform_range, multiplier
+	)
+
+	for node in translated_graph.nodes():
+		translated_graph.nodes[node]['label'] = str(node)
+		translated_graph.nodes[node]['comp'] = comp_dict[node]
+
+	# Generate data loads between edges and data-link transfer rates
+	edge_dict = generator.genereate_data_costs(
+		translated_graph.edges, mean, uniform_range, multiplier, ccr
+	)
+
+	for edge in translated_graph.edges:
+		translated_graph.edges[edge]['data_size'] = edge_dict[edge]
+
+	return translated_graph
