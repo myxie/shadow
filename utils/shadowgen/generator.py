@@ -17,6 +17,7 @@ import random
 import sys
 import os
 import subprocess
+import math
 
 import numpy as np
 import networkx as nx
@@ -59,7 +60,8 @@ def generate_system_machines(config_path,
 	heterogeneity = np.array(heterogeneity)
 
 	if len(specrange) != len(heterogeneity):
-		sys.exit('FLOP/s range list provided does not match heterogeneity (List is wrong size)')
+		sys.exit(
+			'FLOP/s range list provided does not match heterogeneity (List is wrong size)')
 
 	machines = []
 	for p in heterogeneity:
@@ -68,35 +70,48 @@ def generate_system_machines(config_path,
 
 	for m in machines:
 		if 0 < np.remainder(m, 1) < 1:
-			sys.exit('Number of machines specified ({0}) and percentage split on systerm ({1}) not compatible'.format(
-				num_machines, heterogeneity
-			))
+			sys.exit(
+				'Number of machines specified ({0}) and percentage split on systerm ({1}) not compatible'.format(
+					num_machines, heterogeneity
+				))
 
 	machine_categ = {}
 	y = 0
 	for i, m in enumerate(machines):
 		# nd = int(random.uniform(10, 20))
 		lwr, upr = specrange[i][0], specrange[i][1]
-		rnd = random.uniform(lwr * multiplier, upr * multiplier)
 		# TODO rewrite this as a for loop for each machine category, add a new machine
 		# machine_categ['cat{0}'.format(i)] = {}
+		# Calc data transfer rates
+		rnd = random.uniform(1, max_data_rate)
+		rate = round(
+			(rnd - (rnd % multiplier)) / 5
+		) * 5
+		# Calculate flops
+		rnd = random.uniform(lwr * multiplier, upr * multiplier)
 		for x in range(int(m)):
-			machine_categ['cat{0}_m{1}'.format(i, y)] = {'flops': rnd - (rnd % multiplier)}
+			machine_categ['cat{0}_m{1}'.format(i, y)] = {
+				'flops': math.ceil(rnd - (rnd % multiplier)),
+				'rates': rate
+			}
 			y += 1
 
-	data_rates = {}
-	for i in range(len(heterogeneity)):
-		rnd = random.uniform(1, max_data_rate)
-		data_rates['cat{0}'.format(i)] = rnd - (rnd % multiplier)
 
 	system = {
 		"header": {
-			"time": 'false'
+			"time": 'false',
+			"gen_specs": {
+				"file": config_path,
+				"seed": seed,
+				"range": str(specrange),
+				"heterogeneity": float(heterogeneity),
+				"multiplier": multiplier
+			}
 		},
 		'system':
 			{
 				'resources': machine_categ,
-				'rates': data_rates
+				# 'rates': data_rates
 			}
 	}
 
@@ -118,7 +133,7 @@ def genereate_data_costs(
 	comm_min = (comm_mean - (uniform_range * ccr)) * multiplier
 	comm_max = (comm_mean + (uniform_range * ccr)) * multiplier
 	for edge in graph_edges:
-		rnd = int(random.uniform(comm_min, comm_max))
+		rnd = math.ceil(int(random.uniform(comm_min, comm_max)))
 		edgedict[edge] = rnd
 
 	return edgedict
@@ -202,7 +217,7 @@ def generate_graph_costs(
 	comm_max = (comm_mean + (uniform_range * ccr)) * multiplier
 	for edge in dotgraph.edges:
 		rnd = int(random.uniform(comm_min, comm_max))
-		dotgraph.edges[edge]['data_size'] = rnd - (rnd % multiplier)
+		dotgraph.edges[edge]['data_size'] = (rnd - (rnd % multiplier))
 
 	jgraph = {
 		"header": {
