@@ -72,7 +72,8 @@ class Task(object):
 		return self.calculated_runtime[machine]
 
 	def calc_ave_runtime(self):
-		return sum(self.calculated_runtime.values()) / len(self.calculated_runtime)
+		return sum(self.calculated_runtime.values()) \
+			   / len(self.calculated_runtime)
 
 	def update_task_rank(self, rank):
 		self.rank = rank
@@ -121,7 +122,8 @@ class Workflow(object):
 		:return: Non-negative return value inidcates success.
 		"""
 		self.env = environment
-		# Go through environment flags and check what processing we can do to the workflow
+		# Go through environment flags and check what processing we can do 
+		# to the workflow
 		self.solution = Solution(machines=[m for m in self.env.machines])
 		# That is, the runtime of tasks has already been calculated
 		if self._time:
@@ -132,7 +134,9 @@ class Workflow(object):
 					comp_array_length = len(self.tasks[task]['comp'])
 				except TypeError:
 					print(
-						"Computation costs should be an array, but instead is {0}. Check your configuration files".format(
+						"Computation costs should be an array, "
+						"but instead is {0}. Check your configuration "
+						"files".format(
 							self.tasks[task]['comp']
 						)
 					)
@@ -149,9 +153,12 @@ class Workflow(object):
 			for m in self.env.machines:
 				for task in self.tasks:
 					comp = task.flops_demand
-					task.calculated_runtime[m] = int(self.env.calc_task_runtime_on_machine(m, comp))
+					task.calculated_runtime[m] = int(
+						self.env.calc_task_runtime_on_machine(m, comp)
+					)
 			# self.tasks[node]['comp']
-			# TODO Use rates from environment in calcuation; for the time being rates are specified in the graph
+			# TODO Use rates from environment in calcuation; for the time 
+			#  being rates are specified in the graph
 
 			return 0
 
@@ -170,7 +177,9 @@ class Workflow(object):
 		if sort_type == 'topological':
 			return nx.topological_sort(self.graph)
 		else:
-			raise NotImplementedError("This sorting method has not been implemented")
+			raise NotImplementedError(
+				"This sorting method has not been implemented"
+			)
 
 	def solution_exec_order(self):
 		return sorted(
