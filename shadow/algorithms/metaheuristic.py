@@ -550,8 +550,6 @@ def generate_allocations(machines, task_order, wf, seed, solution_class=GASoluti
 		index = random.randint(0, RAND_BOUNDS) % rand_bounds
 		m = machines[index]
 		ast, aft = calc_start_finish_times(t, m, wf, soln.list_machine_allocations(m))
-		t.ast = ast
-		t.aft = aft
 		solnt = copy.deepcopy(t)
 		soln.add_allocation(solnt, m)
 		if solnt.aft > soln.makespan:

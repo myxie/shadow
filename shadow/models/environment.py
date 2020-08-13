@@ -53,46 +53,46 @@ def _process_env_resources(resources):
 		# This is resources dictionary
 		for machine in resources:
 			name = machine
-			flops, memory, bandwidth = None, None, None
+			flops, memory, bandwidth, cost = None, None, None, None
 			if 'flops' in resources[machine]:
 				flops = resources[machine]['flops']
 			if 'memory' in resources[machine]:
 				memory = resources[machine]['memory']
-			if 'bandwidth' in resources[machine]:
+			if 'rates' in resources[machine]:
 				bandwidth = resources[machine]['bandwidth']
+			if 'cost' in resources[machine]:
+				cost = resources[machine]['cost']
 
-			m = Machine(name, flops, memory, bandwidth, cost=None)
+			m = Machine(name, flops, memory, bandwidth, cost=cost)
 			machines.append(m)
 		return machines
 
 
 class Environment(object):
-	def __init__(self, config):
+	def __init__(self, config, dictionary=False):
 		"""
 		This is a description of the Environment class
 		:param config:
 		"""
-		with open(config, 'r') as infile:
-			jdict = json.load(infile)
+		resources = {}
+		bandwidth = 1.0 # 1 gb/s
 		costs_bool = False
-		resources, rates, costs = {}, {}, {}
-		if ENV_RESOURCE in jdict[ENV_SYS]:
-			resources = jdict[ENV_SYS][ENV_RESOURCE]
-		if ENV_RATES in jdict[ENV_SYS]:
-			rates = jdict[ENV_SYS][ENV_RATES]
-		if ENV_COST in jdict[ENV_SYS]:
-			costs = jdict[ENV_SYS][ENV_COST]
-			costs_bool = True
+		if dictionary:
+			#  We are using a dictionary instead of a file
+			dconfig = config
+			if ENV_RESOURCE in dconfig[ENV_SYS]:
+				resources = dconfig[ENV_SYS][ENV_RESOURCE]
+
+		else:
+			with open(config, 'r') as infile:
+				jdict = json.load(infile)
+			if ENV_RESOURCE in jdict[ENV_SYS]:
+				resources = jdict[ENV_SYS][ENV_RESOURCE]
+			if ENV_BANDWIDTH in jdict[ENV_SYS]:
+				bandwidth = jdict[ENV_SYS][ENV_BANDWIDTH]
 
 		self.machines = _process_env_resources(resources)
-		if costs_bool:
-			self.costs = costs
-			self._process_env_costs(costs)
-		self.rates = rates
-
-	def _process_env_costs(self, costs):
-		for machine in self.machines:
-			machine.cost = costs[machine.machine_type]
+		self.system_bandwith = bandwidth
 
 	@staticmethod
 	def _check_comp(res_dict):
@@ -104,19 +104,20 @@ class Environment(object):
 		retval = None
 		for machine in res_dict:
 			tmp_flops_val = None
-			# This is a sanity check to ensure that each machine category has machines with the same computing capacity
+			# This is a sanity check to ensure that each machine
+			# category has machines with the same computing capacity
 			machine_dict = res_dict[machine]
 			if 'flops' in machine_dict:
 				retval = True
 			else:
-				# sys.exit('Error: We need some form of computation provision in our system config')
 				retval = False
 				return retval
 			if tmp_flops_val is None:
 				tmp_flops_val = machine_dict['flops']
 			else:
 				if tmp_flops_val != machine_dict['flops']:
-					# sys.exit('Error: The computing power of machines in the same category are different.')
+					# sys.exit('Error: The computing power of machines
+					# in the same category are different.')
 					return retval
 		return retval
 
@@ -152,5 +153,4 @@ class Environment(object):
 		return float(machine.cost * task_runtime)
 
 	def calc_data_transfer_time(self, data_size):
-		average_rate = sum(self.rates.values()) / len(self.rates.values())
-		return int(data_size / average_rate)
+		return int(data_size / self.system_bandwith)

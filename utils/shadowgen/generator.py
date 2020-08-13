@@ -28,6 +28,7 @@ def generate_system_machines(config_path,
 							 magnitude='giga',
 							 heterogeneity=None,
 							 specrange=None,
+							 system_bandwidth=1.0,
 							 seed=20):
 	# TODO move the necessary information from generate_graph_costs here for system configuration
 	"""
@@ -112,6 +113,7 @@ def generate_system_machines(config_path,
 			{
 				'resources': machine_categ,
 				# 'rates': data_rates
+				'bandwidth':system_bandwidth
 			}
 	}
 
