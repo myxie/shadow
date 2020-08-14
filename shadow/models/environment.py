@@ -59,7 +59,7 @@ def _process_env_resources(resources):
 			if 'memory' in resources[machine]:
 				memory = resources[machine]['memory']
 			if 'rates' in resources[machine]:
-				bandwidth = resources[machine]['bandwidth']
+				bandwidth = resources[machine]['rates']
 			if 'cost' in resources[machine]:
 				cost = resources[machine]['cost']
 
