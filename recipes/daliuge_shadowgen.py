@@ -35,7 +35,7 @@ SYSTEM_OUTPUT_PATH = 'recipes/routput/system_spec_{0}_{1}_{2}'.format(
 )
 
 # Graph Reqs.
-LOGICAL_GRAPH = 'recipes/rdata/SDPContinuumPipelineNoOuter.graph'
+LOGICAL_GRAPH = 'recipes/rdata/SDPContinuumPipeline_UpdatedNoOuter.graph'
 # DALIUGE_GRAPH = 'TestAskapCont.graph'
 SHADOW_OUTPUT = 'recipes/routput/shadow_TestAskapCont.json'
 MEAN = 5000  # Mean of 5000/range of 500 gives us a distribution between 4500-5500
@@ -43,7 +43,7 @@ UNIFORM_RANGE = 1000
 MULTIPLIER = 1
 CCR = 0.5  # CCR < 1 -> Data time > Comp time
 logger.debug('Heterogeneity length: {0}'.format(len(HETEROGENEITY)))
-# Generating the system
+# Generating the syste
 system_config_path = generator.generate_system_machines(
 	SYSTEM_OUTPUT_PATH, NUM_MACHINES, MAGNITUDE, HETEROGENEITY, SPEC_RANGE
 )

@@ -1,6 +1,6 @@
 from shadow.algorithms.heuristic import heft
 
-from shadow.models.workflow import Workflow, Task
+from shadow.models.workflow import Workflow
 from shadow.models.environment import Environment
 
 from shadow.visualiser.plot import AllocationPlot

@@ -20,7 +20,7 @@ import argparse
 import unittest
 import logging
 
-import test.test_workflow, test.test_heuristic
+import test
 from shadow.algorithms.heuristic import heft
 from shadow.models.workflow import Workflow
 from shadow.models.environment import Environment

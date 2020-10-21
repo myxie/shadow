@@ -48,7 +48,8 @@ def edit_channels(graph_name, suffix, extension):
 
 
 def unroll_logical_graph(graph):
-	cmd_list = ['dlg', 'unroll-and-partition', '-fv', '-a', 'mysarkar', '-L', graph]
+	cmd_list = ['dlg', 'unroll-and-partition', '-fv', '-a', 'mysarkar', '-L',
+				graph]
 	jgraph_path = "{0}.json".format(graph[:-6])
 	with open(format(jgraph_path), 'w+') as f:
 		subprocess.call(cmd_list, stdout=f)
@@ -132,19 +133,34 @@ def _daliuge_to_nx(input_file):
 			if 'app' in val.keys():
 				if val['app'] == "dlg.apps.simple.SleepApp":
 					continue
-			unrolled_nx.add_node(val['oid'])
-			unrolled_nx.nodes[val['oid']]['nm'] = val['nm']
+				unrolled_nx.add_node(val['oid'])
+				unrolled_nx.nodes[val['oid']]['nm'] = val['nm']
+
+		edgedict = {}
+		for val in graphdict:
+			if 'producers' in val.keys():
+				edgedict[val['oid']] = {'producers': [], 'consumers': []}
+				edgedict[val['oid']]['producers'] = val['producers']
+			if 'consumers' in val.keys():
+				if val['oid'] in edgedict:
+					edgedict[val['oid']]['consumers'] = val['consumers']
+				else:
+					edgedict[val['oid']] = {
+						'producers': [], 'consumers': val['consumers']
+					}
 
 		for val in graphdict:
 			if 'app' in val.keys():
 				if val['app'] == "dlg.apps.simple.SleepApp":
 					continue
 			if 'outputs' in val:
-				for item in val['outputs']:
-					unrolled_nx.add_edge(val['oid'], item)
-			elif 'consumers' in val:
-				for item in val['consumers']:
-					unrolled_nx.add_edge(val['oid'], item)
+				for output in val['outputs']:
+					for consumer in edgedict[output]['consumers']:
+						unrolled_nx.add_edge(val['oid'], consumer)
+			if 'inputs' in val:
+				for inputs in val['inputs']:
+					for producer in edgedict[inputs]['producers']:
+						unrolled_nx.add_edge(producer, val['oid'])
 
 		for node in unrolled_nx.nodes():
 			unrolled_nx.nodes[node]['label'] = unrolled_nx.nodes[node]['nm']
