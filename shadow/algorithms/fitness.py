@@ -21,53 +21,53 @@ objective_functions = ['time, cost']
 
 
 def calculate_fitness(objectives, solution):
-	fitness = {}
-	for objective in objectives:
-		if objective == 'time':
-			fitness['time'] = (time_fitness(solution))
-		elif objective == 'cost':
-			fitness['cost'] = (cost_fitness(solution))
-		else:
-			raise NotImplementedError(
-				"Objective function {0} has not been implemented".format(objective)
-			)
+    fitness = {}
+    for objective in objectives:
+        if objective == 'time':
+            fitness['time'] = (time_fitness(solution))
+        elif objective == 'cost':
+            fitness['cost'] = (cost_fitness(solution))
+        else:
+            raise NotImplementedError(
+                "Objective function {0} has not been implemented".format(objective)
+            )
 
-	return fitness
+    return fitness
 
 
 def cost_fitness(solution):
-	"""
-	Calculate the cost of the solution based on the environment
-	:param solution:
-	:return: cost
-	"""
+    """
+    Calculate the cost of the solution based on the environment
+    :param solution:
+    :return: cost
+    """
 
-	cost = 0
+    cost = 0
 
-	for machine in solution.machines:
-		tmpcost = 0.0
-		for allocation in solution.list_machine_allocations(machine):
-			runtime = allocation.task.aft - allocation.task.ast
-			tmpcost += runtime * machine.cost
-		cost += tmpcost
-	return cost
+    for machine in solution.machines:
+        tmpcost = 0.0
+        for allocation in solution.list_machine_allocations(machine):
+            runtime = allocation.task.aft - allocation.task.ast
+            tmpcost += runtime * machine.cost
+        cost += tmpcost
+    return cost
 
 
 def time_fitness(solution):
-	"""
-	Return the runtime of the solution based on the environment
-	:param solution:
-	:return:
-	"""
-	return solution.makespan
+    """
+    Return the runtime of the solution based on the environment
+    :param solution:
+    :return:
+    """
+    return solution.makespan
 
 
 def throughput_fitness():
-	return None
+    return None
 
 
 def reliability_fitness():
-	return None
+    return None
 
 
 # This is ugly - I should place this somewhere else (e.g current_globs.py)
