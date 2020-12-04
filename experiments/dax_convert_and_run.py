@@ -16,7 +16,6 @@
 # This is adapted and expanded upon in the shadowgen.ipynb notebook
 
 
-
 from shadow.models.workflow import Workflow
 from shadow.models.environment import Environment
 import shadow.algorithms.heuristic as heuristic

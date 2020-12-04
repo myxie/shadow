@@ -18,59 +18,59 @@ from shadow.models.workflow import Workflow, Task
 
 
 def sequential_execution(workflow):
-	seq_eq = -1
-	for machine in workflow.env.machines:
-		tmp = 0
-		for task in workflow.tasks:
-			tmp += task.calculated_runtime[machine]
-		if seq_eq < 0 or seq_eq < tmp:
-			seq_eq = tmp
-	return seq_eq
+    seq_eq = -1
+    for machine in workflow.env.machines:
+        tmp = 0
+        for task in workflow.tasks:
+            tmp += task.calculated_runtime[machine]
+        if seq_eq < 0 or seq_eq < tmp:
+            seq_eq = tmp
+    return seq_eq
 
 
 # TODO Update this to ensure it corresponds with Topcuoglu et al.'s defintion of CPmin
 def critical_path_min(workflow):
-	"""
-	Critical path using the minimum cost (for SLR calculation)
-	Use the minimum cost per task to calculate the CP
+    """
+    Critical path using the minimum cost (for SLR calculation)
+    Use the minimum cost per task to calculate the CP
 
-	:param workflow:
-	:return:
-	"""
-	top_sort = workflow.sort_tasks("topological")
-	dist = [-1 for x in range(len(list(workflow.graph.nodes())))]
-	dist[0] = 0
-	critical_path = []
+    :param workflow:
+    :return:
+    """
+    top_sort = workflow.sort_tasks("topological")
+    dist = [-1 for x in range(len(list(workflow.graph.nodes())))]
+    dist[0] = 0
+    critical_path = []
 
-	for u in top_sort:
-		for v in list(workflow.graph.edges(u)):
-			(edge_u, edge_v) = v
-			if dist[edge_v] < dist[u] + min(workflow.tasks[v].calculated_runtime.values()):
-				dist[edge_v] = dist[u] + min(workflow.tasks[v].calculated_runtime.values())
+    for u in top_sort:
+        for v in list(workflow.graph.edges(u)):
+            (edge_u, edge_v) = v
+            if dist[edge_v] < dist[u] + min(workflow.tasks[v].calculated_runtime.values()):
+                dist[edge_v] = dist[u] + min(workflow.tasks[v].calculated_runtime.values())
 
-	workflow_size = len(list(workflow.tasks))
-	final_dist = dist[workflow_size - 1]
-	# critical_path.append(len(list(list(graph.nodes()))) - 1)
-	critical_path.append(workflow_size-1)
-	q = Queue()
-	q.put(workflow_size - 1)
+    workflow_size = len(list(workflow.tasks))
+    final_dist = dist[workflow_size - 1]
+    # critical_path.append(len(list(list(graph.nodes()))) - 1)
+    critical_path.append(workflow_size-1)
+    q = Queue()
+    q.put(workflow_size - 1)
 
-	while not q.empty():
-		u = q.get()
-		tmp_max = 0
-		for v in list(workflow.graph.predecessors(Task(u))):
-			if dist[v] > tmp_max:
-				tmp_max = dist[v]
-				tmp_v = v
-				if tmp_v not in critical_path:
-					critical_path.append(tmp_v)
-				q.put(tmp_v)
-			elif dist[v] is 0:
-				tmp_v = 0  # this is the first node in the graph
-				if tmp_v not in critical_path:
-					critical_path.append(tmp_v)
-	cp_min = 0
-	# for x in critical_path:
-	# 	cp_min = cp_min + min(self.comp_matrix[x])
+    while not q.empty():
+        u = q.get()
+        tmp_max = 0
+        for v in list(workflow.graph.predecessors(Task(u))):
+            if dist[v] > tmp_max:
+                tmp_max = dist[v]
+                tmp_v = v
+                if tmp_v not in critical_path:
+                    critical_path.append(tmp_v)
+                q.put(tmp_v)
+            elif dist[v] is 0:
+                tmp_v = 0  # this is the first node in the graph
+                if tmp_v not in critical_path:
+                    critical_path.append(tmp_v)
+    cp_min = 0
+    # for x in critical_path:
+    # 	cp_min = cp_min + min(self.comp_matrix[x])
 
-	return cp_min
+    return cp_min

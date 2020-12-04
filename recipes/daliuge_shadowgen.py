@@ -29,9 +29,9 @@ NUM_MACHINES = 20
 SPEC_RANGE = [(200,400)]
 MAGNITUDE = 'giga'
 SYSTEM_OUTPUT_PATH = 'recipes/routput/system_spec_{0}_{1}_{2}'.format(
-	NUM_MACHINES,
-	SPEC_RANGE,
-	HETEROGENEITY
+    NUM_MACHINES,
+    SPEC_RANGE,
+    HETEROGENEITY
 )
 
 # Graph Reqs.
@@ -45,7 +45,7 @@ CCR = 0.5  # CCR < 1 -> Data time > Comp time
 logger.debug('Heterogeneity length: {0}'.format(len(HETEROGENEITY)))
 # Generating the syste
 system_config_path = generator.generate_system_machines(
-	SYSTEM_OUTPUT_PATH, NUM_MACHINES, MAGNITUDE, HETEROGENEITY, SPEC_RANGE
+    SYSTEM_OUTPUT_PATH, NUM_MACHINES, MAGNITUDE, HETEROGENEITY, SPEC_RANGE
 )
 logger.info(system_config_path)
 

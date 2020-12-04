@@ -19,5 +19,5 @@ from IPython.display import Image
 
 
 def convert_to_graphviz(workflow):
-	dotgraph = nx.nx_pydot.to_pydot(workflow.graph)
-	return graphviz.Source(dotgraph)
+    dotgraph = nx.nx_pydot.to_pydot(workflow.graph)
+    return graphviz.Source(dotgraph)

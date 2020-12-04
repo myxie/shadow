@@ -20,95 +20,95 @@ from matplotlib.ticker import (MultipleLocator, FormatStrFormatter, AutoMinorLoc
 
 
 class AllocationPlot(object):
-	"""
-	This is created when we want to generate an allocation plot for the results of a scheduled 
-	workflow
-	"""
+    """
+    This is created when we want to generate an allocation plot for the results of a scheduled
+    workflow
+    """
 
-	def __init__(self, solution):
-		self.machines = solution.machines
-		self.makespan = solution.makespan
-		self.plotable_allocations = self._unwrap_allocation_tuples(solution)
+    def __init__(self, solution):
+        self.machines = solution.machines
+        self.makespan = solution.makespan
+        self.plotable_allocations = self._unwrap_allocation_tuples(solution)
 
-		# We have a dictionary of the allocations, what do we do with them?
-		pass
+        # We have a dictionary of the allocations, what do we do with them?
+        pass
 
-	def _unwrap_allocation_tuples(self, solution):
-		alloc_list = []
-		for i, m in enumerate(self.machines):
-			alloc_list.append([])
-			for alloc in solution.list_machine_allocations(m):
-				alloc_list[i].append((alloc.task.ast, alloc.task.aft, alloc.tid))
-		return alloc_list
+    def _unwrap_allocation_tuples(self, solution):
+        alloc_list = []
+        for i, m in enumerate(self.machines):
+            alloc_list.append([])
+            for alloc in solution.list_machine_allocations(m):
+                alloc_list[i].append((alloc.task.ast, alloc.task.aft, alloc.tid))
+        return alloc_list
 
-	def plot(self):
-		num_machines = len(self.machines)
-		fig, ax = plt.subplots(num_machines, sharex='row', sharey='col', gridspec_kw={'hspace': 0})
-		self._setup_xaxis(num_machines, ax)
-		data = self._format_data_for_imshow(self.plotable_allocations, num_machines, self.makespan, ax)
-		self._use_imshow(data, ax, num_machines)
-		self._setup_grid(num_machines, ax, self.machines)
-		plt.xlabel('Makespan (s)')
-		return fig, ax
+    def plot(self):
+        num_machines = len(self.machines)
+        fig, ax = plt.subplots(num_machines, sharex='row', sharey='col', gridspec_kw={'hspace': 0})
+        self._setup_xaxis(num_machines, ax)
+        data = self._format_data_for_imshow(self.plotable_allocations, num_machines, self.makespan, ax)
+        self._use_imshow(data, ax, num_machines)
+        self._setup_grid(num_machines, ax, self.machines)
+        plt.xlabel('Makespan (s)')
+        return fig, ax
 
-	def _setup_grid(self, num_machines, ax, machines):
-		for x, m in enumerate(machines):
-			# Setup axis
-			ax[x].grid(which='minor', axis='y', linestyle='-', color='w', linewidth=5)
-			ax[x].set_yticks(np.arange(0, 0))
-			ax[x].set_aspect('auto')
-			ax[x].set(ylabel=m.id)
+    def _setup_grid(self, num_machines, ax, machines):
+        for x, m in enumerate(machines):
+            # Setup axis
+            ax[x].grid(which='minor', axis='y', linestyle='-', color='w', linewidth=5)
+            ax[x].set_yticks(np.arange(0, 0))
+            ax[x].set_aspect('auto')
+            ax[x].set(ylabel=m.id)
 
-	def _setup_xaxis(self, num_machines, ax):
-		ax[0].xaxis.set_major_locator(MultipleLocator(10))
-		ax[0].xaxis.set_major_formatter(FormatStrFormatter('%d'))
-		for x in range(0, num_machines):
-			ax[x].set_yticks(np.arange(0, 2) - .5, minor=True)
+    def _setup_xaxis(self, num_machines, ax):
+        ax[0].xaxis.set_major_locator(MultipleLocator(10))
+        ax[0].xaxis.set_major_formatter(FormatStrFormatter('%d'))
+        for x in range(0, num_machines):
+            ax[x].set_yticks(np.arange(0, 2) - .5, minor=True)
 
-	def _format_data_for_imshow(self, allocations, num_machines, makespan, ax):
-		data = np.zeros((makespan + 10, num_machines)).transpose()
-		count = 0
-		for machine in allocations:
-			for tup in machine:
-				# data[count][tup[0]]=0.5
-				data[count][(tup[0]):(tup[1]) - 1] = 1
-				# data[count][tup[1]]=0.5
-				text = ax[count].text(
-					(tup[1] + tup[0]) / 2,
-					0,
-					tup[2],
-					horizontalalignment='center',
-					verticalalignment='center',
-					color="w"
-				)
-			# data[count][tup[1]+1]=0.5
-			count += 1
-		return data
+    def _format_data_for_imshow(self, allocations, num_machines, makespan, ax):
+        data = np.zeros((makespan + 10, num_machines)).transpose()
+        count = 0
+        for machine in allocations:
+            for tup in machine:
+                # data[count][tup[0]]=0.5
+                data[count][(tup[0]):(tup[1]) - 1] = 1
+                # data[count][tup[1]]=0.5
+                text = ax[count].text(
+                    (tup[1] + tup[0]) / 2,
+                    0,
+                    tup[2],
+                    horizontalalignment='center',
+                    verticalalignment='center',
+                    color="w"
+                )
+            # data[count][tup[1]+1]=0.5
+            count += 1
+        return data
 
-	def _use_imshow(self, data, ax, num_machines):
-		ax[0].imshow(np.array([data[0]]), cmap="binary", origin='lower')
-		for x in range(1, num_machines):
-			ax[x].imshow(np.array([data[x]]), cmap="binary")
-		for a in ax:
-			a.label_outer()
+    def _use_imshow(self, data, ax, num_machines):
+        ax[0].imshow(np.array([data[0]]), cmap="binary", origin='lower')
+        for x in range(1, num_machines):
+            ax[x].imshow(np.array([data[x]]), cmap="binary")
+        for a in ax:
+            a.label_outer()
 
 
 class ComparisonPlot:
-	def __init__(self, solutions):
-		# Solutions is a list
-		if not isinstance(solutions, list):
-			raise TypeError("solutions is a list of Solution objects")
-		self.solutions = solutions
+    def __init__(self, solutions):
+        # Solutions is a list
+        if not isinstance(solutions, list):
+            raise TypeError("solutions is a list of Solution objects")
+        self.solutions = solutions
 
 
 class MetricPlot:
-	def __init__(self, metrics):
-		if not isinstance(metrics, list):
-			raise TypeError("metrics is a list of metrics")
-		# These are the metrics that we are displaying
-		self.metrics = metrics
+    def __init__(self, metrics):
+        if not isinstance(metrics, list):
+            raise TypeError("metrics is a list of metrics")
+        # These are the metrics that we are displaying
+        self.metrics = metrics
 
 
 class BarPlot(object):
-	def __init__(self):
-		pass
+    def __init__(self):
+        pass

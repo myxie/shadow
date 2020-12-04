@@ -27,9 +27,9 @@ NUM_MACHINES = 10
 SPEC_RANGE = [(50,100)]
 MAGNITUDE = 'giga'
 SYSTEM_OUTPUT_PATH = 'recipes/routput/basic_spec-{0}.json'.format(
-	NUM_MACHINES
+    NUM_MACHINES
 )
 system_config_path = generator.generate_system_machines(
-	SYSTEM_OUTPUT_PATH, NUM_MACHINES, MAGNITUDE, HETEROGENEITY, SPEC_RANGE
+    SYSTEM_OUTPUT_PATH, NUM_MACHINES, MAGNITUDE, HETEROGENEITY, SPEC_RANGE
 )
 logger.info(system_config_path)

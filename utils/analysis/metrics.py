@@ -23,22 +23,22 @@ metric_map = ['slr, speedup, efficiency']
 
 
 def schedule_to_length(workflow):
-	cpmin = ga.critical_path_min(workflow)
-	return workflow.solution.makespan/cpmin
+    cpmin = ga.critical_path_min(workflow)
+    return workflow.solution.makespan/cpmin
 
 
 def speedup(workflow):
-	seq_eq = ga.sequential_execution(workflow)
-	if workflow.solution.makespan > 0:
-		return seq_eq/ workflow.solution.makespan
-	else:
-		return -1
+    seq_eq = ga.sequential_execution(workflow)
+    if workflow.solution.makespan > 0:
+        return seq_eq/ workflow.solution.makespan
+    else:
+        return -1
 
 
 def efficiency(workflow):
-	if workflow.solution.makespan > 0:
-		su = speedup(workflow)
-		denom = len(workflow.env.machines)
-		return su / denom
-	else:
-		return -1
+    if workflow.solution.makespan > 0:
+        su = speedup(workflow)
+        denom = len(workflow.env.machines)
+        return su / denom
+    else:
+        return -1

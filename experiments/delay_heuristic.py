@@ -16,14 +16,14 @@ print(heft(DelayWorkflow))
 
 
 def calc_task_delay(task, delay, workflow):
-	t = workflow.graph.tasks[task]
-	aft = t.aft
-	update_list = list(workflow.graph.successors(t))
-	# add 10 to the start and finish time of each of these successors, and their successors
-	update_queue = Queue()
-	update_queue.put(update_list)
-	print(update_queue)
-	return workflow
+    t = workflow.graph.tasks[task]
+    aft = t.aft
+    update_list = list(workflow.graph.successors(t))
+    # add 10 to the start and finish time of each of these successors, and their successors
+    update_queue = Queue()
+    update_queue.put(update_list)
+    print(update_queue)
+    return workflow
 
 task = HEFTWorkflow.tasks[0]
 calc_task_delay(task, 10, workflow=HEFTWorkflow)
