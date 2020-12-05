@@ -32,9 +32,6 @@ class Machine(object):
         self.bandwidth = bandwidth
         self.cost = cost
 
-    #
-    # def __repr__(self):
-    # 	return self.id
     def __str__self(self):
         return str(self.id)
 
