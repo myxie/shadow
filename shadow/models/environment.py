@@ -131,7 +131,8 @@ class Environment(object):
 
     def calc_task_runtime_on_machine(self, machine, task_flops):
         """
-        returns Task runtime based on total Floating point operations required to complete the task
+        returns Task runtime based on total Floating point operations required
+         to complete the task
         :param machine: the machine on which the task is being run
         :param task_flops: the total number of FLOPs in the task
         :return:
