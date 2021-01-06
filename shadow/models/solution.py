@@ -60,8 +60,8 @@ class Solution:
         self.execution_order.append(a)
         if sort:
             self.execution_order.sort(key=lambda alloc: alloc.ast)
-        if task.aft > self.makespan:
-            self.makespan = task.aft
+        # if alloc.aft > self.makespan:
+        self.makespan = self.execution_order[-1].aft
 
     def list_machine_allocations(self, machine):
         """
