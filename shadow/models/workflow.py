@@ -30,7 +30,8 @@ from shadow.models.solution import Solution
 
 class Task(object):
     """
-    Helper class for the
+    Tasks are components of a Workflow that store information associated to
+    their compute requirement.
     """
 
     def __init__(self, tid, flops=0):

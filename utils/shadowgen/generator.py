@@ -30,14 +30,16 @@ def generate_system_machines(config_path,
                              specrange=None,
                              system_bandwidth=1.0,
                              seed=20):
-    # TODO move the necessary information from generate_graph_costs here for system configuration
+    # TODO move the necessary information from generate_graph_costs here for
+    #  system configuration
     """
     :param seed:
     :param config_path:
     :param num_machines:
     :param magnitude:
     :param heterogeneity:
-    :param specrange: List of ranges of FLOP/s provided by each separate machine (aligns with heterogeneity list),
+    :param specrange: List of ranges of FLOP/s provided by
+    each separate machine (aligns with heterogeneity list),
     relative to specified magnitude
     :return:
     """
@@ -62,7 +64,9 @@ def generate_system_machines(config_path,
 
     if len(specrange) != len(heterogeneity):
         sys.exit(
-            'FLOP/s range list provided does not match heterogeneity (List is wrong size)')
+            'FLOP/s range list provided does not match heterogeneity'
+            ' (List is wrong size)'
+        )
 
     machines = []
     for p in heterogeneity:
@@ -72,7 +76,8 @@ def generate_system_machines(config_path,
     for m in machines:
         if 0 < np.remainder(m, 1) < 1:
             sys.exit(
-                'Number of machines specified ({0}) and percentage split on systerm ({1}) not compatible'.format(
+                'Number of machines specified ({0}) and percentage split on'
+                'system ({1}) not compatible'.format(
                     num_machines, heterogeneity
                 ))
 
@@ -97,7 +102,6 @@ def generate_system_machines(config_path,
             }
             y += 1
 
-
     system = {
         "header": {
             "time": 'false',
@@ -105,7 +109,7 @@ def generate_system_machines(config_path,
                 "file": config_path,
                 "seed": seed,
                 "range": str(specrange),
-                "heterogeneity": float(heterogeneity),
+                "heterogeneity": str(heterogeneity),
                 "multiplier": multiplier
             }
         },
@@ -113,7 +117,7 @@ def generate_system_machines(config_path,
             {
                 'resources': machine_categ,
                 # 'rates': data_rates
-                'bandwidth':system_bandwidth
+                'bandwidth': system_bandwidth
             }
     }
 
@@ -123,7 +127,40 @@ def generate_system_machines(config_path,
     return config_path
 
 
-def genereate_data_costs(
+def generate_data_intensive_costs(
+        graph_edges,
+        mean,
+        uniform_range,
+        multiplier,
+        ccr
+):
+    """
+    A data-intensive graph is going to screw up traditional graph-based
+    scheduling algorithms, as they place the data within the graph/on edges
+    in order to count communication between nodes as a cost (which it is).
+
+    However, doing so with high data volumes often leads to these algorithms
+    ignoring parallelism given the time cost.
+    Parameters
+    ----------
+    graph_edges
+    mean
+    uniform_range
+    multiplier
+    ccr
+
+    Returns
+    -------
+
+    """
+    edgedict = {}
+    for edge in graph_edges:
+        edgedict[edge] = 0
+
+    return edgedict
+
+
+def generate_data_costs(
         graph_edges,
         mean,
         uniform_range,
@@ -227,7 +264,9 @@ def generate_graph_costs(
         },
         'graph': nx.readwrite.node_link_data(dotgraph)
     }
-    # Generate place holder system values (resources/data_rate) for compatibility with shadow library format
+
+    # Generate place holder system values (resources/data_rate) for
+    # compatibility with shadow library format
 
     if not json_path:
         json_path = '{0}.json'.format(dot_path[:-4])

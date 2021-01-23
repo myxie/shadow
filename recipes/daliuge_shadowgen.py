@@ -24,24 +24,25 @@ logging.basicConfig(level='DEBUG')
 logger = logging.getLogger(__name__)
 
 # System Reqs.
-HETEROGENEITY = [1.0]  # Homogeneous
-NUM_MACHINES = 20
-SPEC_RANGE = [(200,400)]
+HETEROGENEITY = [0.75,0.25]  # Homogeneous
+NUM_MACHINES = 40
+SPEC_RANGE = [(200,400),(800,1600)]
 MAGNITUDE = 'giga'
 SYSTEM_OUTPUT_PATH = 'recipes/routput/system_spec_{0}_{1}_{2}'.format(
     NUM_MACHINES,
-    SPEC_RANGE,
-    HETEROGENEITY
+    "{0}-{1}".format(SPEC_RANGE[0 ][0],SPEC_RANGE[1][1]),
+    "{0}-{1}".format(HETEROGENEITY[0], HETEROGENEITY[1])
 )
 
 # Graph Reqs.
 LOGICAL_GRAPH = 'recipes/rdata/SDPContinuumPipeline_UpdatedNoOuter.graph'
 # DALIUGE_GRAPH = 'TestAskapCont.graph'
 SHADOW_OUTPUT = 'recipes/routput/shadow_TestAskapCont.json'
-MEAN = 5000  # Mean of 5000/range of 500 gives us a distribution between 4500-5500
-UNIFORM_RANGE = 1000
+MEAN = 500000  # Mean of 5000/range of 500 gives us a distribution between
+# 4500-5500
+UNIFORM_RANGE = 400000
 MULTIPLIER = 1
-CCR = 0.5  # CCR < 1 -> Data time > Comp time
+CCR = 0.001  # CCR < 1 -> Data time > Comp time
 logger.debug('Heterogeneity length: {0}'.format(len(HETEROGENEITY)))
 # Generating the syste
 system_config_path = generator.generate_system_machines(
@@ -51,7 +52,14 @@ logger.info(system_config_path)
 
 # Generating graph costs
 unrolled_graph_json = daliuge.unroll_logical_graph(LOGICAL_GRAPH)
-nxgraph,output_graph_path = daliuge.json_to_shadow(unrolled_graph_json, SHADOW_OUTPUT, MEAN, UNIFORM_RANGE, MULTIPLIER, CCR)
+nxgraph,output_graph_path = daliuge.json_to_shadow(
+    unrolled_graph_json, SHADOW_OUTPUT, MEAN, UNIFORM_RANGE, MULTIPLIER, CCR,
+    seed=20, data_intensive=True
+)
+
 daliuge.generate_dot_from_networkx_graph(nxgraph,'output')
+
+
+
 logger.info(output_graph_path)
 

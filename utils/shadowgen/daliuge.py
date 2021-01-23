@@ -48,7 +48,7 @@ def edit_channels(graph_name, suffix, extension):
 
 
 def unroll_logical_graph(graph):
-    cmd_list = ['dlg', 'unroll-and-partition', '-fv', '-a', 'mysarkar', '-L',
+    cmd_list = ['dlg', 'unroll', '-fv', '-L',
                 graph]
     jgraph_path = "{0}.json".format(graph[:-6])
     with open(format(jgraph_path), 'w+') as f:
@@ -78,7 +78,8 @@ def json_to_shadow(
         uniform_range,
         multiplier,
         ccr,
-        seed=20):
+        seed=20,
+        data_intensive=False):
     """
     Daliuge import will use
     :return: The NetworkX graph for visualisation purposed;
@@ -89,7 +90,7 @@ def json_to_shadow(
     unrolled_nx = _daliuge_to_nx(daliuge_json)
 
     translated_graph = _add_generated_values_to_graph(
-        unrolled_nx, mean, uniform_range, ccr, multiplier
+        unrolled_nx, mean, uniform_range, ccr, multiplier, data_intensive
     )
     # Convering DALiuGE nodes to readable nodes
 
@@ -105,7 +106,7 @@ def json_to_shadow(
                 'multiplier': multiplier
             },
         },
-        'input': nx.readwrite.node_link_data(translated_graph)
+        'graph': nx.readwrite.node_link_data(translated_graph)
     }
 
     with open("{0}".format(output_file), 'w') as jfile:
@@ -173,7 +174,8 @@ def _add_generated_values_to_graph(
         mean,
         uniform_range,
         ccr,
-        multiplier
+        multiplier,
+        data_intensive=False
 ):
     """
     Produces a new graph that converts the DALiuGE Node labels into easier-to-read values,
@@ -202,9 +204,15 @@ def _add_generated_values_to_graph(
         translated_graph.nodes[node]['comp'] = comp_dict[node]
 
     # Generate data loads between edges and data-link transfer rates
-    edge_dict = generator.genereate_data_costs(
-        translated_graph.edges, mean, uniform_range, multiplier, ccr
-    )
+    edge_dict = None
+    if data_intensive:
+        edge_dict = generator.generate_data_intensive_costs(
+            translated_graph.edges, mean, uniform_range, multiplier, ccr
+        )
+    else:
+        edge_dict = generator.generate_data_costs(
+            translated_graph.edges, mean, uniform_range, multiplier, ccr
+        )
 
     for edge in translated_graph.edges:
         translated_graph.edges[edge]['data_size'] = edge_dict[edge]

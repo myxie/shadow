@@ -33,12 +33,14 @@ def run_daliuge_translator(arg):
 			suffix=channel_suffix,
 			extension=extension
 		)
-		dlg.unroll_graph(graph_file+channel_suffix+extension)
+		dlg.unroll_logical_graph(graph_file+channel_suffix+extension)
 		if arg['vis']:
 			dlg.generate_dot_from_networkx_graph(
 				graph_file+channel_suffix+extension,
 				graph_file+channel_suffix+'.dot'
 			)
+	else:
+		dlg.json_to_shadow(graph_file)
 
 
 def ggen_generation(arg):

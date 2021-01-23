@@ -995,7 +995,7 @@
                 {
                     "name": "num_of_iter",
                     "text": "Number loops",
-                    "value": "2"
+                    "value": "1000"
                 }
             ],
             "group": -7,
@@ -1063,7 +1063,7 @@
                 {
                     "name": "num_of_iter",
                     "text": "Number loops",
-                    "value": "2"
+                    "value": "10"
                 }
             ],
             "group": -21,
