@@ -1,0 +1,468 @@
+{
+  "header": {
+    "time": false,
+    "gen_specs": {
+      "file": "channel_split_continuum.json",
+      "mean": 500000,
+      "range": "+-400000",
+      "seed": 20,
+      "ccr": 0.001,
+      "multiplier": 1
+    }
+  },
+  "graph": {
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+      {
+        "comp": 824511,
+        "id": "c0_0"
+      },
+      {
+        "comp": 649003,
+        "id": "c0_1"
+      },
+      {
+        "comp": 713207,
+        "id": "c0_2"
+      },
+      {
+        "comp": 823692,
+        "id": "c0_3"
+      },
+      {
+        "comp": 307861,
+        "id": "c0_4"
+      },
+      {
+        "comp": 608580,
+        "id": "c0_5"
+      },
+      {
+        "comp": 823956,
+        "id": "c0_6"
+      },
+      {
+        "comp": 797704,
+        "id": "c0_7"
+      },
+      {
+        "comp": 558352,
+        "id": "c0_8"
+      },
+      {
+        "comp": 235502,
+        "id": "c0_9"
+      },
+      {
+        "comp": 429218,
+        "id": "c0_10"
+      },
+      {
+        "comp": 895070,
+        "id": "c0_11"
+      },
+      {
+        "comp": 182598,
+        "id": "c0_12"
+      },
+      {
+        "comp": 355311,
+        "id": "c0_13"
+      },
+      {
+        "comp": 860031,
+        "id": "c0_14"
+      },
+      {
+        "comp": 459520,
+        "id": "c0_15"
+      },
+      {
+        "comp": 266922,
+        "id": "c0_16"
+      },
+      {
+        "comp": 353523,
+        "id": "c0_17"
+      },
+      {
+        "comp": 826908,
+        "id": "c0_18"
+      },
+      {
+        "comp": 824511,
+        "id": "c1_0"
+      },
+      {
+        "comp": 649003,
+        "id": "c1_1"
+      },
+      {
+        "comp": 713207,
+        "id": "c1_2"
+      },
+      {
+        "comp": 823692,
+        "id": "c1_3"
+      },
+      {
+        "comp": 307861,
+        "id": "c1_4"
+      },
+      {
+        "comp": 608580,
+        "id": "c1_5"
+      },
+      {
+        "comp": 823956,
+        "id": "c1_6"
+      },
+      {
+        "comp": 797704,
+        "id": "c1_7"
+      },
+      {
+        "comp": 558352,
+        "id": "c1_8"
+      },
+      {
+        "comp": 235502,
+        "id": "c1_9"
+      },
+      {
+        "comp": 429218,
+        "id": "c1_10"
+      },
+      {
+        "comp": 895070,
+        "id": "c1_11"
+      },
+      {
+        "comp": 182598,
+        "id": "c1_12"
+      },
+      {
+        "comp": 355311,
+        "id": "c1_13"
+      },
+      {
+        "comp": 860031,
+        "id": "c1_14"
+      },
+      {
+        "comp": 459520,
+        "id": "c1_15"
+      },
+      {
+        "comp": 266922,
+        "id": "c1_16"
+      },
+      {
+        "comp": 353523,
+        "id": "c1_17"
+      },
+      {
+        "comp": 826908,
+        "id": "c1_18"
+      },
+      {
+        "comp": 100000,
+        "id": "channel_split0"
+      },
+      {
+        "comp": 100000,
+        "id": "channel_split1"
+      },
+      {
+        "comp": 100000,
+        "id": "channel_split"
+      },
+      {
+        "comp": 100000,
+        "id": "channel_split2"
+      },
+      {
+        "comp": 100000,
+        "id": "channel_split3"
+      },
+      {
+        "comp": 100000,
+        "id": "channel_split4"
+      },
+      {
+        "comp": 100000,
+        "id": "channel_split5"
+      },
+      {
+        "comp": 100000,
+        "id": "channel_split6"
+      },
+      {
+        "comp": 100000,
+        "id": "channel_split7"
+      },
+      {
+        "comp": 100000,
+        "id": "channel_split8"
+      },
+      {
+        "comp": 100000,
+        "id": "channel_split9"
+      }
+    ],
+    "links": [
+      {
+        "data_size": 0,
+        "source": "c0_0",
+        "target": "c0_4"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_1",
+        "target": "c0_2"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_2",
+        "target": "c0_3"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_3",
+        "target": "c0_4"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_4",
+        "target": "c0_5"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_5",
+        "target": "c0_6"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_6",
+        "target": "c0_7"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_7",
+        "target": "c0_8"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_8",
+        "target": "c0_9"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_9",
+        "target": "c0_10"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_10",
+        "target": "c0_11"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_11",
+        "target": "c0_12"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_12",
+        "target": "c0_13"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_13",
+        "target": "c0_14"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_14",
+        "target": "c0_15"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_15",
+        "target": "c0_16"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_16",
+        "target": "c0_17"
+      },
+      {
+        "data_size": 0,
+        "source": "c0_17",
+        "target": "c0_18"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_0",
+        "target": "c1_4"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_1",
+        "target": "c1_2"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_2",
+        "target": "c1_3"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_3",
+        "target": "c1_4"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_4",
+        "target": "c1_5"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_5",
+        "target": "c1_6"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_6",
+        "target": "c1_7"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_7",
+        "target": "c1_8"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_8",
+        "target": "c1_9"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_9",
+        "target": "c1_10"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_10",
+        "target": "c1_11"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_11",
+        "target": "c1_12"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_12",
+        "target": "c1_13"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_13",
+        "target": "c1_14"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_14",
+        "target": "c1_15"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_15",
+        "target": "c1_16"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_16",
+        "target": "c1_17"
+      },
+      {
+        "data_size": 0,
+        "source": "c1_17",
+        "target": "c1_18"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split0",
+        "target": "c0_0"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split0",
+        "target": "c0_1"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split1",
+        "target": "c1_0"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split1",
+        "target": "c1_1"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split",
+        "target": "channel_split0"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split",
+        "target": "channel_split1"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split",
+        "target": "channel_split2"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split",
+        "target": "channel_split3"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split",
+        "target": "channel_split4"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split",
+        "target": "channel_split5"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split",
+        "target": "channel_split6"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split",
+        "target": "channel_split7"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split",
+        "target": "channel_split8"
+      },
+      {
+        "data_size": 0,
+        "source": "channel_split",
+        "target": "channel_split9"
+      }
+    ]
+  }
+}

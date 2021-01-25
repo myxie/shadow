@@ -158,18 +158,43 @@ def calculate_upward_ranks(workflow):
         if task.rank == -1:
             stack.append(task)
 
+    sort = list(nx.topological_sort(workflow.graph))
+
     task_ranks = {}
+    curr_task = None
+    pred = None
     while len(stack) > 0:
-        curr_task = stack.pop()
-        longest_rank = 0
-        for successor in workflow.graph.successors(curr_task):
+        if curr_task is None:
+            curr_task = stack.pop()
+        longest_rank = -1
+        succ = list(workflow.graph.successors(curr_task))
+        for successor in succ:
+            if successor in task_ranks and workflow.graph.has_edge(
+                    successor,curr_task
+            ):
+                longest_rank = max(
+                    longest_rank,
+                    ave_comm_cost(workflow, curr_task, successor)
+                    + task_ranks[successor]
+                )
+            else:
+                pred = curr_task
+                curr_task = successor
+
+        if not list(workflow.graph.successors(curr_task)):
+            if pred is None:
+                curr_task = None
+                continue
             longest_rank = max(
-                longest_rank, ave_comm_cost(workflow, curr_task, successor)
-                              + task_ranks[successor]
+                longest_rank,
+                ave_comm_cost(workflow, pred, curr_task)
             )
 
-        rank = curr_task.calc_ave_runtime() + longest_rank
-        task_ranks[curr_task] = rank
+        if longest_rank >= 0:
+            rank = curr_task.calc_ave_runtime() + longest_rank
+            task_ranks[curr_task] = rank
+            curr_task = None
+            pred = None
 
     return task_ranks
 
@@ -209,7 +234,8 @@ def calc_est(workflow, task, machine, solution):
         pre_machine_alloc = alloc.machine
         # rate = workflow.system['data_rate'][pre_processor][machine]
         if pre_machine_alloc != machine:  # and rate > 0:
-            comm_cost = int(workflow.graph.edges[pretask, task]['data_size'])  # / rate)
+            comm_cost = int(
+                workflow.graph.edges[pretask, task]['data_size'])  # / rate)
         else:
             comm_cost = 0
 
@@ -236,7 +262,8 @@ def calc_est(workflow, task, machine, solution):
                     prev_alloc.aft,
                     alloc.ast
                 ))
-        final_alloc = curr_allocations[num_alloc - 1]  # We want the finish time of the latest allocation.
+        final_alloc = curr_allocations[
+            num_alloc - 1]  # We want the finish time of the latest allocation.
         available_slots.append((final_alloc.aft, -1))
 
     for slot in available_slots:
@@ -323,8 +350,10 @@ def insertion_policy_oct(workflow, oct_rank_matrix):
             for machine in workflow.env.machines:
                 eft_matrix[(task, machine)] = task.calculated_runtime[machine]
                 oeft_matrix[(task, machine)] = \
-                    eft_matrix[(task, machine)] + oct_rank_matrix[(task, machine)]
-                if (min_oeft == -1) or (oeft_matrix[(task, machine)] < min_oeft):
+                    eft_matrix[(task, machine)] + oct_rank_matrix[
+                        (task, machine)]
+                if (min_oeft == -1) or (
+                        oeft_matrix[(task, machine)] < min_oeft):
                     min_oeft = oeft_matrix[(task, machine)]
                     m = machine
             aft = task.calculated_runtime[m]
@@ -339,8 +368,10 @@ def insertion_policy_oct(workflow, oct_rank_matrix):
                 eft = est + task.calculated_runtime[machine]
                 eft_matrix[(task, machine)] = eft
                 oeft_matrix[(task, machine)] = \
-                    eft_matrix[(task, machine)] + oct_rank_matrix[(task, machine)]
-                if (min_oeft == -1) or (oeft_matrix[(task, machine)] < min_oeft):
+                    eft_matrix[(task, machine)] + oct_rank_matrix[
+                        (task, machine)]
+                if (min_oeft == -1) or (
+                        oeft_matrix[(task, machine)] < min_oeft):
                     min_oeft = oeft_matrix[(task, machine)]
                     m = machine
 
@@ -370,14 +401,16 @@ def fcfs_allocation(workflow, greedy, seed):
                 task.calculated_runtime.items(),
                 key=operator.itemgetter(1)
             )
-            machine_available = _check_machine_availability(solution, m, start_time, task)
+            machine_available = _check_machine_availability(solution, m,
+                                                            start_time, task)
             if machine_available:
                 ast = start_time
                 aft = w
                 machine = m
                 solution.add_allocation(task, machine, ast=ast, aft=aft)
         else:
-            latest_predecessor_allocation = latest_allocation(task, solution, workflow)
+            latest_predecessor_allocation = latest_allocation(task, solution,
+                                                              workflow)
             earliest_start_time = -1
             finish_time = 0
             machine = latest_predecessor_allocation.machine
@@ -414,18 +447,24 @@ def fcfs_allocation(workflow, greedy, seed):
     return solution
 
 
+# TODO address control flow if predecessor doesn't exist due to multiple
+#  head nodes
+
 def latest_allocation(task, solution, workflow):
     pred = list(workflow.graph.predecessors(task))
     pred.sort(key=lambda x: x.aft, reverse=True)
-    task_allocations = [alloc for alloc in list(solution.task_allocations.values())]
+    task_allocations = [alloc for alloc in
+                        list(solution.task_allocations.values())]
     if len(task_allocations) < 1:
         xx = 1
-    pred_task_allocations = [alloc for alloc in task_allocations if alloc.task in pred]
+    pred_task_allocations = [alloc for alloc in task_allocations if
+                             alloc.task in pred]
     pred_task_allocations.sort(key=lambda alloc: alloc.aft, reverse=True)
     return pred_task_allocations[0]  # pred[0]
 
 
-def find_earliest_availability(m, task, machine, earliest_start_time, new_start, finish_time):
+def find_earliest_availability(m, task, machine, earliest_start_time, new_start,
+                               finish_time):
     # machine = latest_predecessor_allocation.machine
     if earliest_start_time == -1 or earliest_start_time > new_start:
         earliest_start_time = new_start
@@ -435,19 +474,23 @@ def find_earliest_availability(m, task, machine, earliest_start_time, new_start,
     return earliest_start_time, finish_time, machine
 
 
-def attempt_allocation_on_resource(workflow, latest_predecessor_allocation, solution, task, machine,
+def attempt_allocation_on_resource(workflow, latest_predecessor_allocation,
+                                   solution, task, machine,
                                    earliest_start_time,
                                    finish_time, available):
     for m in workflow.env.machines:
         new_start = latest_predecessor_allocation.aft
         if m is not latest_predecessor_allocation.machine:
-            data_size = workflow.graph.edges[latest_predecessor_allocation.task, task]['data_size']
+            data_size = \
+            workflow.graph.edges[latest_predecessor_allocation.task, task][
+                'data_size']
             new_start += workflow.env.calc_data_transfer_time(data_size)
         if _check_machine_availability(solution, m, new_start, task):
             available = True
-            earliest_start_time, finish_time, machine = find_earliest_availability(m, task, machine,
-                                                                                   earliest_start_time, new_start,
-                                                                                   finish_time)
+            earliest_start_time, finish_time, machine = find_earliest_availability(
+                m, task, machine,
+                earliest_start_time, new_start,
+                finish_time)
 
     return earliest_start_time, finish_time, machine, available
 

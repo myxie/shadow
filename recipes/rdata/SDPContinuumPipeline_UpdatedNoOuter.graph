@@ -1109,7 +1109,7 @@
                     "description": "",
                     "name": "num_of_iter",
                     "text": "Number loops",
-                    "value": "10"
+                    "value": "1"
                 }
             ],
             "height": 800.0000000000002,
@@ -1180,7 +1180,7 @@
                     "description": "",
                     "name": "num_of_iter",
                     "text": "Number loops",
-                    "value": "2"
+                    "value": "1"
                 }
             ],
             "group": -21,

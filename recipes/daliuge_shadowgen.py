@@ -16,6 +16,9 @@
 # Example Recipe for generating graph costs and homogeneous cluster on which to
 # run a (BASIC) DALiuGE Graph, generated from the EAGLE template
 import logging
+import json
+
+import networkx as nx
 
 from utils.shadowgen import daliuge
 from utils.shadowgen import generator
@@ -52,14 +55,76 @@ logger.info(system_config_path)
 
 # Generating graph costs
 unrolled_graph_json = daliuge.unroll_logical_graph(LOGICAL_GRAPH)
-nxgraph,output_graph_path = daliuge.json_to_shadow(
-    unrolled_graph_json, SHADOW_OUTPUT, MEAN, UNIFORM_RANGE, MULTIPLIER, CCR,
-    seed=20, data_intensive=True
-)
 
-daliuge.generate_dot_from_networkx_graph(nxgraph,'output')
+graph_list = []
+
+CHANNELS = 2
+for i in range(0, CHANNELS):
+    identifier = "c{0}_".format(i)
+    nxgraph,output_graph_path = daliuge.json_to_shadow(
+        unrolled_graph_json, SHADOW_OUTPUT, MEAN, UNIFORM_RANGE, MULTIPLIER,
+        CCR,node_identifier=identifier,
+        seed=20, data_intensive=True
+    )
+    graph_list.append(nxgraph)
+
+head = 'channel_split'
+channel_graph = nx.DiGraph()
+children = [head+str(i) for i in range(0,CHANNELS)]
+channel_graph.add_nodes_from(children)
+channel_graph.add_node(head)
+channel_graph.add_edges_from([(head, head+str(x)) for x in range(0, CHANNELS)])
+for node in channel_graph.nodes():
+    channel_graph.nodes[node]['comp'] = 100000
+for edge in channel_graph.edges():
+    channel_graph.edges[edge]['data_size']=0
+i = 0
+# glist = []
+# for x in range(0,len(children)):
+#     ng = nx.DiGraph()
+#     ng.add_nodes_from([z for z in range(i, i + len(children))])
+#     ng.add_edges_from([(z, z + 1) for z in range(i, i+len(children)-1)])
+#     glist.append(ng)
+#     i += len(children)
+
+glistgraph = nx.compose_all(graph_list)
+final = nx.compose(glistgraph, channel_graph)
+
+for i in range(0,CHANNELS):
+    minor_heads = []
+    for node in graph_list[i].nodes():
+        pred = list(final.predecessors(node))
+        if len(pred) == 0:
+            minor_heads.append(node)
+    for node in minor_heads:
+        final.add_edge(head+str(i),node,data_size=0)
+
+nx.drawing.nx_pydot.write_dot(final, 'testgraph.dot')
+
+jgraph = {
+    "header": {
+        "time": False,
+        "gen_specs": {
+            'file': "channel_split_continuum.json",
+            'mean': MEAN,
+            'range': "+-{0}".format(UNIFORM_RANGE),
+            'seed': 20,
+            'ccr': CCR,
+            'multiplier': MULTIPLIER
+        },
+    },
+    'graph': nx.readwrite.node_link_data(final)
+}
+
+with open(
+        "{0}".format(
+            "recipes/routput/shadow_Continuum_ChannelSplit.json"
+        ),'w'
+) as jfile:
+    json.dump(jgraph, jfile, indent=2)
 
 
+daliuge.generate_dot_from_networkx_graph(final,'output')
 
 logger.info(output_graph_path)
 

@@ -78,6 +78,7 @@ def json_to_shadow(
         uniform_range,
         multiplier,
         ccr,
+        node_identifier,
         seed=20,
         data_intensive=False):
     """
@@ -90,7 +91,8 @@ def json_to_shadow(
     unrolled_nx = _daliuge_to_nx(daliuge_json)
 
     translated_graph = _add_generated_values_to_graph(
-        unrolled_nx, mean, uniform_range, ccr, multiplier, data_intensive
+        unrolled_nx, mean, uniform_range, ccr, multiplier, node_identifier,
+        data_intensive
     )
     # Convering DALiuGE nodes to readable nodes
 
@@ -112,7 +114,7 @@ def json_to_shadow(
     with open("{0}".format(output_file), 'w') as jfile:
         json.dump(jgraph, jfile, indent=2)
 
-    return unrolled_nx, output_file
+    return translated_graph, output_file
 
 
 def _daliuge_to_nx(input_file):
@@ -175,6 +177,7 @@ def _add_generated_values_to_graph(
         uniform_range,
         ccr,
         multiplier,
+        node_identifier,
         data_intensive=False
 ):
     """
@@ -195,12 +198,16 @@ def _add_generated_values_to_graph(
         (u, v) = edge
         translated_graph.add_edge(translation_dict[u], translation_dict[v])
 
+    new = [node_identifier+str(node) for node in translated_graph.nodes()]
+    mapping = dict(zip(translated_graph, new))
+    translated_graph = nx.relabel_nodes(translated_graph,mapping)
+
     comp_dict = generator.generate_comp_costs(
         translated_graph.nodes, mean, uniform_range, multiplier
     )
 
     for node in translated_graph.nodes():
-        translated_graph.nodes[node]['label'] = str(node)
+        # translated_graph.nodes[node]['label'] = node_identifier+str(node)
         translated_graph.nodes[node]['comp'] = comp_dict[node]
 
     # Generate data loads between edges and data-link transfer rates

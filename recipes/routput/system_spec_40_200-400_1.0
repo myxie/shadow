@@ -1,0 +1,177 @@
+{
+  "header": {
+    "time": "false",
+    "gen_specs": {
+      "file": "recipes/routput/system_spec_40_200-400_1.0",
+      "seed": 20,
+      "range": "[(200, 400)]",
+      "heterogeneity": 1.0,
+      "multiplier": 1
+    }
+  },
+  "system": {
+    "resources": {
+      "cat0_m0": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m1": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m2": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m3": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m4": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m5": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m6": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m7": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m8": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m9": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m10": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m11": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m12": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m13": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m14": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m15": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m16": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m17": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m18": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m19": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m20": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m21": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m22": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m23": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m24": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m25": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m26": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m27": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m28": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m29": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m30": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m31": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m32": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m33": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m34": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m35": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m36": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m37": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m38": {
+        "flops": 337,
+        "rates": 10
+      },
+      "cat0_m39": {
+        "flops": 337,
+        "rates": 10
+      }
+    },
+    "bandwidth": 1.0
+  }
+}

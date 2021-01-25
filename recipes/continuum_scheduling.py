@@ -24,7 +24,7 @@ from shadow.models.environment import Environment
 from shadow.algorithms.heuristic import heft, fcfs
 
 
-WORKFLOW = "routput/shadow_TestAskapCont.json"
+WORKFLOW = "routput/shadow_Continuum_ChannelSplit.json"
 CLUSTER = "routput/system_spec_40_200-400_1.0"
 
 wf_fcfs = Workflow(WORKFLOW)
