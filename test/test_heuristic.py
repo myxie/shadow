@@ -87,6 +87,9 @@ class TestFCFS(unittest.TestCase):
 		self.assertEqual(solution.makespan, 110)
 
 
+# if all(k in task_ranks for k in succs):
+
+
 class TestHeftMethods(unittest.TestCase):
 	"""
 	This class test HEFT on the same example graph presented by

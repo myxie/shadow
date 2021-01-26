@@ -153,48 +153,40 @@ def calculate_upward_ranks(workflow):
     :param workflow - Subject workflow
     :param task -  A task task in an DAG that is being ranked
     """
-    stack = deque()
-    for task in workflow.tasks:
-        if task.rank == -1:
-            stack.append(task)
 
-    sort = list(nx.topological_sort(workflow.graph))
+    # task = list(workflow.graph.nodes)
+    # if len(list(workflow.graph.sucessors(task))) == 0:
+    #     return ave_comm_cost( wf, task, successor)
 
     task_ranks = {}
-    curr_task = None
-    pred = None
-    while len(stack) > 0:
-        if curr_task is None:
-            curr_task = stack.pop()
-        longest_rank = -1
-        succ = list(workflow.graph.successors(curr_task))
-        for successor in succ:
-            if successor in task_ranks and workflow.graph.has_edge(
-                    successor,curr_task
-            ):
-                longest_rank = max(
-                    longest_rank,
-                    ave_comm_cost(workflow, curr_task, successor)
-                    + task_ranks[successor]
-                )
-            else:
-                pred = curr_task
-                curr_task = successor
+    unranked = [node for node in workflow.graph.nodes()]
 
-        if not list(workflow.graph.successors(curr_task)):
-            if pred is None:
-                curr_task = None
-                continue
-            longest_rank = max(
-                longest_rank,
-                ave_comm_cost(workflow, pred, curr_task)
-            )
+    for node in workflow.graph.nodes():
+        longest_rank = 0
+        if len(list(workflow.graph.successors(node))) == 0:
+            task_ranks[node] = node.calc_ave_runtime() + longest_rank
+            unranked.remove(node)
 
-        if longest_rank >= 0:
-            rank = curr_task.calc_ave_runtime() + longest_rank
-            task_ranks[curr_task] = rank
-            curr_task = None
-            pred = None
+    while unranked:
+        for node in unranked:
+            longest_rank = 0
+            succs = list(workflow.graph.successors(node))
+            if all(k in task_ranks for k in succs):
+                for s in succs:
+                    if longest_rank == 0:
+                        longest_rank = ave_comm_cost(
+                            workflow, node, s
+                        ) + task_ranks[s]
+                    else:
+                        longest_rank = max(
+                            longest_rank, ave_comm_cost(workflow, node, s)
+                            + task_ranks[s]
+                        )
+
+            if longest_rank > 0:
+                task_ranks[node] = longest_rank + node.calc_ave_runtime()
+                unranked.remove(node)
+
 
     return task_ranks
 
@@ -482,8 +474,8 @@ def attempt_allocation_on_resource(workflow, latest_predecessor_allocation,
         new_start = latest_predecessor_allocation.aft
         if m is not latest_predecessor_allocation.machine:
             data_size = \
-            workflow.graph.edges[latest_predecessor_allocation.task, task][
-                'data_size']
+                workflow.graph.edges[latest_predecessor_allocation.task, task][
+                    'data_size']
             new_start += workflow.env.calc_data_transfer_time(data_size)
         if _check_machine_availability(solution, m, new_start, task):
             available = True
