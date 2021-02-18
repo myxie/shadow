@@ -211,7 +211,8 @@ def generate_population(wf, size, seed, skip_limit):
     In the future it might be useful, in addition to checking feasibility of solution, to minimise duplicates of the population generated. Not sure about this.
     """
     population = []
-    top_sort = generate_exec_orders(wf, popsize=size, seed=seed, skip_limit=skip_limit)
+    top_sort = generate_exec_orders(wf, popsize=size, seed=seed,
+                                    skip_limit=skip_limit)
     for x in range(size):
         curr = next(top_sort)
         soln = generate_allocations(
@@ -228,24 +229,23 @@ def generate_population(wf, size, seed, skip_limit):
 # How can we test non-domination? Need to get a testing set together for our HEFT graph
 # OR WE CAN USE A DIFFERENT GRAPH :O
 
-def binary_tournament(pop, seed=DEFAULT_SEED):
+def binary_tournament(pop, compare_prob, seed=DEFAULT_SEED):
     """
     Stock standard binary tournament selection
     :param pop: population of solutions
     :param seed: Random seed value for repeatability
     :return: selected parent for crossover
     """
-    # random.seed(seed)
 
     k = 2  # BINARY tournament selection
-    best = None
     # Get two random solutions from the population
     t1, t2 = random.sample(pop, k)
-    return compare_fitness(t1, t2, [0.8, 0.2], 0.8)
+    return compare_fitness(t1, t2, [0.8, 0.2], 0.6, compare_prob)
 
 
-def compare_fitness(soln1, soln2, weights, probfit, comparison=min):
-    if len(soln1.fitness) != len(soln2.fitness) or len(weights) != len(soln1.fitness):
+def compare_fitness(soln1, soln2, weights, probfit, compare, comparison=min):
+    if len(soln1.fitness) != len(soln2.fitness) or len(weights) != len(
+            soln1.fitness):
         raise ValueError("Solutions have diferent numbers of fitness scores")
 
     fitlist = [soln1, soln2]
@@ -253,11 +253,18 @@ def compare_fitness(soln1, soln2, weights, probfit, comparison=min):
     if comparison is max:
         rev = True
 
-    fitlist.sort(key=lambda x: (x.fitness['time']*weights[0], x.fitness['cost']*(weights[1])), reverse=rev)
-    if random.random() < probfit:
+    fitlist.sort(
+        key=lambda x: (
+            x.fitness['time'] * weights[0],
+            x.fitness['cost'] * weights[1]
+        ),
+        reverse=rev
+    )
+
+    if compare < probfit:
         return fitlist[0]
     else:
-        return random.sample(fitlist,1)[0]
+        return fitlist[1]
 
 
 def crossover(parent1, parent2, workflow, seed=DEFAULT_SEED):
@@ -268,19 +275,21 @@ def crossover(parent1, parent2, workflow, seed=DEFAULT_SEED):
     1. Two parents are selected at random from population
     2. Two random points are selected from the task-assignment strings
     3. all tasks between the points are chosen as crossover points
-    4. the service allocation of the tasks within the crossover points are exchanged.
+    4. the machine allocation of the tasks within the crossover points are
+    exchanged.
     """
 
     p1, p2 = create_window(parent1, parent2, seed)
-    # We achieve the crossover by finding the 'like tasks' between the boundary and swapping
-    # Them between parents.
+    # We achieve the crossover by finding the 'like tasks'
+    # between the boundary and swapping them between parents.
     pairs = parent1.task_machine_pairs()
     # machines = copy.deepcopy(parent1.machines)
     c1, c2 = GASolution(parent1.machines), GASolution(parent2.machines)
     # c1.execution_order = copy.deepcopy(parent1.execution_order)
     # c2.execution_order = copy.deepcopy(parent2.execution_order)
 
-    crossover_tasks = [allocation.task.tid for allocation in parent1.execution_order[p1:p2]]
+    crossover_tasks = [allocation.task.tid for allocation in
+                       parent1.execution_order[p1:p2]]
     c1_crossover_m, c2_crossover_m = [], []
     # These are the machine allocations for each task/pair swap
     c1_tmp_alloc = []
@@ -321,31 +330,29 @@ def crossover(parent1, parent2, workflow, seed=DEFAULT_SEED):
     for alloc in c1_tmp_alloc:
         t = alloc.task
         m = alloc.machine
-        calc_start_finish_times(
+        ast, aft = calc_start_finish_times(
             task=t,
             machine=m,
             workflow=workflow,
-            curr_allocations=c1.list_machine_allocations(m),
             solution=c1
         )
-        alloc = Allocation(alloc.task, alloc.machine)
+        alloc = Allocation(alloc.task, alloc.machine, ast=ast, aft=aft)
         c1.allocations[m.id].append(alloc)
         c1.execution_order.append(alloc)
         c1.task_allocations[t] = alloc
         if t.aft > c1.makespan:
-            c1.makespan = t.aft
+            c1.makespan = alloc.aft
 
     for alloc in c2_tmp_alloc:
         t = alloc.task
         m = alloc.machine
-        calc_start_finish_times(
+        ast, aft = calc_start_finish_times(
             task=t,
             machine=m,
             workflow=workflow,
-            curr_allocations=c2.list_machine_allocations(m),
             solution=c2
         )
-        alloc = Allocation(alloc.task, alloc.machine)
+        alloc = Allocation(alloc.task, alloc.machine, ast=ast, aft=aft)
         c2.allocations[m.id].append(alloc)
         c2.execution_order.append(alloc)
         c2.task_allocations[t] = alloc
@@ -382,10 +389,10 @@ def mutation(solution, workflow, mutation_type='swapping', seed=None):
 
     Level 0 should have just the first task(s) - those with no indegree
     Level n should have just the final task(s) - those with no outdegree
-    """
+
 
     # Swapping mutation
-    """
+
     The swapping mutation involves mixing up the execution order of two tasks.
     This requires us to make sure we are only swapping the order of tasks 
     that are independent of each other. We are lucky because in a directed graph, 
@@ -425,7 +432,6 @@ def mutation(solution, workflow, mutation_type='swapping', seed=None):
 
     if not selected_tasks:
         return None
-
 
     t1index = alloc_order.index(t1.tid)
     t2index = alloc_order.index(t2.tid)
@@ -480,7 +486,8 @@ def mutation(solution, workflow, mutation_type='swapping', seed=None):
     # 		c1_tmp_alloc.append(nalloc)
 
     tmp_alloc = copy.deepcopy(solution.allocations)
-    tmp_alloc[selected_machine.id].sort(key=lambda alloc: alloc_order.index(alloc.task.tid))
+    tmp_alloc[selected_machine.id].sort(
+        key=lambda alloc: alloc_order.index(alloc.task.tid))
     tmp_list = []
     for m in solution.machines:
         for alloc in tmp_alloc[m.id]:
@@ -495,7 +502,6 @@ def mutation(solution, workflow, mutation_type='swapping', seed=None):
             task=t,
             machine=m,
             workflow=workflow,
-            curr_allocations=c1.list_machine_allocations(m),
             solution=c1
         )
         c1.add_allocation(alloc.task, alloc.machine, sort=False)
@@ -538,56 +544,81 @@ def calc_solution_cost(solution, workflow):
     cost = 0
     for machine in workflow.env.machines:
         for alloc in solution.list_machine_allocations(machine):
-            runtime = alloc.task.aft - alloc.task.ast
+            runtime = alloc.aft - alloc.ast
             cost += workflow.env.calc_task_cost_on_machine(machine, runtime)
     return cost
 
 
-def generate_allocations(machines, task_order, wf, seed, solution_class=GASolution):
-    soln = solution_class(machines=machines)
+def generate_allocations(machines, task_order, wf, seed,
+                         solution_class=GASolution):
+    solution = solution_class(machines=machines)
     rand_bounds = len(machines)
     random.seed(seed)
     for t in task_order:
         index = random.randint(0, RAND_BOUNDS) % rand_bounds
         m = machines[index]
-        ast, aft = calc_start_finish_times(t, m, wf, soln.list_machine_allocations(m))
+        ast, aft = calc_start_finish_times(
+            t, m, wf, solution
+        )
         solnt = copy.deepcopy(t)
-        soln.add_allocation(solnt, m)
-        if solnt.aft > soln.makespan:
-            soln.makespan = solnt.aft
+        solnt.ast = ast
+        solnt.aft = aft
+        solution.add_allocation(task=solnt, machine=m, ast=ast, aft=aft)
+        if solnt.aft > solution.makespan:
+            solution.makespan = solnt.aft
 
-    soln.makespan = soln.execution_order[-1].task.aft
-    soln.solution_cost = calc_solution_cost(soln, wf)
+    solution.solution_cost = calc_solution_cost(solution, wf)
 
-    return soln
+    return solution
 
 
-def calc_start_finish_times(task, machine, workflow, curr_allocations, solution=None):
-    # For a given solution, we have task-machine pairs in a given order
-    # This order will be based on the execution order provided by a topological sort
+def calc_start_finish_times(task, machine, workflow,
+                            solution):
+    """
+
+    Function that calculates the start and finish times for a given
+    task/machine assignment based on the current allocations provided to the
+    solution.
+
+    Parameters
+    ----------
+    task
+    machine
+    workflow
+    solution
+
+    Returns
+    -------
+
+    """
+
     st = 0
-    predecessors = workflow.graph.predecessors(task)
-    for pretask in predecessors:
-        solntask = pretask
-        if solution:
+    if solution.task_allocations:
+        predecessors = workflow.graph.predecessors(task)
+        for pretask in predecessors:
             alloc = solution.task_allocations[pretask]
-            solntask = alloc.task
-        edge_comm_cost = 0
-        if solntask.machine.id != machine.id:
-            edge_comm_cost = workflow.graph.edges[pretask, task][WORKFLOW_DATASIZE]
-        # If the finish time of the previous task is greater than st and communication cost, then we update the est
-        if solntask.aft + edge_comm_cost >= st:
-            st = solntask.aft + edge_comm_cost
-    # Also need to check what the latest current allocation is on the machine
+            # solntask = alloc.task
+            edge_comm_cost = 0
+            if alloc.machine.id != machine.id:
+                edge_comm_cost = workflow.graph.edges[pretask, task][
+                    WORKFLOW_DATASIZE]
 
-    num_alloc = len(curr_allocations)
-    if num_alloc > 0:
-        if not _check_machine_availability(workflow.solution, machine, st, task):
-            final = curr_allocations[num_alloc - 1]
-            # This is in the event that the task execution order places tasks
-            # with the same previous task on the same machine
-            if final.task.aft > st:
-                st = final.task.aft
+            # If the finish time of the previous task is greater than
+            # st and communication cost, then we update the est
+            if alloc.aft + edge_comm_cost >= st:
+                st = alloc.aft + edge_comm_cost
+
+        # Also need to check what the latest current allocation
+        # is on the machine = if it's not available, we update the time to
+        # ensure no overlap.
+        if not _check_machine_availability(
+                solution, machine, st, task
+        ):
+            final = solution.list_machine_allocations(machine)[-1]
+            # This is in the event that the task execution order
+            # places tasks with the same previous task on the same machine
+            if final.aft > st:
+                st = final.aft
 
     ast = st
     runtime = task.calc_runtime(machine)
@@ -601,11 +632,13 @@ def calc_start_finish_times(task, machine, workflow, curr_allocations, solution=
 
 def _check_machine_availability(solution, machine, start_time, task):
     for alloc in solution.list_machine_allocations(machine):
-        if alloc.task.ast <= start_time < alloc.task.aft:
+        if alloc.ast <= start_time < alloc.aft:
             return False
         # if it starts beforehand but will over-run:
-        if start_time < alloc.task.ast <= start_time + task.calculated_runtime[machine]:
+        if start_time < alloc.ast <= start_time + task.calculated_runtime[
+            machine]:
             return False
+    return True
 
 
 ###### NSGAII Specific functions #####

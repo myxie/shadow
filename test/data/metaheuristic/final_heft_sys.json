@@ -2,24 +2,20 @@
   "system": {
     "resources": {
       "cat0_m0": {
-        "flops": 7000.0
+        "flops": 7000.0,
+        "rates": 1.0,
+        "cost": 0.9
       },
       "cat1_m1": {
-        "flops": 6000.0
+        "flops": 6000.0,
+        "rates": 1.0,
+        "cost": 0.4
       },
       "cat2_m2": {
-        "flops": 11000.0
+        "flops": 11000.0,
+        "rates": 1.0,
+        "cost": 1.7
       }
-    },
-    "rates": {
-      "cat0": 1.0,
-      "cat1": 1.0,
-      "cat2": 1.0
-    },
-    "cost": {
-      "cat0": 0.9,
-      "cat1": 0.4,
-      "cat2": 1.7
     }
   }
 }

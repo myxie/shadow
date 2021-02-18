@@ -29,7 +29,9 @@ def calculate_fitness(objectives, solution):
             fitness['cost'] = (cost_fitness(solution))
         else:
             raise NotImplementedError(
-                "Objective function {0} has not been implemented".format(objective)
+                "Objective function {0} has not been implemented".format(
+                    objective
+                )
             )
 
     return fitness
@@ -47,7 +49,7 @@ def cost_fitness(solution):
     for machine in solution.machines:
         tmpcost = 0.0
         for allocation in solution.list_machine_allocations(machine):
-            runtime = allocation.task.aft - allocation.task.ast
+            runtime = allocation.aft - allocation.ast
             tmpcost += runtime * machine.cost
         cost += tmpcost
     return cost

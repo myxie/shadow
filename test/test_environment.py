@@ -16,10 +16,11 @@ import unittest
 from test.config import test_environment_data
 import os
 from shadow.models.environment import Environment
-# Tests for /algorithms/heuristic.py
 
+"""
+Tests for models.environment.Environment
+"""
 
-# Testing heft algorithms in heuristics.py
 
 class TestEnvironmentInit(unittest.TestCase):
 	def setUp(self) -> None:
@@ -28,7 +29,8 @@ class TestEnvironmentInit(unittest.TestCase):
 		pass
 
 	def test_init(self):
-		self.assertTrue(self.env.has_comp)
+
+		pass
 
 	def tearDown(self) -> None:
 		pass

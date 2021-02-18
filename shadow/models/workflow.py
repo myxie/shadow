@@ -110,8 +110,12 @@ class Workflow(object):
         self.graph = nx.relabel_nodes(self.graph, mapping, copy=False)
         self.tasks = self.graph.nodes
         self.edges = self.graph.edges
-        self.env = None # Initialised when we 'add_environment'
-        self.solution = None  # Solution is dependent on an environment
+
+        # Initialised when we 'add_environment'
+        self.env = None
+        # Solution is dependent on an environment
+        self.solution = None
+
         # This lets us know when reading the graph if 'comp' attribute
         # in the Networkx graph is time or FLOPs based
         self._time = wfconfig['header']['time']
@@ -149,7 +153,6 @@ class Workflow(object):
                 task.calculated_runtime = dict(zip(machines, runtime_list))
             return 0
         # Use compute provided by system values to calculate the time taken
-
         else:
             for m in self.env.machines:
                 for task in self.tasks:
@@ -157,10 +160,8 @@ class Workflow(object):
                     task.calculated_runtime[m] = int(
                         self.env.calc_task_runtime_on_machine(m, comp)
                     )
-            # self.tasks[node]['comp']
             # TODO Use rates from environment in calcuation; for the time
             #  being rates are specified in the graph
-
             return 0
 
     def sort_tasks(self, sort_type):

@@ -74,6 +74,13 @@ def pheft(workflow):
 
 
 def fcfs(workflow, greedy=True, seed=None):
+    """
+    Implementation of First Come First Serve Algorithm
+    :param workflow:
+    :param greedy:
+    :param seed:
+    :return:
+    """
     if workflow.env is None:
         raise RuntimeError("Workflow environment is not initialised")
     solution = fcfs_allocation(workflow, greedy, seed)

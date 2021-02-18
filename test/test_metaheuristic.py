@@ -109,9 +109,12 @@ class TestPopulationGeneration(unittest.TestCase):
 	# self.assertAlmostEqual(soln.solution_cost, 110.6, delta=0.01)
 
 	def test_pop_gen(self):
-		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
+		pop = generate_population(
+			self.wf, size=25, seed=self.SEED, skip_limit=5
+		)
 		soln1 = pop[0]
-		# First solution should be the same solution we have been working with previously.
+		# First solution should be the same solution we
+		# have been working with previously.
 		self.assertEqual(107, soln1.makespan)
 		soln2 = pop[2]
 		self.assertNotEqual(114, soln2.makespan)
@@ -134,8 +137,7 @@ class TestPopulationGeneration(unittest.TestCase):
 		for p in pop:
 			print(p.nondom_rank)
 
-	# Playground test to print some values for the test data set
-	# @unittest.skip
+
 	def test_create_sample_pop(self):
 		logger.debug("HEFT makespan {0}".format(heft(self.wf).makespan))
 		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
@@ -167,8 +169,16 @@ class TestPopulationGeneration(unittest.TestCase):
 class TestGASelectionMethods(unittest.TestCase):
 
 	def setUp(self):
-		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['topcuoglu_graph']))
-		env = Environment("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['graph_sys_with_costs']))
+		self.wf = Workflow(
+			"{0}/{1}".format(
+				current_dir, cfg.test_metaheuristic_data['topcuoglu_graph']
+			)
+		)
+		env = Environment(
+			"{0}/{1}".format(
+				current_dir, cfg.test_metaheuristic_data['graph_sys_with_costs']
+			)
+		)
 		self.wf.add_environment(env)
 		self.SEED = 10
 
@@ -176,14 +186,23 @@ class TestGASelectionMethods(unittest.TestCase):
 		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
 		for soln in pop:
 			soln.fitness = calculate_fitness(['time', 'cost'], soln)
+		compare_prob = 0.5
 		random.seed(self.SEED)
-		parent1 = binary_tournament(pop)
+		parent1 = binary_tournament(pop,compare_prob,self.SEED)
 		logger.debug(parent1.execution_order)
-		parent2 = binary_tournament(pop)
+		compare_prob = 0.7
+		parent2 = binary_tournament(pop,compare_prob,self.SEED)
+		# parent2 = binary_tournament(pop, self.SEED)
 		logger.debug(parent2.execution_order)
-		self.assertSequenceEqual([0, 5, 3, 4, 2, 1, 6, 8, 7, 9], [t.task.tid for t in parent1.execution_order])
+		self.assertSequenceEqual(
+			[0, 5, 3, 4, 2, 1, 6, 8, 7, 9],
+			[t.task.tid for t in parent1.execution_order]
+		)
 		logger.debug("Fitness: {0}".format(parent1.fitness))
-		self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.task.tid for t in parent2.execution_order])
+		self.assertSequenceEqual(
+			[0, 5, 4, 1, 3, 2, 8, 6, 7, 9],
+			[t.task.tid for t in parent2.execution_order]
+		)
 		logger.debug("Fitness: {0}".format(parent2.fitness))
 
 
@@ -205,16 +224,23 @@ class TestGASelectionMethods(unittest.TestCase):
 		plt.show()
 
 	def test_crossover(self):
-		pop = generate_population(self.wf, size=50, seed=self.SEED, skip_limit=5)
+		pop = generate_population(self.wf, size=25, seed=self.SEED,
+								  skip_limit=5)
 		for soln in pop:
 			soln.fitness = calculate_fitness(['time', 'cost'], soln)
 
 		random.seed(self.SEED)
 
 		p1 = binary_tournament(pop)
-		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9], [t.task.tid for t in p1.execution_order])
+		self.assertSequenceEqual(
+			[0, 5, 3, 2, 1, 4, 7, 8, 6, 9],
+			[t.task.tid for t in p1.execution_order]
+		)
 		p2 = binary_tournament(pop)
-		self.assertSequenceEqual([0, 5, 4, 1, 3, 2, 8, 6, 7, 9], [t.task.tid for t in p2.execution_order])
+		self.assertSequenceEqual(
+			[0, 5, 4, 1, 3, 2, 8, 6, 7, 9],
+			[t.task.tid for t in p2.execution_order]
+		)
 		c1, c2 = crossover(p1, p2, self.wf)
 		p1order = [t.task.tid for t in p1.execution_order]
 		c1order = [t.task.tid for t in c1.execution_order]
@@ -252,14 +278,16 @@ class TestGASelectionMethods(unittest.TestCase):
 
 
 	def test_mutation(self):
-		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
+		pop = generate_population(self.wf, size=50, seed=self.SEED,
+								  skip_limit=5)
 		for soln in pop:
 			soln.fitness = calculate_fitness(['time', 'cost'], soln)
 
 		random.seed(self.SEED)
 
-		p1 = binary_tournament(pop)
-		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9], [t.task.tid for t in p1.execution_order])
+		p1 = binary_tournament(pop,0.5)
+		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9],
+								 [t.task.tid for t in p1.execution_order])
 
 		mutated_child = mutation(p1, self.wf,'swapping',seed=self.SEED)
 		mutated_order_swapped = [0,5,3,1,7,4,2,8,6,9]
@@ -295,8 +323,8 @@ class TestGASelectionMethods(unittest.TestCase):
 			parent1= None
 			parent2 = None
 			while len(new_pop) < len(pop):
-				p1 = binary_tournament(pop)
-				p2 = binary_tournament(pop)
+				p1 = binary_tournament(pop,random.random())
+				p2 = binary_tournament(pop,random.random())
 				parent1 = p1
 				parent2 = p2
 				if random.random() < crossover_probability:
