@@ -57,12 +57,12 @@ class TestPopulationGeneration(unittest.TestCase):
 		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['topcuoglu_graph']))
 		env = Environment("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['graph_sys_with_costs']))
 		self.wf.add_environment(env)
-		self.SEED = 10
+		self.rng = np.random.default_rng(40)
 
 	def test_generate_exec_orders(self):
 		# Calling generate_exec_orders with a population of 1 should return a simple top sort
-		top_sort = generate_exec_orders(self.wf, popsize=4, seed=self.SEED, skip_limit=1)
-		# The result of running the above with self.SEED = 10, no skips is:
+		top_sort = generate_exec_orders(self.wf, popsize=4, rng=self.rng, skip_limit=1)
+		# The result of running the above with self.rng = 10, no skips is:
 		# The first should always be 'order'
 		order = [0, 5, 4, 3, 2, 6, 1, 8, 7, 9]
 		curr = next(top_sort)
@@ -81,11 +81,11 @@ class TestPopulationGeneration(unittest.TestCase):
 
 	def test_generate_allocations(self):
 		# Generate allocations creates pairs. Solution is implied in allocation?
-		top_sort = generate_exec_orders(self.wf, popsize=4, seed=self.SEED, skip_limit=1)
+		top_sort = generate_exec_orders(self.wf, popsize=4, rng=self.rng, skip_limit=1)
 		curr = next(top_sort)
 		machines = list(self.wf.env.machines)
 		# Solution should contain allocations between tasks and machines
-		soln = generate_allocations(machines, curr, self.wf, self.SEED)
+		soln = generate_allocations(machines, curr, self.wf, self.rng)
 		# Test seed is 10; RANDBOUNDS is 1000
 		# first should be 0,0,1,2,0
 		# For each Task in soln, we will have an allocation
@@ -110,7 +110,7 @@ class TestPopulationGeneration(unittest.TestCase):
 
 	def test_pop_gen(self):
 		pop = generate_population(
-			self.wf, size=25, seed=self.SEED, skip_limit=5
+			self.wf, size=25, rng=self.rng, skip_limit=5
 		)
 		soln1 = pop[0]
 		# First solution should be the same solution we
@@ -129,7 +129,7 @@ class TestPopulationGeneration(unittest.TestCase):
 
 	@unittest.skip
 	def test_nondomsort(self):
-		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=100)
+		pop = generate_population(self.wf, size=4, rng=self.rng, skip_limit=100)
 		seed = 10
 		objectives = []
 		# print(pop)
@@ -140,7 +140,7 @@ class TestPopulationGeneration(unittest.TestCase):
 
 	def test_create_sample_pop(self):
 		logger.debug("HEFT makespan {0}".format(heft(self.wf).makespan))
-		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
+		pop = generate_population(self.wf, size=25, rng=self.rng, skip_limit=5)
 		for soln in pop:
 			self.assertEqual(soln.execution_order[-1].task.aft,soln.makespan)
 		logger.debug("GA Initial Population")
@@ -180,19 +180,19 @@ class TestGASelectionMethods(unittest.TestCase):
 			)
 		)
 		self.wf.add_environment(env)
-		self.SEED = 10
+		self.rng = np.random.default_rng(40)
 
 	def test_binary_tournament(self):
-		pop = generate_population(self.wf, size=25, seed=self.SEED, skip_limit=5)
+		pop = generate_population(self.wf, size=25, rng=self.rng, skip_limit=5)
 		for soln in pop:
 			soln.fitness = calculate_fitness(['time', 'cost'], soln)
 		compare_prob = 0.5
-		random.seed(self.SEED)
-		parent1 = binary_tournament(pop,compare_prob,self.SEED)
+		random.seed(self.rng)
+		parent1 = binary_tournament(pop,compare_prob,self.rng)
 		logger.debug(parent1.execution_order)
 		compare_prob = 0.7
-		parent2 = binary_tournament(pop,compare_prob,self.SEED)
-		# parent2 = binary_tournament(pop, self.SEED)
+		parent2 = binary_tournament(pop,compare_prob,self.rng)
+		# parent2 = binary_tournament(pop, self.rng)
 		logger.debug(parent2.execution_order)
 		self.assertSequenceEqual(
 			[0, 5, 3, 4, 2, 1, 6, 8, 7, 9],
@@ -204,32 +204,32 @@ class TestGASelectionMethods(unittest.TestCase):
 			[t.task.tid for t in parent2.execution_order]
 		)
 		logger.debug("Fitness: {0}".format(parent2.fitness))
+		#
+		#
+		# fig, ax = plt.subplots()
+		# x = [soln.fitness['time'] for soln in pop]
+		# y = [soln.fitness['cost'] for soln in pop]
+		# ax.set_xlim([90,200])
+		# ax.set_ylim([100,170])
+		# ax.grid(True)
+		# ax.scatter(x, y, c='red')
+		# ax.set_axisbelow(True)
+		# selectedx = [parent1.fitness['time'], parent2.fitness['time']]
+		# selectedy = [parent1.fitness['cost'], parent2.fitness['cost']]
+		# ax.scatter(selectedx, selectedy, c='blue')
+		# ax.legend()
+		# plt.xlabel('Solution Runtime')
+		# plt.ylabel('Solution execution cost binary')
 
-
-		fig, ax = plt.subplots()
-		x = [soln.fitness['time'] for soln in pop]
-		y = [soln.fitness['cost'] for soln in pop]
-		ax.set_xlim([90,200])
-		ax.set_ylim([100,170])
-		ax.grid(True)
-		ax.scatter(x, y, c='red')
-		ax.set_axisbelow(True)
-		selectedx = [parent1.fitness['time'], parent2.fitness['time']]
-		selectedy = [parent1.fitness['cost'], parent2.fitness['cost']]
-		ax.scatter(selectedx, selectedy, c='blue')
-		ax.legend()
-		plt.xlabel('Solution Runtime')
-		plt.ylabel('Solution execution cost binary')
-
-		plt.show()
+		# plt.show()
 
 	def test_crossover(self):
-		pop = generate_population(self.wf, size=25, seed=self.SEED,
+		pop = generate_population(self.wf, size=25, rng=self.rng,
 								  skip_limit=5)
 		for soln in pop:
 			soln.fitness = calculate_fitness(['time', 'cost'], soln)
 
-		random.seed(self.SEED)
+		random.seed(self.rng)
 
 		p1 = binary_tournament(pop)
 		self.assertSequenceEqual(
@@ -238,7 +238,7 @@ class TestGASelectionMethods(unittest.TestCase):
 		)
 		p2 = binary_tournament(pop)
 		self.assertSequenceEqual(
-			[0, 5, 4, 1, 3, 2, 8, 6, 7, 9],
+	[0, 5, 4, 1, 3, 2, 8, 6, 7, 9],
 			[t.task.tid for t in p2.execution_order]
 		)
 		c1, c2 = crossover(p1, p2, self.wf)
@@ -278,18 +278,18 @@ class TestGASelectionMethods(unittest.TestCase):
 
 
 	def test_mutation(self):
-		pop = generate_population(self.wf, size=50, seed=self.SEED,
+		pop = generate_population(self.wf, size=25, rng=self.rng,
 								  skip_limit=5)
 		for soln in pop:
 			soln.fitness = calculate_fitness(['time', 'cost'], soln)
 
-		random.seed(self.SEED)
+		random.seed(self.rng)
 
-		p1 = binary_tournament(pop,0.5)
+		p1 = binary_tournament(pop,0.6)
 		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9],
 								 [t.task.tid for t in p1.execution_order])
 
-		mutated_child = mutation(p1, self.wf,'swapping',seed=self.SEED)
+		mutated_child = mutation(p1, self.wf,'swapping',rng=self.rng)
 		mutated_order_swapped = [0,5,3,1,7,4,2,8,6,9]
 		self.assertSequenceEqual(mutated_order_swapped, [alloc.task.tid for alloc in mutated_child.execution_order])
 		selected_machine = None
@@ -305,7 +305,7 @@ class TestGASelectionMethods(unittest.TestCase):
 		crossover_probability = 0.5
 		mutation_probability = 0.4
 		popsize = 25
-		pop = generate_population(self.wf, size=popsize,seed=self.SEED, skip_limit=5)
+		pop = generate_population(self.wf, size=popsize,rng=self.rng, skip_limit=5)
 		for soln in pop:
 			soln.fitness = calculate_fitness(['time','cost'],soln)
 
@@ -317,7 +317,7 @@ class TestGASelectionMethods(unittest.TestCase):
 		generations.append((x,y))
 		parents1 = []
 		parents2 = []
-		random.seed(self.SEED)
+		random.seed(self.rng)
 		for gen in range(total_generations):
 			new_pop = []
 			parent1= None
@@ -332,7 +332,7 @@ class TestGASelectionMethods(unittest.TestCase):
 					new_pop.append(c1)
 					new_pop.append(c2)
 				elif random.random() < mutation_probability:
-					c1 = mutation(p1, self.wf, 'swapping',seed=self.SEED)
+					c1 = mutation(p1, self.wf, 'swapping',rng=self.rng)
 					if c1 is None:
 						# The mutation didn't occur due to selection issue
 						continue
@@ -392,10 +392,10 @@ class TestNSGAIIMethods(unittest.TestCase):
 		self.wf = Workflow("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['topcuoglu_graph']))
 		env = Environment("{0}/{1}".format(current_dir, cfg.test_metaheuristic_data['graph_sys_with_costs']))
 		self.wf.add_environment(env)
-		self.SEED = 10
+		self.rng = 10
 
 		# These two are generated in the above tests, so we can garauntee their correctness
 	def test_dominates(self):
-		pop = generate_population(self.wf, size=4, seed=self.SEED, skip_limit=100)
+		pop = generate_population(self.wf, size=4, rng=self.rng, skip_limit=100)
 
 # This gives us 4 solutions with which to play

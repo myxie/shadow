@@ -201,17 +201,18 @@ def nsga2(wf, seed, generations=100, popsize=100):
 ################################################################################
 ################################################################################
 
-def generate_population(wf, size, seed, skip_limit):
+def generate_population(wf, size, rng, skip_limit):
     """
     task_assign[0] is the resource to which Task0 is assigned
     task_order[0] is the task that will be executed first
 
     each 'solution' should be a tuple of a task-assign and exec-order solution
 
-    In the future it might be useful, in addition to checking feasibility of solution, to minimise duplicates of the population generated. Not sure about this.
+    In the future it might be useful, in addition to checking feasibility of solution,
+    to minimise duplicates of the population generated. Not sure about this.
     """
     population = []
-    top_sort = generate_exec_orders(wf, popsize=size, seed=seed,
+    top_sort = generate_exec_orders(wf, popsize=size, rng=rng,
                                     skip_limit=skip_limit)
     for x in range(size):
         curr = next(top_sort)
@@ -219,7 +220,7 @@ def generate_population(wf, size, seed, skip_limit):
             machines=wf.env.machines,
             task_order=(curr),
             wf=wf,
-            seed=seed
+            rng=rng
         )
         population.append(soln)
 
@@ -382,7 +383,7 @@ def create_window(parent1, parent2, seed=DEFAULT_SEED):
     return p1, p2
 
 
-def mutation(solution, workflow, mutation_type='swapping', seed=None):
+def mutation(solution, workflow, mutation_type='swapping', rng=None):
     """
     Mutation requires us to separate the nodes into levels of nodes that are
     independent of each other with respect to precedence:
@@ -400,7 +401,6 @@ def mutation(solution, workflow, mutation_type='swapping', seed=None):
     we cannot swap because that breaks precedence (so we find another!).  
     """
 
-    random.seed(seed)
     task_order = [alloc.task.tid for alloc in solution.execution_order]
 
     # Calculate random ints
@@ -519,20 +519,19 @@ def peek(iterable):
     return first, itertools.chain([first], iterable)
 
 
-def generate_exec_orders(wf, popsize, seed, skip_limit):
+def generate_exec_orders(wf, popsize, rng, skip_limit):
     top_sort_list = []
     gen = nx.all_topological_sorts(G=wf.graph)
     retval = peek(gen)
     if retval is None:
         return None
 
-    random.seed(seed)
     while len(top_sort_list) < popsize:
         gen = nx.all_topological_sorts(G=wf.graph)
         for top in gen:
             # 'skip through' a number of different top sorts to ensure we are
             # getting a diverse range.
-            skip = random.randint(0, RAND_BOUNDS) % skip_limit
+            skip = rng.integers(low=0, high=RAND_BOUNDS) % skip_limit
             for x in range(skip):
                 next(gen)
             yield top
@@ -549,13 +548,12 @@ def calc_solution_cost(solution, workflow):
     return cost
 
 
-def generate_allocations(machines, task_order, wf, seed,
+def generate_allocations(machines, task_order, wf, rng,
                          solution_class=GASolution):
     solution = solution_class(machines=machines)
     rand_bounds = len(machines)
-    random.seed(seed)
     for t in task_order:
-        index = random.randint(0, RAND_BOUNDS) % rand_bounds
+        index = rng.integers(low=0, high=RAND_BOUNDS) % rand_bounds
         m = machines[index]
         ast, aft = calc_start_finish_times(
             t, m, wf, solution
