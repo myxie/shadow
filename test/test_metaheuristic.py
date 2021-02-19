@@ -37,10 +37,12 @@ from shadow.algorithms.metaheuristic import generate_population, \
 	mutation
 
 
+
 from shadow.algorithms.fitness import calculate_fitness
 from shadow.models.workflow import Workflow, Task
 from shadow.models.environment import Environment
 from shadow.algorithms.heuristic import heft
+from shadow.algorithms.metaheuristic import GASolution
 
 current_dir = os.path.abspath('.')
 
@@ -60,33 +62,110 @@ class TestPopulationGeneration(unittest.TestCase):
 		self.rng = np.random.default_rng(40)
 
 	def test_generate_exec_orders(self):
-		# Calling generate_exec_orders with a population of 1 should return a simple top sort
+		"""
+		Expected results from creating a topological sort of `self.wf` for a
+		given population size. The `skip_limit` in this example is 1,
+		which means that if we were to generate a population of execution
+		orders, we would go through all topological sorts without skipping any.
+
+		Population size: 4
+		Skip limit - 1
+		rng = default_rng(40) (This is specified in setUp).
+
+		With `skip_limit=1`, the first top_sort created will be:
+
+			[0, 5, 4, 3, 2, 6, 1, 8, 7, 9]
+
+		Test 1: Check to make sure the expected topological sort generated is
+		the one we get from `generate_exec_orders`
+
+		Test 2: Check that the next topological sort is different - that is,
+		we are not generating the same TopSort over and over again.
+
+		Returns
+		-------
+		Pass/Fail
+		"""
+
+		# Test 1
 		top_sort = generate_exec_orders(self.wf, popsize=4, rng=self.rng, skip_limit=1)
-		# The result of running the above with self.rng = 10, no skips is:
-		# The first should always be 'order'
 		order = [0, 5, 4, 3, 2, 6, 1, 8, 7, 9]
 		curr = next(top_sort)
-		# Check that a comparison between top_sort and the correct order is correct
 		sum = 0
 		for i in range(len(order)):
 			if curr[i].tid != order[i]:
 				sum += 1
 		self.assertEqual(sum, 0)
 
+		# Test 2
 		curr = next(top_sort)
 		for i in range(len(order)):
 			if curr[i].tid != order[i]:
 				sum += 1
 		self.assertGreater(sum, 0)
 
-	def test_generate_allocations(self):
-		# Generate allocations creates pairs. Solution is implied in allocation?
-		top_sort = generate_exec_orders(self.wf, popsize=4, rng=self.rng, skip_limit=1)
+	def test_calc_start_finish_time(self):
+		"""
+		Given a 'randomly' generated Solution, ensure that we calculate the
+		correct start and finish times for the random allocation.
+
+		Test 1: Duplicates `test_generate_exec_orders` to confirm RNG returns
+		the same values for the same function parameters.
+
+		Test 2: Initial conditions, where there are no allocations already in
+		the solution
+
+
+		Returns
+		-------
+		Pass/Fail
+		"""
+		
+		# Test 1
+		top_sort = generate_exec_orders(
+			self.wf, popsize=4, rng=self.rng, skip_limit=1
+		)
 		curr = next(top_sort)
+		self.assertListEqual(
+			[x.tid for x in curr],
+			[0, 5, 4, 3, 2, 6, 1, 8, 7, 9]
+		)
+		machine = 0
+
+		solution = GASolution
+		ast, aft = calc_start_finish_times(
+			curr[0], 0, self.wf, solution
+		)
+
+	def test_generate_allocations(self):
+		"""
+		After generating an execution order, we need to allocate tasks to
+		machines whilst maintaining precedence constraints.
+
+		Test 1: Duplicates `test_generate_exec_orders`
+
+
+		Test2: Generate a list of allocations, and creates a set from this
+		list of IDs. This compare to a list of sets; the difference between
+		each set (which represents task-machin pairings) should be 0.
+
+
+		Returns
+		-------
+
+		"""
+		top_sort = generate_exec_orders(
+			self.wf, popsize=4, rng=self.rng, skip_limit=1
+		)
+		curr = next(top_sort)
+		self.assertListEqual(
+			[x.tid for x in curr],
+			[0, 5, 4, 3, 2, 6, 1, 8, 7, 9]
+		)
 		machines = list(self.wf.env.machines)
 		# Solution should contain allocations between tasks and machines
 		soln = generate_allocations(machines, curr, self.wf, self.rng)
-		# Test seed is 10; RANDBOUNDS is 1000
+
 		# first should be 0,0,1,2,0
 		# For each Task in soln, we will have an allocation
 		# e.g. tid=0, m='cat0_m0'.
@@ -95,14 +174,14 @@ class TestPopulationGeneration(unittest.TestCase):
 		# task_alloc_order = [0, 1, 4, 5, 2, 6, 8, 3, 7, 9]
 		# task_alloc_order = [0, 5, 4, 1, 2, 8, 3, 7, 9]
 		alloc_sets = [
-			{0, 5, 2, 6},
-			{4, 1, 7},
-			{3, 8, 9},
+			{0, 5, 4, 8,7},
+			{6,9},
+			{3, 2, 1},
 		]
 		i = 0
 		for machine in machines:
 			x = len(alloc_sets[i] & set(soln.list_machine_allocations(machine)))
-			self.assertEqual(x, 0)  # The difference between the sets should be 0
+			self.assertEqual(x, 0)
 
 		self.assertEqual(soln.makespan, 107)
 
@@ -154,7 +233,7 @@ class TestPopulationGeneration(unittest.TestCase):
 			soln.fitness = calculate_fitness(['time', 'cost'], soln)
 		fig, ax = plt.subplots()
 		ax.set_xlim([90,200])
-		ax.set_ylim([100,170])
+		ax.set_ylim([100,250])
 		x = [soln.fitness['time'] for soln in pop]
 		y = [soln.fitness['cost'] for soln in pop]
 		ax.scatter(x, y, c='red')
@@ -187,7 +266,6 @@ class TestGASelectionMethods(unittest.TestCase):
 		for soln in pop:
 			soln.fitness = calculate_fitness(['time', 'cost'], soln)
 		compare_prob = 0.5
-		random.seed(self.rng)
 		parent1 = binary_tournament(pop,compare_prob,self.rng)
 		logger.debug(parent1.execution_order)
 		compare_prob = 0.7
@@ -285,7 +363,7 @@ class TestGASelectionMethods(unittest.TestCase):
 
 		random.seed(self.rng)
 
-		p1 = binary_tournament(pop,0.6)
+		p1 = binary_tournament(pop,self.rng, 0.6)
 		self.assertSequenceEqual([0, 5, 3, 2, 1, 4, 7, 8, 6, 9],
 								 [t.task.tid for t in p1.execution_order])
 
@@ -305,7 +383,12 @@ class TestGASelectionMethods(unittest.TestCase):
 		crossover_probability = 0.5
 		mutation_probability = 0.4
 		popsize = 25
-		pop = generate_population(self.wf, size=popsize,rng=self.rng, skip_limit=5)
+		pop = generate_population(
+			self.wf,
+			size=popsize,
+			rng=self.rng,
+			skip_limit=5
+		)
 		for soln in pop:
 			soln.fitness = calculate_fitness(['time','cost'],soln)
 
@@ -317,14 +400,13 @@ class TestGASelectionMethods(unittest.TestCase):
 		generations.append((x,y))
 		parents1 = []
 		parents2 = []
-		random.seed(self.rng)
 		for gen in range(total_generations):
 			new_pop = []
 			parent1= None
 			parent2 = None
 			while len(new_pop) < len(pop):
-				p1 = binary_tournament(pop,random.random())
-				p2 = binary_tournament(pop,random.random())
+				p1 = binary_tournament(pop,0.5,self.rng)
+				p2 = binary_tournament(pop,0.5,self.rng)
 				parent1 = p1
 				parent2 = p2
 				if random.random() < crossover_probability:
@@ -365,8 +447,8 @@ class TestGASelectionMethods(unittest.TestCase):
 			logger.info(soln.fitness)
 
 		fig, ax = plt.subplots()
-		ax.set_xlim([90, 200])
-		ax.set_ylim([130, 170])
+		ax.set_xlim([80, 250])
+		ax.set_ylim([100, 250])
 		scatter = ax.scatter(generations[0][0], generations[0][1],c='blue',alpha=.2, label='New Pop')
 		parent_scatter = ax.scatter(parents1[0][0], parents1[0][1], c='red', alpha=0.8, label='Parent 1')
 		parent2_scatter = ax.scatter(parents2[0][0], parents1[0][1], c='red', alpha=0.8, label = 'Parent 2')

@@ -230,7 +230,7 @@ def generate_population(wf, size, rng, skip_limit):
 # How can we test non-domination? Need to get a testing set together for our HEFT graph
 # OR WE CAN USE A DIFFERENT GRAPH :O
 
-def binary_tournament(pop, compare_prob, seed=DEFAULT_SEED):
+def binary_tournament(pop,prob_fitness, rng):
     """
     Stock standard binary tournament selection
     :param pop: population of solutions
@@ -240,11 +240,12 @@ def binary_tournament(pop, compare_prob, seed=DEFAULT_SEED):
 
     k = 2  # BINARY tournament selection
     # Get two random solutions from the population
-    t1, t2 = random.sample(pop, k)
-    return compare_fitness(t1, t2, [0.8, 0.2], 0.6, compare_prob)
+    t1, t2 = rng.choice(pop, k)
+    # t1, t2 = random.sample(pop, k)
+    return compare_fitness(t1, t2, [0.8, 0.2], prob_fitness,rng)
 
 
-def compare_fitness(soln1, soln2, weights, probfit, compare, comparison=min):
+def compare_fitness(soln1, soln2, weights, probfit, rng,comparison=min):
     if len(soln1.fitness) != len(soln2.fitness) or len(weights) != len(
             soln1.fitness):
         raise ValueError("Solutions have diferent numbers of fitness scores")
@@ -262,7 +263,7 @@ def compare_fitness(soln1, soln2, weights, probfit, compare, comparison=min):
         reverse=rev
     )
 
-    if compare < probfit:
+    if rng.random() < probfit:
         return fitlist[0]
     else:
         return fitlist[1]
@@ -537,8 +538,6 @@ def generate_exec_orders(wf, popsize, rng, skip_limit):
             yield top
 
 
-# return top_sort_list
-
 def calc_solution_cost(solution, workflow):
     cost = 0
     for machine in workflow.env.machines:
@@ -550,6 +549,7 @@ def calc_solution_cost(solution, workflow):
 
 def generate_allocations(machines, task_order, wf, rng,
                          solution_class=GASolution):
+
     solution = solution_class(machines=machines)
     rand_bounds = len(machines)
     for t in task_order:
@@ -580,9 +580,16 @@ def calc_start_finish_times(task, machine, workflow,
 
     Parameters
     ----------
-    task
-    machine
-    workflow
+    task : shadow.workflow.Task obj
+        The task for which we are identifying the start and finish time.
+        This is mainly used only to retrieve the task predecessors.
+
+    machine : shadow.models.environment.Machine
+        The machine selected for allocation
+
+    workflow : shaodw.models.workflow.Worklflow
+        The workflow we have generated and are establishing random machine
+        allocations for. Workflow objects store a NetworkX task in them
     solution
 
     Returns
