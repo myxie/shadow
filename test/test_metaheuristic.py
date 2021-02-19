@@ -120,7 +120,7 @@ class TestPopulationGeneration(unittest.TestCase):
 		-------
 		Pass/Fail
 		"""
-		
+
 		# Test 1
 		top_sort = generate_exec_orders(
 			self.wf, popsize=4, rng=self.rng, skip_limit=1
