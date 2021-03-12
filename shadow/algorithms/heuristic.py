@@ -89,7 +89,23 @@ def fcfs(workflow, greedy=True, seed=None):
 
 def minimin(workflow):
     """Real-Time Task Mapping and Scheduling for Collaborative
-    In-Network Processingin DVS-Enabled Wireless Sensor Networks"""
+    In-Network Processingin DVS-Enabled Wireless Sensor Networks
+
+    Procedure to identifying the meta-tasks:
+    Topological sort
+    Create a set of sets
+    For each node,
+        If no parent --> update first set
+        If parent
+            For each set
+                If parent in set
+                    Add node to set below
+
+    Now we will have something like:
+    {{0}, {1,2,3},{4,5,6},{7},{8,9},{10}}
+    """
+
+
     pass
 
 

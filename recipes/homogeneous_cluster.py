@@ -26,6 +26,7 @@ HETEROGENEITY = [1.0]  # Homogeneous
 NUM_MACHINES = 400
 SPEC_RANGE = [(50,100)]
 MAGNITUDE = 'giga'
+
 SYSTEM_OUTPUT_PATH = 'recipes/routput/basic_spec-{0}.json'.format(
     NUM_MACHINES
 )

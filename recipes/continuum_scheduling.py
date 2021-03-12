@@ -22,13 +22,12 @@ with 40 machines.
 import pandas as pd
 import seaborn as sns
 
-
 from shadow.models.workflow import Workflow
 from shadow.models.environment import Environment
 from shadow.algorithms.heuristic import heft, fcfs
 
-
-df = pd.DataFrame(columns=["time", "channels","algorithm","diff"])
+# df = pd.DataFrame(columns=["time", "channels", "algorithm", "diff"])
+df = pd.DataFrame()
 WORKFLOW = "routput/shadow_Continuum_ChannelSplit_10.json"
 CLUSTER = "routput/system_spec_40_200-400_1.0"
 
@@ -64,13 +63,13 @@ for x in range(10, 100, 10):
 
     soln2 = heft(wf_heft)
     heft_res = soln2.makespan
-    diff = abs(fcfs_res-heft_res)
+    diff = abs(fcfs_res - heft_res)
     values = {"time": fcfs_res, "channels": x, "algorithm": "fcfs",
-              "diff":diff}
+              "diff": diff}
     row_to_add = pd.Series(values, name=x)
     df = df.append(row_to_add)
     values = {"time": heft_res, "channels": x, "algorithm": "heft",
-              "diff":diff}
+              "diff": diff}
     row_to_add = pd.Series(values, name=x)
     df = df.append(row_to_add)
 
@@ -78,8 +77,9 @@ print(df)
 df.to_pickle("continuum_pickle.pkl")
 sns.set_style("darkgrid")
 df.time = df.time.astype(float)
-df.channels=df.channels.astype(float)
+df.channels = df.channels.astype(float)
 import matplotlib.pyplot as plt
+
 sns.lineplot(x="channels", y="time", hue="algorithm", data=df)
 plt.show()
 plt.savefig("channels.png")

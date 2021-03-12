@@ -81,13 +81,6 @@ for x in range(10,110,10):
         channel_graph.nodes[node]['comp'] = 100000
     for edge in channel_graph.edges():
         channel_graph.edges[edge]['data_size'] = 0
-    # glist = []
-    # for x in range(0,len(children)):
-    #     ng = nx.DiGraph()
-    #     ng.add_nodes_from([z for z in range(i, i + len(children))])
-    #     ng.add_edges_from([(z, z + 1) for z in range(i, i+len(children)-1)])
-    #     glist.append(ng)
-    #     i += len(children)
 
     glistgraph = nx.compose_all(graph_list)
     final = nx.compose(glistgraph, channel_graph)
