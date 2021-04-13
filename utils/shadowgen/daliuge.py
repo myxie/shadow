@@ -154,6 +154,7 @@ def _daliuge_to_nx(input_file):
 
         for val in graphdict:
             if 'app' in val.keys():
+                # There is a known bug in DALiuGE about this.
                 if val['app'] == "dlg.apps.simple.SleepApp":
                     continue
             if 'outputs' in val:

@@ -247,10 +247,10 @@ def calc_est(workflow, task, machine, solution):
         # If task isn't on the same processor, there is a transfer cost
         alloc = solution.task_allocations[pretask]
         pre_machine_alloc = alloc.machine
-        # rate = workflow.system['data_rate'][pre_processor][machine]
-        if pre_machine_alloc != machine:  # and rate > 0:
+        rate = workflow.env.system_bandwith
+        if pre_machine_alloc != machine and rate > 0:
             comm_cost = int(
-                workflow.graph.edges[pretask, task]['data_size'])  # / rate)
+                workflow.graph.edges[pretask, task]['data_size'] / rate)
         else:
             comm_cost = 0
 

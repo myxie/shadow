@@ -79,6 +79,8 @@ class Environment(object):
             dconfig = config
             if ENV_RESOURCE in dconfig[ENV_SYS]:
                 resources = dconfig[ENV_SYS][ENV_RESOURCE]
+            if ENV_BANDWIDTH in dconfig[ENV_SYS]:
+                bandwidth = dconfig[ENV_SYS][ENV_BANDWIDTH]
 
         else:
             with open(config, 'r') as infile:

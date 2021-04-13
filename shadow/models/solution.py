@@ -91,6 +91,21 @@ class Solution:
     def list_all_allocations(self):
         return self.allocations
 
+    def pretty_print_allocation(self):
+        """
+        Generate a string-formatted version of the solutions allocated,
+        for use in command line reporting.
+        Returns
+        -------
+
+        """
+        ret_str = ''
+        if self.allocations:
+            # TODO logic
+            return str
+        else:
+            return None
+
     def find_alloc(self, task):
         pass
 
