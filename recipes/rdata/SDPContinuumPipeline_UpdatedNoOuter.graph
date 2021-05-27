@@ -1180,7 +1180,7 @@
                     "description": "",
                     "name": "num_of_iter",
                     "text": "Number loops",
-                    "value": "1"
+                    "value": "2"
                 }
             ],
             "group": -21,

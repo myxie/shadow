@@ -8,7 +8,11 @@
     ],
     "loop_cxt": null,
     "dw": 5,
-    "check_filepath_exists": true,
+    "check_filepath_exists": "1",
+    "data_volume": "5",
+    "group_end": "0",
+    "filepath": "",
+    "dirname": "",
     "iid": "0",
     "lg_key": -2,
     "dt": "File",
@@ -26,6 +30,11 @@
     ],
     "loop_cxt": null,
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
+    "check_filepath_exists": "1",
+    "filepath": "",
+    "dirname": "",
     "iid": "0",
     "lg_key": -3,
     "dt": "Memory",
@@ -43,7 +52,10 @@
     ],
     "loop_cxt": null,
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0",
     "lg_key": -1,
     "dt": "Component",
@@ -64,7 +76,10 @@
     ],
     "loop_cxt": null,
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0",
     "lg_key": -8,
     "dt": "Component",
@@ -109,7 +124,10 @@
     ],
     "loop_cxt": "0",
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0/0",
     "lg_key": -10,
     "dt": "Component",
@@ -131,7 +149,10 @@
     ],
     "loop_cxt": "0",
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0/0",
     "lg_key": -14,
     "dt": "Component",
@@ -176,7 +197,10 @@
     ],
     "loop_cxt": "0",
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0/0",
     "lg_key": -16,
     "dt": "Component",
@@ -213,6 +237,31 @@
     ]
   },
   {
+    "oid": "1_-19_0/0/1",
+    "type": "app",
+    "app": "dlg.apps.bash_shell_app.BashShellApp",
+    "rank": [
+      0,
+      0,
+      1
+    ],
+    "loop_cxt": "0/1",
+    "tw": 5,
+    "command": "",
+    "num_cpus": 1,
+    "iid": "0/0/1",
+    "lg_key": -19,
+    "dt": "BashShellApp",
+    "nm": "Identify Component",
+    "inputs": [
+      "1_-41_0/0/1",
+      "1_-42_0/0/0"
+    ],
+    "outputs": [
+      "1_-27_0/0/1"
+    ]
+  },
+  {
     "oid": "1_-20_0/0/0",
     "type": "app",
     "app": "test.graphsRepository",
@@ -223,7 +272,10 @@
     ],
     "loop_cxt": "0/0",
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0/0/0",
     "lg_key": -20,
     "dt": "Component",
@@ -233,6 +285,32 @@
     ],
     "outputs": [
       "1_-42_0/0/0"
+    ]
+  },
+  {
+    "oid": "1_-20_0/0/1",
+    "type": "app",
+    "app": "test.graphsRepository",
+    "rank": [
+      0,
+      0,
+      1
+    ],
+    "loop_cxt": "0/1",
+    "tw": 5,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
+    "iid": "0/0/1",
+    "lg_key": -20,
+    "dt": "Component",
+    "nm": "subtractComponentImagePlane",
+    "inputs": [
+      "1_-27_0/0/1"
+    ],
+    "outputs": [
+      "1_-42_0/0/1"
     ]
   },
   {
@@ -246,7 +324,10 @@
     ],
     "loop_cxt": "0/0",
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "1",
+    "appclass": "test.graphsRepository",
     "iid": "0/0/0",
     "lg_key": -13,
     "dt": "Component",
@@ -256,6 +337,33 @@
     ],
     "inputs": [
       "1_-23_0/0"
+    ]
+  },
+  {
+    "oid": "1_-13_0/0/1",
+    "type": "app",
+    "app": "test.graphsRepository",
+    "rank": [
+      0,
+      0,
+      1
+    ],
+    "loop_cxt": "0/1",
+    "tw": 5,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "1",
+    "appclass": "test.graphsRepository",
+    "iid": "0/0/1",
+    "lg_key": -13,
+    "dt": "Component",
+    "nm": "FFT",
+    "outputs": [
+      "1_-41_0/0/1"
+    ],
+    "inputs": [
+      "1_-23_0/0",
+      "1_-42_0/0/0"
     ]
   },
   {
@@ -269,6 +377,8 @@
     ],
     "loop_cxt": "0/0",
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0/0/0",
     "lg_key": -41,
     "dt": "Memory",
@@ -278,6 +388,30 @@
     ],
     "consumers": [
       "1_-19_0/0/0"
+    ]
+  },
+  {
+    "oid": "1_-41_0/0/1",
+    "type": "plain",
+    "storage": "Memory",
+    "rank": [
+      0,
+      0,
+      1
+    ],
+    "loop_cxt": "0/1",
+    "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
+    "iid": "0/0/1",
+    "lg_key": -41,
+    "dt": "Memory",
+    "nm": "relationship",
+    "producers": [
+      "1_-13_0/0/1"
+    ],
+    "consumers": [
+      "1_-19_0/0/1"
     ]
   },
   {
@@ -291,6 +425,8 @@
     ],
     "loop_cxt": "0/0",
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0/0/0",
     "lg_key": -27,
     "dt": "Memory",
@@ -300,6 +436,30 @@
     ],
     "consumers": [
       "1_-20_0/0/0"
+    ]
+  },
+  {
+    "oid": "1_-27_0/0/1",
+    "type": "plain",
+    "storage": "Memory",
+    "rank": [
+      0,
+      0,
+      1
+    ],
+    "loop_cxt": "0/1",
+    "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
+    "iid": "0/0/1",
+    "lg_key": -27,
+    "dt": "Memory",
+    "nm": "relationship",
+    "producers": [
+      "1_-19_0/0/1"
+    ],
+    "consumers": [
+      "1_-20_0/0/1"
     ]
   },
   {
@@ -313,12 +473,40 @@
     ],
     "loop_cxt": "0/0",
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "1",
     "iid": "0/0/0",
     "lg_key": -42,
     "dt": "Memory",
     "nm": "relationship",
     "producers": [
       "1_-20_0/0/0"
+    ],
+    "consumers": [
+      "1_-28_0/0",
+      "1_-19_0/0/1",
+      "1_-13_0/0/1"
+    ]
+  },
+  {
+    "oid": "1_-42_0/0/1",
+    "type": "plain",
+    "storage": "Memory",
+    "rank": [
+      0,
+      0,
+      1
+    ],
+    "loop_cxt": "0/1",
+    "dw": 5,
+    "data_volume": "5",
+    "group_end": "1",
+    "iid": "0/0/1",
+    "lg_key": -42,
+    "dt": "Memory",
+    "nm": "relationship",
+    "producers": [
+      "1_-20_0/0/1"
     ],
     "consumers": [
       "1_-28_0/0"
@@ -334,13 +522,17 @@
     ],
     "loop_cxt": "0",
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0/0",
     "lg_key": -28,
     "dt": "Component",
     "nm": "Python App",
     "inputs": [
-      "1_-42_0/0/0"
+      "1_-42_0/0/0",
+      "1_-42_0/0/1"
     ],
     "outputs": [
       "1_-43_0/0"
@@ -356,7 +548,10 @@
     ],
     "loop_cxt": "0",
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "1",
+    "appclass": "test.graphsRepository",
     "iid": "0/0",
     "lg_key": -12,
     "dt": "Component",
@@ -378,6 +573,8 @@
     ],
     "loop_cxt": "0",
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0/0",
     "lg_key": -37,
     "dt": "Memory",
@@ -399,6 +596,8 @@
     ],
     "loop_cxt": "0",
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0/0",
     "lg_key": -38,
     "dt": "Memory",
@@ -420,6 +619,8 @@
     ],
     "loop_cxt": "0",
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0/0",
     "lg_key": -39,
     "dt": "Memory",
@@ -441,6 +642,8 @@
     ],
     "loop_cxt": "0",
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0/0",
     "lg_key": -40,
     "dt": "Memory",
@@ -462,6 +665,8 @@
     ],
     "loop_cxt": "0",
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "1",
     "iid": "0/0",
     "lg_key": -43,
     "dt": "Memory",
@@ -483,6 +688,8 @@
     ],
     "loop_cxt": "0",
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0/0",
     "lg_key": -23,
     "dt": "Memory",
@@ -491,7 +698,8 @@
       "1_-10_0/0"
     ],
     "consumers": [
-      "1_-13_0/0/0"
+      "1_-13_0/0/0",
+      "1_-13_0/0/1"
     ]
   },
   {
@@ -503,7 +711,10 @@
     ],
     "loop_cxt": null,
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0",
     "lg_key": -24,
     "dt": "Component",
@@ -524,7 +735,10 @@
     ],
     "loop_cxt": null,
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0",
     "lg_key": -25,
     "dt": "Component",
@@ -545,7 +759,10 @@
     ],
     "loop_cxt": null,
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "1",
+    "appclass": "test.graphsRepository",
     "iid": "0",
     "lg_key": -5,
     "dt": "Component",
@@ -566,7 +783,10 @@
     ],
     "loop_cxt": null,
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0",
     "lg_key": -6,
     "dt": "Component",
@@ -584,7 +804,10 @@
     ],
     "loop_cxt": null,
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0",
     "lg_key": -11,
     "dt": "Component",
@@ -605,7 +828,10 @@
     ],
     "loop_cxt": null,
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0",
     "lg_key": -4,
     "dt": "Component",
@@ -626,7 +852,10 @@
     ],
     "loop_cxt": null,
     "tw": 5,
-    "num_cpus": 1,
+    "num_cpus": "1",
+    "execution_time": "5",
+    "group_start": "0",
+    "appclass": "test.graphsRepository",
     "iid": "0",
     "lg_key": -17,
     "dt": "Component",
@@ -647,7 +876,11 @@
     ],
     "loop_cxt": null,
     "dw": 5,
-    "check_filepath_exists": true,
+    "check_filepath_exists": "1",
+    "data_volume": "5",
+    "group_end": "0",
+    "filepath": "",
+    "dirname": "",
     "iid": "0",
     "lg_key": -30,
     "dt": "File",
@@ -668,6 +901,8 @@
     ],
     "loop_cxt": null,
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0",
     "lg_key": -31,
     "dt": "Memory",
@@ -688,6 +923,8 @@
     ],
     "loop_cxt": null,
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0",
     "lg_key": -32,
     "dt": "Memory",
@@ -708,6 +945,8 @@
     ],
     "loop_cxt": null,
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0",
     "lg_key": -33,
     "dt": "Memory",
@@ -728,6 +967,8 @@
     ],
     "loop_cxt": null,
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0",
     "lg_key": -26,
     "dt": "Memory",
@@ -748,6 +989,8 @@
     ],
     "loop_cxt": null,
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0",
     "lg_key": -29,
     "dt": "Memory",
@@ -768,6 +1011,8 @@
     ],
     "loop_cxt": null,
     "dw": 5,
+    "data_volume": "5",
+    "group_end": "0",
     "iid": "0",
     "lg_key": -44,
     "dt": "Memory",
@@ -788,7 +1033,11 @@
     ],
     "loop_cxt": null,
     "dw": 5,
-    "check_filepath_exists": true,
+    "check_filepath_exists": "1",
+    "data_volume": "5",
+    "group_end": "1",
+    "filepath": "",
+    "dirname": "",
     "iid": "0",
     "lg_key": -18,
     "dt": "File",
@@ -809,7 +1058,11 @@
     ],
     "loop_cxt": null,
     "dw": 5,
-    "check_filepath_exists": true,
+    "check_filepath_exists": "1",
+    "data_volume": "5",
+    "group_end": "0",
+    "filepath": "",
+    "dirname": "",
     "iid": "0",
     "lg_key": -7,
     "dt": "File",

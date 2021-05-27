@@ -81,5 +81,5 @@ df.channels = df.channels.astype(float)
 import matplotlib.pyplot as plt
 
 sns.lineplot(x="channels", y="time", hue="algorithm", data=df)
-plt.show()
+# plt.show()
 plt.savefig("channels.png")

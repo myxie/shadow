@@ -230,7 +230,7 @@ def generate_population(wf, size, rng, skip_limit):
 # How can we test non-domination? Need to get a testing set together for our HEFT graph
 # OR WE CAN USE A DIFFERENT GRAPH :O
 
-def binary_tournament(pop,prob_fitness, rng):
+def binary_tournament(pop, prob_fitness, rng):
     """
     Stock standard binary tournament selection
     :param pop: population of solutions
@@ -242,10 +242,10 @@ def binary_tournament(pop,prob_fitness, rng):
     # Get two random solutions from the population
     t1, t2 = rng.choice(pop, k)
     # t1, t2 = random.sample(pop, k)
-    return compare_fitness(t1, t2, [0.8, 0.2], prob_fitness,rng)
+    return compare_fitness(t1, t2, [0.8, 0.2], prob_fitness, rng)
 
 
-def compare_fitness(soln1, soln2, weights, probfit, rng,comparison=min):
+def compare_fitness(soln1, soln2, weights, probfit, rng, comparison=min):
     if len(soln1.fitness) != len(soln2.fitness) or len(weights) != len(
             soln1.fitness):
         raise ValueError("Solutions have diferent numbers of fitness scores")
@@ -267,6 +267,40 @@ def compare_fitness(soln1, soln2, weights, probfit, rng,comparison=min):
         return fitlist[0]
     else:
         return fitlist[1]
+
+
+def create_crossover_allocs(first, second ,crossover_tasks):
+    c1 = []
+    c2 = []
+    for m in first.machines:
+        for alloc in first.list_machine_allocations(m):
+            if alloc.task.tid in crossover_tasks:
+                continue
+            else:
+                nalloc = copy.deepcopy(alloc)
+                nalloc.reset()
+                c1.append(nalloc)
+        for alloc in second.list_machine_allocations(m):
+            if alloc.task.tid in crossover_tasks:
+                continue
+            else:
+                nalloc = copy.deepcopy(alloc)
+                nalloc.reset()
+                c2.append(nalloc)
+
+    for m in first.machines:
+        for alloc in second.list_machine_allocations(m):
+            if alloc.task.tid in crossover_tasks:
+                nalloc = copy.deepcopy(alloc)
+                nalloc.reset()
+                c2.append(nalloc)
+        for alloc in first.list_machine_allocations(m):
+            if alloc.task.tid in crossover_tasks:
+                nalloc = copy.deepcopy(alloc)
+                nalloc.reset()
+                c2.append(nalloc)
+
+    return c1,c2
 
 
 def crossover(parent1, parent2, workflow, seed=DEFAULT_SEED):
@@ -296,6 +330,10 @@ def crossover(parent1, parent2, workflow, seed=DEFAULT_SEED):
     # These are the machine allocations for each task/pair swap
     c1_tmp_alloc = []
     c2_tmp_alloc = []
+
+    # c1_tmp_alloc = generate_tmp_allocations(parent1, parent2)
+    c1_prelim = create_crossover_allocs(p1,p2,crossover_tasks)
+    c2_prelim = create_crossover_allocs(p2,p1, crossover_tasks)
     for m in parent1.machines:
         for alloc in parent1.list_machine_allocations(m):
             if alloc.task.tid in crossover_tasks:
@@ -360,15 +398,6 @@ def crossover(parent1, parent2, workflow, seed=DEFAULT_SEED):
         c2.task_allocations[t] = alloc
         if t.aft > c2.makespan:
             c2.makespan = t.aft
-    # 	index = random.randint(0, RAND_BOUNDS) % rand_bounds
-    # 	m = machines[index]
-    # 	calc_start_finish_times(t, m, wf, soln.list_machine_allocations(m))
-    # 	soln.add_allocation(t, m)
-    # 	if t.aft > soln.makespan:
-    # 		soln.makespan = t.aft
-    #
-    # soln.solution_cost = calc_solution_cost(soln, wf)
-
     return c1, c2
 
 
@@ -471,20 +500,6 @@ def mutation(solution, workflow, mutation_type='swapping', rng=None):
                 task_order[t1i] = task
                 task_order[i] = t1.tid
     c1 = GASolution(solution.machines)
-    # c1.allocations = copy.deepcopy(solution.allocations)
-    # c1.allocations[selected_machine.id].sort(key=lambda alloc: alloc_order.index(alloc.task.tid))
-
-    # for m in solution.machines:
-    # 	if m is selected_machine:
-    # 		c1.allocations[selected_machine.id].sort(key=lambda alloc: alloc_order.index(alloc.task.tid))
-
-    # for alloc in parent1.list_machine_allocations(m):
-    # 	if alloc.task.tid in crossover_tasks:
-    # 		continue
-    # 	else:
-    # 		nalloc = copy.deepcopy(alloc)
-    # 		nalloc.reset()
-    # 		c1_tmp_alloc.append(nalloc)
 
     tmp_alloc = copy.deepcopy(solution.allocations)
     tmp_alloc[selected_machine.id].sort(
@@ -549,7 +564,6 @@ def calc_solution_cost(solution, workflow):
 
 def generate_allocations(machines, task_order, wf, rng,
                          solution_class=GASolution):
-
     solution = solution_class(machines=machines)
     rand_bounds = len(machines)
     for t in task_order:
