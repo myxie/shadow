@@ -222,12 +222,7 @@ class TestDALiuGEGraph(unittest.TestCase):
 		pass
 
 	def test_it_works(self):
-		# print(heft(self.workflow))
 		print(heft(self.dense))
 		self.dense.pretty_print_allocation()
-
-		# for p in self.dense.machines:
-		# 	print(p)
-		# #print(heft(self.gnp))
 
 		pass

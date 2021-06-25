@@ -93,7 +93,7 @@ class Workflow(object):
     information of the underlying workflow graph. See utils.shadowgen for more \
     information on producing shadow-compatible JSON files.
 
-    The workflow includes
+    The workflow includes this is a test
     """
 
     def __init__(self, config, taskobj=Task, from_file=True):
@@ -160,9 +160,7 @@ class Workflow(object):
                     task.calculated_runtime[m] = int(
                         self.env.calc_task_runtime_on_machine(m, comp)
                     )
-            # TODO Use rates from environment in calcuation; for the time
-            #  being rates are specified in the graph
-            return 0
+
 
     def sort_tasks(self, sort_type):
         """
