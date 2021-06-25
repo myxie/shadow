@@ -160,7 +160,7 @@ class Workflow(object):
                     task.calculated_runtime[m] = int(
                         self.env.calc_task_runtime_on_machine(m, comp)
                     )
-
+            return 0
 
     def sort_tasks(self, sort_type):
         """
