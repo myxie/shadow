@@ -312,7 +312,7 @@ def insertion_policy(workflow):
     solution = Solution(workflow.env.machines)
     for task in sorted_tasks:
         # Treat the first task differently, as it's the easiest to get the lowest cost
-        if task == list(workflow.tasks)[0]:  # Convert networkx NodeView to list
+        if task == list(sorted_tasks)[0]:  # Convert networkx NodeView to list
             m, w = min(
                 task.calculated_runtime.items(),
                 key=operator.itemgetter(1)
