@@ -20,58 +20,58 @@ import argparse
 import unittest
 import logging
 
-import test
+from test import test_workflow, test_heuristic
 from shadow.algorithms.heuristic import heft
 from shadow.models.workflow import Workflow
 from shadow.models.environment import Environment
 
 testcases = {  # Tests for the test runner
-	"workflow": test.test_workflow,
-	"heuristic": test.test_heuristic
+    "workflow": test_workflow,
+    "heuristic": test_heuristic
 }
 
 
 def run_tests(arg, tests, curr_parser):
-	if arg['all']:
-		suite = unittest.TestSuite()
-		loader = unittest.TestLoader()
-		for test in tests:
-			suite.addTests(loader.loadTestsFromModule(tests[test]))
-		runner = unittest.TextTestRunner()
-		runner.run(suite)
-		return True
+    if arg['all']:
+        suite = unittest.TestSuite()
+        loader = unittest.TestLoader()
+        for test in tests:
+            suite.addTests(loader.loadTestsFromModule(tests[test]))
+        runner = unittest.TextTestRunner()
+        runner.run(suite)
+        return True
 
-	if arg['case']:
-		for case in arg['case']:
-			suite = unittest.TestSuite()
-			loader = unittest.TestLoader()
-			suite.addTests(loader.loadTestsFromModule(tests[case]))
-			runner = unittest.TextTestRunner()
-			runner.run(suite)
-	else:
-		curr_parser.print_help()
+    if arg['case']:
+        for case in arg['case']:
+            suite = unittest.TestSuite()
+            loader = unittest.TestLoader()
+            suite.addTests(loader.loadTestsFromModule(tests[case]))
+            runner = unittest.TextTestRunner()
+            runner.run(suite)
+    else:
+        curr_parser.print_help()
 
 
 def run_shadow():
-	"""
-	env = Environment(environment_config)
-	wf = Workflow(workflow_config)
-	wf.add_environment()
-	env.run_workflows(heuristic.heft)
+    """
+    env = Environment(environment_config)
+    wf = Workflow(workflow_config)
+    wf.add_environment()
+    env.run_workflows(heuristic.heft)
 
-	:return:
-	"""
-	pass
+    :return:
+    """
+    pass
 
 
 def run_algorithm(arg, parser):
-	if arg['algorithm'] == 'heft':
-		pass
-		wf = Workflow(arg['workflow'])
-		env = Environment(arg['environment'])
-		wf.add_environment(env)
-		print(heft(wf))
-		print(wf.machine_alloc)
+    if arg['algorithm'] == 'heft':
+        pass
+        wf = Workflow(arg['workflow'])
+        env = Environment(arg['environment'])
+        wf.add_environment(env)
+        print(heft(wf).makespan)
+        # print(wf.machine_alloc)
 
 
 # wf = Workflow(arg['graph'])
@@ -82,39 +82,38 @@ def run_algorithm(arg, parser):
 
 
 if __name__ == "__main__":
+    # logging.basicConfig(level="DEBUG")
+    parser = argparse.ArgumentParser(
+        description='ScHeduling Algorithms for Data-Intensive			 Workflows')
+    parser.add_argument('--log',
+                        help='Log-level for logger (default is 3 [Warning])')
 
-	parser = argparse.ArgumentParser(description='ScHeduling Algorithms for Data-Intensive			 Workflows')
-	parser.add_argument('--log', help='Log-level for logger (default is 3 [Warning])')
+    subparsers = parser.add_subparsers(help='Command', dest='command')
 
-	subparsers = parser.add_subparsers(help='Command', dest='command')
+    test_parser = subparsers.add_parser('test', help='Test Runner')
+    test_parser.add_argument('--all', action='store_true', help='Run all test')
+    test_parser.add_argument('--case', nargs='+', choices=list(testcases),
+                             help='Run the following test cases')
 
-	# choices = list(cfg.test.keys())
-	# test = { # Tests for the test runner
-	# 	"workflow": test.test_workflow,
-	# 	"graph_generator": test.test_graph_generator,
-	# 	"heuristic": test.test_heuristic,
-	# 	"metaheuristic": test.test_metaheuristic}
+    test_parser.set_defaults(func=run_tests)
 
-	test_parser = subparsers.add_parser('test', help='Test Runner')
-	test_parser.add_argument('--all', action='store_true', help='Run all test')
-	test_parser.add_argument('--case', nargs='+', choices=list(testcases), help='Run the following test cases')
+    algorithm_parser = subparsers.add_parser('algorithm',
+                                             help='Run a single algorithm on a given data file')
+    algorithm_parser.set_defaults(func=run_algorithm)
+    algorithm_parser.add_argument('algorithm', help='Name of algorithm')
+    algorithm_parser.add_argument('workflow',
+                                  help='Location of workflow config')
+    algorithm_parser.add_argument('environment',
+                                  help='Location of the environment config')
 
-	test_parser.set_defaults(func=run_tests)
-
-	algorithm_parser = subparsers.add_parser('algorithm', help='Run a single algorithm on a given data file')
-	algorithm_parser.set_defaults(func=run_algorithm)
-	algorithm_parser.add_argument('algorithm', help='Name of algorithm')
-	algorithm_parser.add_argument('workflow', help='Location of workflow config')
-	algorithm_parser.add_argument('environment', help='Location of the environment config')
-
-	args = parser.parse_args()
-	if not args.command:
-		parser.print_help()
-	if args.log:
-		# Levels in logger are multiples of 10, so we multiply by 10 so people use the logical 1/2/3/4
-		loglevel = int(args.log) * 10
-		logging.basicConfig(level=loglevel)
-	if args.command == 'algorithm':
-		args.func(vars(args), algorithm_parser)
-	if args.command == 'test':
-		args.func(vars(args), testcases, test_parser)
+    args = parser.parse_args()
+    if not args.command:
+        parser.print_help()
+    if args.log:
+        # Levels in logger are multiples of 10, so we multiply by 10 so people use the logical 1/2/3/4
+        loglevel = int(args.log) * 10
+        logging.basicConfig(level=loglevel)
+    if args.command == 'algorithm':
+        args.func(vars(args), algorithm_parser)
+    if args.command == 'test':
+        args.func(vars(args), testcases, test_parser)
