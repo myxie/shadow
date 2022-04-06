@@ -283,21 +283,24 @@ def calc_est(workflow, task, machine, solution):
     available_slots = []
     num_alloc = len(curr_allocations)
     prev = None
-    if len(curr_allocations) > 0:
+    if curr_allocations:
         for i, alloc in enumerate(curr_allocations):
             if i == 0:
-                if alloc.ast != 0:  # If the start time of the first allocation is not 0
+                # If the start time of the first allocation is not 0
+                if alloc.ast != 0:
                     available_slots.append((0, alloc.ast))
                 else:
                     continue
+            elif alloc.ast < est:
+                continue
             else:
                 prev_alloc = curr_allocations[i - 1]
                 available_slots.append((
                     prev_alloc.aft,
                     alloc.ast
                 ))
-        final_alloc = curr_allocations[
-            num_alloc - 1]  # We want the finish time of the latest allocation.
+        # We want the finish time of the latest allocation.
+        final_alloc = curr_allocations[-1]
         available_slots.append((final_alloc.aft, -1))
 
     for slot in available_slots:
