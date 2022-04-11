@@ -226,7 +226,6 @@ def calculate_upward_ranks(workflow, progress=True):
                 unranked.remove(node)
                 if progress:
                     pbar.update()
-                LOGGER.debug(f'Ranked {_ranked_node_count}/{_total_nodes}')
     if progress:
         pbar.close()
 
