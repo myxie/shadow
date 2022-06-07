@@ -16,13 +16,15 @@
 
 import json
 import sys
+import operator
+import logging
 
 import networkx as nx
 import numpy as np
 from shadow.models.environment import Environment
 from shadow.models.solution import Solution
 
-
+LOGGER = logging.getLogger(__name__)
 # TODO clean up allocation and ranking;
 #  reduce direct  to the graph,
 #  instead, only interact with
@@ -34,21 +36,25 @@ class Task(object):
     their compute requirement.
     """
 
-    def __init__(self, tid, flops=0):
+    def __init__(self, tid, flops=0,pre_compute=False):
         self.tid = tid  # task id - this is unique
         self.rank = -1  # This is updated during the 'Task Prioritisation' phase
-
+        self.pre_compute = pre_compute
         # Resource usage
         self.flops_demand = flops  # Will use the constants
         # Following is {machine name, value} dictionary pairs
-        self.calculated_runtime = {}
-        self.calculated_io = {}
-        self.calculated_memory = {}
-
+        if self.pre_compute:
+            self._calculated_runtime = {}
+            self._calculated_io = {}
+            self._calculated_memory = {}
         # allocations
         self.machine = None
         self.ast = 0  # actual start time
         self.aft = 0  # actual finish time
+        # if self.pre_compute:
+        #     self.test_runtime = self._calculated_runtime
+        # else:
+        #     self.test_runtime = {}
 
     def __repr__(self):
         return str(self.tid)
@@ -70,11 +76,42 @@ class Task(object):
             return self.tid <= task.tid
 
     def calc_runtime(self, machine):
-        return self.calculated_runtime[machine]
+        if self.pre_compute:
+            return self._calculated_runtime[machine]
+        else:
+            return int(np.round(self.flops_demand/machine.flops))
+        # return self.calculated_runtime[machine]
 
-    def calc_ave_runtime(self):
-        return sum(self.calculated_runtime.values()) \
-               / len(self.calculated_runtime)
+    def calculated_runtime(self,machine):
+        if self.pre_compute:
+            return self._calculated_runtime[machine]
+        else:
+            # if self.test_runtime[machine] != self.calc_runtime(machine):
+            #     raise RuntimeError('Incorrect calculation')
+            return self.calc_runtime(machine)
+
+    def calc_ave_runtime(self,env):
+        if self.pre_compute:
+            return (
+                sum(self._calculated_runtime.values())
+               / len(self._calculated_runtime)
+            )
+        else:
+            machines = np.array([m.flops for m in env.machines])
+            compute = self.flops_demand/machines
+            return np.average(np.round(compute).astype(int))
+
+    def calc_mininum_runtime(self,env):
+        if self.pre_compute:
+            return min(
+                self._calculated_runtime.items(),
+                key=operator.itemgetter(1)
+            )
+        else:
+            compute = max(env.machines, key=operator.attrgetter('flops'))
+            w = int(np.round(self.flops_demand/compute.flops))
+            return compute, w
+
 
     def update_task_rank(self, rank):
         self.rank = rank
@@ -102,10 +139,14 @@ class Workflow(object):
         with open(config, 'r') as infile:
             wfconfig = json.load(infile)
         self.graph = nx.readwrite.json_graph.node_link_graph(wfconfig['graph'])
+        self._time = wfconfig['header']['time']
         # Take advantage of how pipelines
         mapping = {}
         for node in self.graph.nodes:
-            t = taskobj(node, self.graph.nodes[node]['comp'])
+            precompute = False
+            if self._time:
+                precompute = True
+            t = taskobj(node, self.graph.nodes[node]['comp'],precompute)
             mapping[node] = t
         self.graph = nx.relabel_nodes(self.graph, mapping, copy=False)
         self.tasks = self.graph.nodes
@@ -118,7 +159,6 @@ class Workflow(object):
 
         # This lets us know when reading the graph if 'comp' attribute
         # in the Networkx graph is time or FLOPs based
-        self._time = wfconfig['header']['time']
 
     def add_environment(self, environment):
         """
@@ -150,16 +190,18 @@ class Workflow(object):
                     raise RuntimeError
                 machines = [m for m in self.env.machines]
                 runtime_list = self.tasks[task]['comp']
-                task.calculated_runtime = dict(zip(machines, runtime_list))
+                task._calculated_runtime = dict(zip(machines, runtime_list))
+                task.test_runtime = task._calculated_runtime
             return 0
         # Use compute provided by system values to calculate the time taken
         else:
-            for m in self.env.machines:
-                for task in self.tasks:
-                    comp = task.flops_demand
-                    task.calculated_runtime[m] = int(
-                        self.env.calc_task_runtime_on_machine(m, comp)
-                    )
+            LOGGER.debug('Tasks do not have pre calculated runtimes')
+            # for m in self.env.machines:
+            #     for task in self.tasks:
+            #         comp = task.flops_demand
+                    # task.test_runtime[m] = int(
+                    #     self.env.calc_task_runtime_on_machine(m, comp)
+                    # )
             return 0
 
     def sort_tasks(self, sort_type):

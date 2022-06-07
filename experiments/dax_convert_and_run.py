@@ -21,8 +21,8 @@ from shadow.models.environment import Environment
 import shadow.algorithms.heuristic as heuristic
 
 workflow = Workflow('dax_files/output/shadow_Epigenomics_24.json')
-env = Environment('environments/sys.json')
-workflow.add_environment(env)
+env = Environment("environments/sys.json")
+workflow.add_environment("env")
 heuristic.heft(workflow)
 
 
