@@ -25,6 +25,8 @@ from shadow.models.environment import Environment
 from shadow.models.solution import Solution
 
 LOGGER = logging.getLogger(__name__)
+
+
 # TODO clean up allocation and ranking;
 #  reduce direct  to the graph,
 #  instead, only interact with
@@ -36,12 +38,13 @@ class Task(object):
     their compute requirement.
     """
 
-    def __init__(self, tid, flops=0,pre_compute=False):
+    def __init__(self, tid, flops=0, data=None, pre_compute=False):
         self.tid = tid  # task id - this is unique
         self.rank = -1  # This is updated during the 'Task Prioritisation' phase
         self.pre_compute = pre_compute
         # Resource usage
         self.flops_demand = flops  # Will use the constants
+        self.io_demand = data
         # Following is {machine name, value} dictionary pairs
         if self.pre_compute:
             self._calculated_runtime = {}
@@ -50,14 +53,13 @@ class Task(object):
         # allocations
         self.machine = None
         self.ast = 0  # actual start time
-        self.aft = 0  # actual finish time
-        # if self.pre_compute:
-        #     self.test_runtime = self._calculated_runtime
-        # else:
-        #     self.test_runtime = {}
+        self.aft = 0  # actual finish time  # if self.pre_compute:  #  #  #
+        # self.test_runtime = self._calculated_runtime  # else:  #  #  #
+        # self.test_runtime = {}
 
     def __repr__(self):
         return str(self.tid)
+
     #
     # Node must be hashable for use with networkx
     def __hash__(self):
@@ -79,10 +81,16 @@ class Task(object):
         if self.pre_compute:
             return self._calculated_runtime[machine]
         else:
-            return int(np.round(self.flops_demand/machine.flops))
-        # return self.calculated_runtime[machine]
+            # Sometimes we may have data but the divisor is more of an issue.
+            if machine.iorate:
+                data = int(np.round(self.io_demand / machine.iorate))
+            else:
+                data = 0
+            compute = int(np.round(self.flops_demand / machine.flops))
+            return max(compute,
+                       data)  # return  # self.calculated_runtime[machine]
 
-    def calculated_runtime(self,machine):
+    def calculated_runtime(self, machine):
         if self.pre_compute:
             return self._calculated_runtime[machine]
         else:
@@ -90,28 +98,66 @@ class Task(object):
             #     raise RuntimeError('Incorrect calculation')
             return self.calc_runtime(machine)
 
-    def calc_ave_runtime(self,env):
+    def calc_ave_runtime(self, env):
         if self.pre_compute:
-            return (
-                sum(self._calculated_runtime.values())
-               / len(self._calculated_runtime)
-            )
+            return (sum(self._calculated_runtime.values()) / len(
+                self._calculated_runtime))
         else:
-            machines = np.array([m.flops for m in env.machines])
-            compute = self.flops_demand/machines
-            return np.average(np.round(compute).astype(int))
+            mcompute = np.array([m.flops for m in env.machines])
+            miorate = np.array([m.iorate for m in env.machines])
+            compute = self.flops_demand / mcompute
+            if miorate.any():
+                data = self.io_demand / miorate
+            else:
+                data = 0
+            return max(np.average(np.round(compute).astype(int)),
+                       np.average(np.round(data).astype(int)))
 
-    def calc_mininum_runtime(self,env):
+    def calc_mininum_runtime(self, env):
+        """
+        Find the minimum runtime for this task in the `env` Environment
+
+        This is acheived by finding the machine with the largest flops,
+        iorate etc., and then using this value as the denominator for the
+        time calculation
+
+        Parameters
+        ----------
+        env :
+            The environment variable that we are concerned with scheduling
+
+        Returns
+        -------
+        machine, time pairing
+
+        Notes
+        ------
+        Whilst we want to find the minimal runtime on all machines, when we
+        compare the compute time to the io time, we want to pick the largest
+        of the two - this is because the largest value demonstrates which
+        element is the bottleneck for this task.
+
+        """
         if self.pre_compute:
-            return min(
-                self._calculated_runtime.items(),
-                key=operator.itemgetter(1)
-            )
+            return min(self._calculated_runtime.items(),
+                       key=operator.itemgetter(1))
         else:
-            compute = max(env.machines, key=operator.attrgetter('flops'))
-            w = int(np.round(self.flops_demand/compute.flops))
+            cm = max(env.machines, key=operator.attrgetter('flops'))
+            cw = int(np.round(self.flops_demand / cm.flops))
+            if cm.iorate:
+                iow = int(np.round(self.io_demand / cm.iorate))
+                return cm, max(iow, cw)
+            else:
+                return cm, cw  # return compute, w
+
+    def calc_max_runtime(self, env):
+        if self.pre_compute:
+            return max(self._calculated_runtime.items(),
+                       key=operator.itemgetter(1))
+        else:
+            compute = min(env.machines, key=operator.attrgetter('flops'))
+            w = int(np.round(self.flops_demand / compute.flops))
             return compute, w
-
 
     def update_task_rank(self, rank):
         self.rank = rank
@@ -146,7 +192,12 @@ class Workflow(object):
             precompute = False
             if self._time:
                 precompute = True
-            t = taskobj(node, self.graph.nodes[node]['comp'],precompute)
+            comp = self.graph.nodes[node]['comp']
+            if 'data' in self.graph.nodes[node]:
+                data = self.graph.nodes[node]['data']
+            else:
+                data = 0
+            t = taskobj(node, comp, data, precompute)
             mapping[node] = t
         self.graph = nx.relabel_nodes(self.graph, mapping, copy=False)
         self.tasks = self.graph.nodes
@@ -157,8 +208,8 @@ class Workflow(object):
         # Solution is dependent on an environment
         self.solution = None
 
-        # This lets us know when reading the graph if 'comp' attribute
-        # in the Networkx graph is time or FLOPs based
+        # This lets us know when reading the graph if 'comp' attribute  # in
+        # the Networkx graph is time or FLOPs based
 
     def add_environment(self, environment):
         """
@@ -178,13 +229,9 @@ class Workflow(object):
                 try:
                     comp_array_length = len(self.tasks[task]['comp'])
                 except TypeError:
-                    print(
-                        "Computation costs should be an array, "
-                        "but instead is {0}. Check your configuration "
-                        "files".format(
-                            self.tasks[task]['comp']
-                        )
-                    )
+                    print("Computation costs should be an array, "
+                          "but instead is {0}. Check your configuration "
+                          "files".format(self.tasks[task]['comp']))
                     raise TypeError
                 if len(self.tasks[task]['comp']) is not len(self.env.machines):
                     raise RuntimeError
@@ -199,9 +246,9 @@ class Workflow(object):
             # for m in self.env.machines:
             #     for task in self.tasks:
             #         comp = task.flops_demand
-                    # task.test_runtime[m] = int(
-                    #     self.env.calc_task_runtime_on_machine(m, comp)
-                    # )
+            # task.test_runtime[m] = int(
+            #     self.env.calc_task_runtime_on_machine(m, comp)
+            # )
             return 0
 
     def sort_tasks(self, sort_type):
@@ -213,18 +260,13 @@ class Workflow(object):
         """
 
         if sort_type == 'rank':
-            return sorted(self.tasks, key=lambda x: \
-                x.rank, reverse=True)
+            return sorted(self.tasks, key=lambda x: x.rank, reverse=True)
 
         if sort_type == 'topological':
             return nx.topological_sort(self.graph)
         else:
             raise NotImplementedError(
-                "This sorting method has not been implemented"
-            )
+                "This sorting method has not been implemented")
 
     def solution_exec_order(self):
-        return sorted(
-            self.tasks, key=lambda x: x.ast
-        )
-
+        return sorted(self.tasks, key=lambda x: x.ast)

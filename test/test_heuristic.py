@@ -117,8 +117,17 @@ class TestHeftMethodCalcTime(unittest.TestCase):
         solution = heft(self.workflow)
         self.assertEqual(98, solution.makespan)
 
+    def test_io_schedule(self):
+        workflow = Workflow('test/data/heuristic/final_heft_data.json')
+        env = Environment('test/data/heuristic/final_heft_sys_data.json')
+        workflow.add_environment(env)
+        solution = heft(workflow)
+        self.assertEqual(98, solution.makespan)
 
-# @unittest.SkipTest
+
+
+
+@unittest.SkipTest
 class TestHeftMethodLargeGraph(unittest.TestCase):
 
     def test_large_workflow(self):

@@ -29,6 +29,7 @@ class Machine(object):
         self.machine_type = mid.split("_")[0]
         self.flops = flops
         self.memory = memory
+        self.iorate = bandwidth
         self.bandwidth = bandwidth
         self.cost = cost
 
@@ -53,7 +54,7 @@ def _process_env_resources(resources):
         # This is resources dictionary
         for machine in resources:
             name = machine
-            flops, memory, bandwidth, cost = None, None, None, None
+            flops, memory, bandwidth, cost = 0, 0, 0, 0
             if 'flops' in resources[machine]:
                 flops = resources[machine]['flops']
             if 'memory' in resources[machine]:
