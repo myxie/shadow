@@ -58,7 +58,7 @@ class TestFCFS(unittest.TestCase):
                 # self.assertEqual(11, alloc.aft)
             if t.tid == 4:
                 continue
-        self.assertEqual(solution.makespan, 112)
+        self.assertEqual(112,solution.makespan)
 
 
 # if all(k in task_ranks for k in succs):
@@ -100,9 +100,9 @@ class TestHeftMethods(unittest.TestCase):
 
 class TestHeftMethodCalcTime(unittest.TestCase):
     def setUp(self):
-        self.workflow = Workflow("{0}/{1}".format(current_dir,
-                                                  cfg.test_workflow_data[
-                                                      'topcuoglu_graph']))
+        self.workflow = Workflow(
+            f"{current_dir}/{cfg.test_workflow_data['topcuoglu_graph']}"
+        )
         env = Environment("{0}/{1}".format(current_dir, cfg.test_workflow_data[
             'topcuoglu_graph_system']))
 
@@ -118,23 +118,23 @@ class TestHeftMethodCalcTime(unittest.TestCase):
         self.assertEqual(98, solution.makespan)
 
 
-# @unittest.SkipTest
+@unittest.SkipTest
 class TestHeftMethodLargeGraph(unittest.TestCase):
 
     def test_large_workflow(self):
         self.workflow = Workflow(
-            "../thesis_experiments/skaworkflows_tests/workflows/hpso01_time-3600_channels-256_tel-512.json"
+            "test/data/heuristic/hpso01_time-18000_channels-512_tel"
+            "-512_no_data"
+            ".json"
         )
         env = Environment(
-            "../thesis_experiments/skaworkflows_tests/shadow_config.json"
+            "test/data/heuristic/shadow_low_sdp_config.json"
         )
         self.workflow.add_environment(env)
         solution = heft(self.workflow)
         print(solution.makespan)
 
 
-
-# @unittest.skip('For now')
 class TestPHeftMethods(unittest.TestCase):
 
     def setUp(self):
