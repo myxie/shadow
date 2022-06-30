@@ -41,7 +41,7 @@ LOGGER = logging.getLogger(__name__)
 ############################# HUERISTICS  ###################################
 #############################################################################
 
-def heft(workflow):
+def heft(workflow, position=0):
     """
     Implementation of the original HEFT algorithm, Topcuolgu 2002.
 
@@ -52,11 +52,11 @@ def heft(workflow):
     if workflow.env is None:
         raise RuntimeError("Workflow environment is not initialised")
     LOGGER.debug('Ranking tasks')
-    task_ranks = calculate_upward_ranks(workflow)
+    task_ranks = calculate_upward_ranks(workflow, position)
     for task in workflow.tasks:
         task.rank = task_ranks[task]
     LOGGER.debug('Allocating tasks using insertion policy')
-    solution = insertion_policy(workflow)
+    solution = insertion_policy(workflow, position)
     return solution
 
 
@@ -159,9 +159,8 @@ def generate_ranking_matrix(workflow):
                 comm_cost = 0
                 if machine is not pk:
                     comm_cost = ave_comm_cost(workflow, curr_task, successor)
-                oct_val = oct_rank_matrix[(successor, machine)] \
-                          + comp_cost \
-                          + comm_cost
+                oct_val = oct_rank_matrix[
+                              (successor, machine)] + comp_cost + comm_cost
                 min_machine = min(min_machine, oct_val)
 
             max_successor = max(max_successor, min_machine)
@@ -170,7 +169,7 @@ def generate_ranking_matrix(workflow):
     return oct_rank_matrix
 
 
-def calculate_upward_ranks(workflow, progress=True):
+def calculate_upward_ranks(workflow, position=0, progress=True):
     """
     Upward ranking heuristic outlined in Topcuoglu, Hariri & Wu (2002)
     Closely modelled off 'cal_up_rank' function at:
@@ -194,15 +193,16 @@ def calculate_upward_ranks(workflow, progress=True):
         longest_rank = 0
         if len(list(workflow.graph.successors(node))) == 0:
             task_ranks[node] = max(
-                node.calc_ave_runtime(workflow.env) + longest_rank, 0
-            )
+                node.calc_ave_runtime(workflow.env) + longest_rank, 0)
             unranked.remove(node)
 
     _ranked_node_count = 1
     _total_nodes = len(workflow.graph.nodes())
     pbar = None
     if progress:
-        pbar = tqdm(total=_total_nodes, unit="Tasks", desc='Ranking tasks')
+        pbar = tqdm(total=_total_nodes, unit="Tasks", desc=f'Ranking tasks '
+                                                           f'{position}',
+                    position=position)
     while unranked:
         for node in unranked:
             _ranked_node_count += 1
@@ -211,18 +211,16 @@ def calculate_upward_ranks(workflow, progress=True):
             if all(k in task_ranks for k in succs):
                 for s in succs:
                     if longest_rank < 0:
-                        longest_rank = ave_comm_cost(
-                            workflow, node, s
-                        ) + task_ranks[s]
+                        longest_rank = ave_comm_cost(workflow, node, s) + \
+                                       task_ranks[s]
                     else:
-                        longest_rank = max(
-                            longest_rank, ave_comm_cost(workflow, node, s)
-                                          + task_ranks[s]
-                        )
+                        longest_rank = max(longest_rank,
+                                           ave_comm_cost(workflow, node, s) +
+                                           task_ranks[s])
 
             if not longest_rank < 0:
-                task_ranks[node] = longest_rank + max(node.calc_ave_runtime(
-                    workflow.env), 1)
+                task_ranks[node] = longest_rank + max(
+                    node.calc_ave_runtime(workflow.env), 1)
                 unranked.remove(node)
                 if progress:
                     pbar.update()
@@ -294,18 +292,14 @@ def calc_est(workflow, task, machine, solution):
                 continue
             else:
                 prev_alloc = curr_allocations[i - 1]
-                available_slots.append((
-                    prev_alloc.aft,
-                    alloc.ast
-                ))
+                available_slots.append((prev_alloc.aft, alloc.ast))
         # We want the finish time of the latest allocation.
         final_alloc = curr_allocations[-1]
         available_slots.append((final_alloc.aft, -1))
 
     for slot in available_slots:
         (start, end) = slot
-        if est < start and start \
-                + task.calc_runtime(machine) <= end:
+        if est < start and start + task.calc_runtime(machine) <= end:
             return start
         if (est >= start) and est + task.calculated_runtime(machine) <= end:
             return est
@@ -321,12 +315,13 @@ def calc_est(workflow, task, machine, solution):
     return est
 
 
-def insertion_policy(workflow, progress=True):
+def insertion_policy(workflow, position=0, progress=True):
     """
     Allocate tasks to machines following the insertion based policy outline
     in Tocuoglu et al.(2002)
     """
     makespan = 0
+    prev_aft, prev_ast = (0, 0)
     # tasks = sort_tasks(workflow, 'rank')
     sorted_tasks = workflow.sort_tasks('rank')
     # tmp = workflow.tasks
@@ -334,11 +329,15 @@ def insertion_policy(workflow, progress=True):
     _debug_task_count = 0
     _total_tasks = len(sorted_tasks)
     pbar = None
+    update = 0
     if progress:
-        pbar = tqdm(total=_total_tasks, unit="Tasks", desc='Allocating tasks')
+        pbar = tqdm(total=_total_tasks, unit="Tasks", desc='Allocating '
+                                                           'tasks',
+                    position=position)
     for task in sorted_tasks:
         _debug_task_count += 1
-        # Treat the first task differently, as it's the easiest to get the lowest cost
+        # Treat the first task differently, as it's the easiest to get the
+        # lowest cost
         if task == list(sorted_tasks)[0]:  # Convert networkx NodeView to list
             m, w = task.calc_mininum_runtime(workflow.env)
             # m2, w2 = min(
@@ -353,6 +352,7 @@ def insertion_policy(workflow, progress=True):
         else:
             aft = -1  # Finish time for the current task
             m = 0
+
             for machine in workflow.env.machines:
                 # tasks in self.rank_sort are being updated, not workflow.graph;
                 est = calc_est(workflow, task, machine, solution)
@@ -367,10 +367,10 @@ def insertion_policy(workflow, progress=True):
 
             if aft >= makespan:
                 makespan = aft
-
             solution.add_allocation(task=task, machine=m, ast=ast, aft=aft)
         if progress:
-            pbar.update()
+            update = len(solution.allocations) - update
+            pbar.update(len(solution.allocations))
     if progress:
         pbar.close()
     solution.makespan = makespan
@@ -397,9 +397,8 @@ def insertion_policy_oct(workflow, oct_rank_matrix):
             min_oeft = -1
             for machine in workflow.env.machines:
                 eft_matrix[(task, machine)] = task.calculated_runtime(machine)
-                oeft_matrix[(task, machine)] = \
-                    eft_matrix[(task, machine)] + oct_rank_matrix[
-                        (task, machine)]
+                oeft_matrix[(task, machine)] = eft_matrix[(task, machine)] + \
+                                               oct_rank_matrix[(task, machine)]
                 if (min_oeft == -1) or (
                         oeft_matrix[(task, machine)] < min_oeft):
                     min_oeft = oeft_matrix[(task, machine)]
@@ -415,9 +414,8 @@ def insertion_policy_oct(workflow, oct_rank_matrix):
                     est = 0
                 eft = est + task.calculated_runtime(machine)
                 eft_matrix[(task, machine)] = eft
-                oeft_matrix[(task, machine)] = \
-                    eft_matrix[(task, machine)] + oct_rank_matrix[
-                        (task, machine)]
+                oeft_matrix[(task, machine)] = eft_matrix[(task, machine)] + \
+                                               oct_rank_matrix[(task, machine)]
                 if (min_oeft == -1) or (
                         oeft_matrix[(task, machine)] < min_oeft):
                     min_oeft = oeft_matrix[(task, machine)]
@@ -446,10 +444,7 @@ def fcfs_allocation(workflow, greedy, seed):
         pred = list(workflow.graph.predecessors(task))
         if not pred:
             start_time = 0
-            nmachine, start_val = find_next_available_machine(
-                start_time, earliest_alloc
-            )
-            m2, val2 = next_available_start(earliest_alloc)
+            nmachine, start_val = next_available_start(earliest_alloc)
             # update earliest for machine as runtime for this task
             w = task.calculated_runtime(nmachine)
             earliest_alloc[nmachine] = w
@@ -459,24 +454,17 @@ def fcfs_allocation(workflow, greedy, seed):
             machine = m
             solution.add_allocation(task, machine, ast=ast, aft=aft)
         else:
-            latest_pred_allocation = latest_allocation(
-                task, solution, workflow
-            )
-            nmachine, start_val = find_next_available_machine(
-                latest_pred_allocation.aft, earliest_alloc
-            )
-            m2, val2 = next_available_start(earliest_alloc)
+            nmachine, start_val = next_available_start(earliest_alloc)
 
-            est = calc_earliest_start_time_on_machine(
-                task, m2, val2, workflow, solution
-            )
+            est = calc_earliest_start_time_on_machine(task, nmachine, start_val,
+                                                      workflow, solution)
             ast = est
-            aft = est + task.calculated_runtime(m2)
-            earliest_alloc[m2] = aft
+            aft = est + task.calculated_runtime(nmachine)
+            earliest_alloc[nmachine] = aft
             # aft = finish_time
             if aft > makespan:
                 makespan = aft
-            solution.add_allocation(task, m2, ast=ast, aft=aft)
+            solution.add_allocation(task, nmachine, ast=ast, aft=aft)
 
     solution.makespan = makespan
     return solution
@@ -508,8 +496,7 @@ def find_next_available_machine(start, earliest_allocs):
         else:
             return m, start
     raise RuntimeError(
-        'Unable to find latest allocation time - something is wrong'
-    )
+        'Unable to find latest allocation time - something is wrong')
 
 
 def next_available_start(earliest_allocs):
@@ -526,9 +513,8 @@ def next_available_start(earliest_allocs):
     return machine, val
 
 
-def calc_earliest_start_time_on_machine(
-        task, machine, pred_start, workflow, solution
-):
+def calc_earliest_start_time_on_machine(task, machine, pred_start, workflow,
+                                        solution):
     """
     Given a task and machine pair, calculate what time it will actually start
 
