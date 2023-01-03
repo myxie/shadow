@@ -80,7 +80,7 @@ for x in range(10,110,10):
     for node in channel_graph.nodes():
         channel_graph.nodes[node]['comp'] = 100000
     for edge in channel_graph.edges():
-        channel_graph.edges[edge]['data_size'] = 0
+        channel_graph.edges[edge]['transfer_data'] = 0
 
     glistgraph = nx.compose_all(graph_list)
     final = nx.compose(glistgraph, channel_graph)
@@ -92,7 +92,7 @@ for x in range(10,110,10):
             if len(pred) == 0:
                 minor_heads.append(node)
         for node in minor_heads:
-            final.add_edge(head + str(i), node, data_size=0)
+            final.add_edge(head + str(i), node, transfer_data=0)
 
     nx.drawing.nx_pydot.write_dot(final, 'testgraph.dot')
 

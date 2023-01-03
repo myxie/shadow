@@ -23,8 +23,8 @@ help in their chosen editors/IDEs, because the dictionary key is not reserved or
 
 ENV_SYS = 'system'
 ENV_RESOURCE = 'resources'
-ENV_RATES = 'rates'
-ENV_BANDWIDTH = 'bandwidth'
+ENV_RATES = "compute_bandwidth"
+ENV_BANDWIDTH = 'system_bandwidth'
 ENV_COST = 'cost'
 
-WORKFLOW_DATASIZE = 'data_size'
+WORKFLOW_DATASIZE = 'transfer_data'

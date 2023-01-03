@@ -94,92 +94,92 @@
     ],
     "links": [
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_0",
         "target": "c99_4"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_1",
         "target": "c99_2"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_2",
         "target": "c99_3"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_3",
         "target": "c99_4"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_4",
         "target": "c99_5"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_5",
         "target": "c99_6"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_6",
         "target": "c99_7"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_7",
         "target": "c99_8"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_8",
         "target": "c99_9"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_9",
         "target": "c99_10"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_10",
         "target": "c99_11"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_11",
         "target": "c99_12"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_12",
         "target": "c99_13"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_13",
         "target": "c99_14"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_14",
         "target": "c99_15"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_15",
         "target": "c99_16"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_16",
         "target": "c99_17"
       },
       {
-        "data_size": 0,
+        "transfer_data": 0,
         "source": "c99_17",
         "target": "c99_18"
       }

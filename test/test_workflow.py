@@ -83,4 +83,4 @@ class TestAddEnvironment(unittest.TestCase):
                 x = [task.calc_runtime(m) for m in self.env.machines]
                 self.assertEqual([24, 28, 15], x)
 
-        self.assertEqual(self.wf.graph.edges[Task(3), Task(7)]['data_size'], 27)
+        self.assertEqual(self.wf.graph.edges[Task(3), Task(7)]['transfer_data'], 27)

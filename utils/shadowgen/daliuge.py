@@ -223,6 +223,6 @@ def _add_generated_values_to_graph(
         )
 
     for edge in translated_graph.edges:
-        translated_graph.edges[edge]['data_size'] = edge_dict[edge]
+        translated_graph.edges[edge]['transfer_data'] = edge_dict[edge]
 
     return translated_graph

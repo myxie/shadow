@@ -3,17 +3,17 @@
     "resources": {
       "cat0_m0": {
         "flops": 7000.0,
-        "rates": 1.0
+        "compute_bandwidth": 1.0
       },
       "cat1_m1": {
         "flops": 6000.0,
-        "rates": 1.0
+        "compute_bandwidth": 1.0
       },
       "cat2_m2": {
         "flops": 11000.0,
-        "rates": 1.0
+        "compute_bandwidth": 1.0
       }
     },
-    "bandwidth": 1.0
+    "system_bandwidth": 1.0
   }
 }

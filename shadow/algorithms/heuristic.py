@@ -231,10 +231,10 @@ def calculate_upward_ranks(workflow, position=0, progress=True):
 
 
 def ave_comm_cost(workflow, task, successor):
-    data_size = workflow.graph.edges[task, successor]['data_size']
-    # return workflow.graph.edges[task, successor]['data_size']
+    transfer_data = workflow.graph.edges[task, successor]['transfer_data']
+    # return workflow.graph.edges[task, successor]['transfer_data']
 
-    return workflow.env.calc_data_transfer_time(data_size=data_size)
+    return workflow.env.calc_data_transfer_time(transfer_data=transfer_data)
 
 
 def ave_comp_cost(workflow, task):
@@ -266,7 +266,7 @@ def calc_est(workflow, task, machine, solution):
         rate = workflow.env.system_bandwith
         if pre_machine_alloc != machine and rate > 0:
             comm_cost = int(
-                workflow.graph.edges[pretask, task]['data_size'] / rate)
+                workflow.graph.edges[pretask, task]['transfer_data'] / rate)
         else:
             comm_cost = 0
 
@@ -301,7 +301,7 @@ def calc_est(workflow, task, machine, solution):
         (start, end) = slot
         if est < start and start + task.calc_runtime(machine) <= end:
             return start
-        if (est >= start) and est + task.calculated_runtime(machine) <= end:
+        if (est >= start) and est + task.calc_runtime(machine) <= end:
             return est
         # At the 'end' of available slots
         if (est >= start) and (end < 0):
@@ -520,7 +520,7 @@ def calc_earliest_start_time_on_machine(task, machine, pred_start, workflow,
 
     This is designed to take into account a task that is allocated on a
     machine to which it's predecessor(s) were not, and therefore has
-    additional data transfer costs associated with it.
+    additional  transfer costs associated with it.
 
     Parameters
     ----------
@@ -557,7 +557,7 @@ def calc_earliest_start_time_on_machine(task, machine, pred_start, workflow,
         rate = workflow.env.system_bandwith
         if pre_machine_alloc != machine and rate > 0:
             comm_cost = int(
-                workflow.graph.edges[pretask, task]['data_size'] / rate)
+                workflow.graph.edges[pretask, task]['transfer_data'] / rate)
         else:
             comm_cost = 0
 

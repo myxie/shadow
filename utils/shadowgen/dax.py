@@ -69,7 +69,7 @@ def build_dag(xml):
                 element = root.findall("job/[@id='{0}']/uses/[@link='output'][@file='{1}']".format(edge[0], file))
                 total += float(element[0].get('size'))
             # Data is in BYTES - convert to megabytes
-            building_dag.edges[edge]['data_size'] = total/1000000
+            building_dag.edges[edge]['transfer_data'] = total/1000000
         else:
             sys.exit("Issues translating DAX")
 
