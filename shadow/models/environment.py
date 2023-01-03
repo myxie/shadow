@@ -59,8 +59,8 @@ def _process_env_resources(resources):
                 flops = resources[machine]['flops']
             if 'memory' in resources[machine]:
                 memory = resources[machine]['memory']
-            if 'rates' in resources[machine]:
-                bandwidth = resources[machine]['rates']
+            if "compute_bandwidth" in resources[machine]:
+                bandwidth = resources[machine]["compute_bandwidth"]
             if 'cost' in resources[machine]:
                 cost = resources[machine]['cost']
 
@@ -156,5 +156,5 @@ class Environment(object):
         """
         return float(machine.cost * task_runtime)
 
-    def calc_data_transfer_time(self, data_size):
-        return int(data_size / self.system_bandwith)
+    def calc_data_transfer_time(self, transfer_data):
+        return int(transfer_data / self.system_bandwith)

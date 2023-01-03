@@ -281,378 +281,378 @@
       {
         "x": "0",
         "y": "0",
-        "data_size": 83,
+        "transfer_data": 83,
         "source": 0,
         "target": 1
       },
       {
         "x": "0",
         "y": "0",
-        "data_size": 61,
+        "transfer_data": 61,
         "source": 0,
         "target": 2
       },
       {
         "x": "0",
         "y": "0",
-        "data_size": 139,
+        "transfer_data": 139,
         "source": 0,
         "target": 3
       },
       {
         "x": "0",
         "y": "0",
-        "data_size": 64,
+        "transfer_data": 64,
         "source": 0,
         "target": 4
       },
       {
         "x": "0",
         "y": "0",
-        "data_size": 132,
+        "transfer_data": 132,
         "source": 0,
         "target": 5
       },
       {
         "x": "0",
         "y": "0",
-        "data_size": 57,
+        "transfer_data": 57,
         "source": 0,
         "target": 6
       },
       {
         "x": "0",
         "y": "1",
-        "data_size": 108,
+        "transfer_data": 108,
         "source": 1,
         "target": 7
       },
       {
         "x": "0",
         "y": "1",
-        "data_size": 94,
+        "transfer_data": 94,
         "source": 1,
         "target": 8
       },
       {
         "x": "0",
         "y": "1",
-        "data_size": 76,
+        "transfer_data": 76,
         "source": 1,
         "target": 9
       },
       {
         "x": "0",
         "y": "2",
-        "data_size": 78,
+        "transfer_data": 78,
         "source": 2,
         "target": 10
       },
       {
         "x": "0",
         "y": "2",
-        "data_size": 121,
+        "transfer_data": 121,
         "source": 2,
         "target": 11
       },
       {
         "x": "0",
         "y": "2",
-        "data_size": 133,
+        "transfer_data": 133,
         "source": 2,
         "target": 12
       },
       {
         "x": "0",
         "y": "3",
-        "data_size": 79,
+        "transfer_data": 79,
         "source": 3,
         "target": 13
       },
       {
         "x": "0",
         "y": "3",
-        "data_size": 116,
+        "transfer_data": 116,
         "source": 3,
         "target": 14
       },
       {
         "x": "0",
         "y": "3",
-        "data_size": 134,
+        "transfer_data": 134,
         "source": 3,
         "target": 15
       },
       {
         "x": "1",
         "y": "0",
-        "data_size": 55,
+        "transfer_data": 55,
         "source": 4,
         "target": 7
       },
       {
         "x": "1",
         "y": "0",
-        "data_size": 71,
+        "transfer_data": 71,
         "source": 4,
         "target": 10
       },
       {
         "x": "1",
         "y": "0",
-        "data_size": 115,
+        "transfer_data": 115,
         "source": 4,
         "target": 13
       },
       {
         "x": "2",
         "y": "0",
-        "data_size": 125,
+        "transfer_data": 125,
         "source": 5,
         "target": 8
       },
       {
         "x": "2",
         "y": "0",
-        "data_size": 127,
+        "transfer_data": 127,
         "source": 5,
         "target": 11
       },
       {
         "x": "2",
         "y": "0",
-        "data_size": 140,
+        "transfer_data": 140,
         "source": 5,
         "target": 14
       },
       {
         "x": "3",
         "y": "0",
-        "data_size": 133,
+        "transfer_data": 133,
         "source": 6,
         "target": 9
       },
       {
         "x": "3",
         "y": "0",
-        "data_size": 121,
+        "transfer_data": 121,
         "source": 6,
         "target": 12
       },
       {
         "x": "3",
         "y": "0",
-        "data_size": 70,
+        "transfer_data": 70,
         "source": 6,
         "target": 15
       },
       {
         "x": "1",
         "y": "1",
-        "data_size": 76,
+        "transfer_data": 76,
         "source": 7,
         "target": 16
       },
       {
         "x": "2",
         "y": "1",
-        "data_size": 104,
+        "transfer_data": 104,
         "source": 8,
         "target": 19
       },
       {
         "x": "3",
         "y": "1",
-        "data_size": 105,
+        "transfer_data": 105,
         "source": 9,
         "target": 22
       },
       {
         "x": "1",
         "y": "2",
-        "data_size": 68,
+        "transfer_data": 68,
         "source": 10,
         "target": 17
       },
       {
         "x": "2",
         "y": "2",
-        "data_size": 52,
+        "transfer_data": 52,
         "source": 11,
         "target": 20
       },
       {
         "x": "3",
         "y": "2",
-        "data_size": 127,
+        "transfer_data": 127,
         "source": 12,
         "target": 23
       },
       {
         "x": "1",
         "y": "3",
-        "data_size": 149,
+        "transfer_data": 149,
         "source": 13,
         "target": 18
       },
       {
         "x": "2",
         "y": "3",
-        "data_size": 80,
+        "transfer_data": 80,
         "source": 14,
         "target": 21
       },
       {
         "x": "3",
         "y": "3",
-        "data_size": 126,
+        "transfer_data": 126,
         "source": 15,
         "target": 24
       },
       {
         "x": "1",
         "y": "1",
-        "data_size": 127,
+        "transfer_data": 127,
         "source": 16,
         "target": 17
       },
       {
         "x": "1",
         "y": "1",
-        "data_size": 144,
+        "transfer_data": 144,
         "source": 16,
         "target": 18
       },
       {
         "x": "1",
         "y": "1",
-        "data_size": 125,
+        "transfer_data": 125,
         "source": 16,
         "target": 19
       },
       {
         "x": "1",
         "y": "1",
-        "data_size": 145,
+        "transfer_data": 145,
         "source": 16,
         "target": 22
       },
       {
         "x": "1",
         "y": "2",
-        "data_size": 83,
+        "transfer_data": 83,
         "source": 17,
         "target": 20
       },
       {
         "x": "1",
         "y": "2",
-        "data_size": 137,
+        "transfer_data": 137,
         "source": 17,
         "target": 23
       },
       {
         "x": "1",
         "y": "3",
-        "data_size": 98,
+        "transfer_data": 98,
         "source": 18,
         "target": 21
       },
       {
         "x": "1",
         "y": "3",
-        "data_size": 97,
+        "transfer_data": 97,
         "source": 18,
         "target": 24
       },
       {
         "x": "2",
         "y": "1",
-        "data_size": 132,
+        "transfer_data": 132,
         "source": 19,
         "target": 20
       },
       {
         "x": "2",
         "y": "1",
-        "data_size": 115,
+        "transfer_data": 115,
         "source": 19,
         "target": 21
       },
       {
         "x": "2",
         "y": "2",
-        "data_size": 55,
+        "transfer_data": 55,
         "source": 20,
         "target": 25
       },
       {
         "x": "2",
         "y": "3",
-        "data_size": 60,
+        "transfer_data": 60,
         "source": 21,
         "target": 26
       },
       {
         "x": "3",
         "y": "1",
-        "data_size": 85,
+        "transfer_data": 85,
         "source": 22,
         "target": 23
       },
       {
         "x": "3",
         "y": "1",
-        "data_size": 91,
+        "transfer_data": 91,
         "source": 22,
         "target": 24
       },
       {
         "x": "3",
         "y": "2",
-        "data_size": 143,
+        "transfer_data": 143,
         "source": 23,
         "target": 27
       },
       {
         "x": "3",
         "y": "3",
-        "data_size": 73,
+        "transfer_data": 73,
         "source": 24,
         "target": 28
       },
       {
         "x": "2",
         "y": "2",
-        "data_size": 119,
+        "transfer_data": 119,
         "source": 25,
         "target": 26
       },
       {
         "x": "2",
         "y": "2",
-        "data_size": 149,
+        "transfer_data": 149,
         "source": 25,
         "target": 27
       },
       {
         "x": "2",
         "y": "3",
-        "data_size": 96,
+        "transfer_data": 96,
         "source": 26,
         "target": 28
       },
       {
         "x": "3",
         "y": "2",
-        "data_size": 118,
+        "transfer_data": 118,
         "source": 27,
         "target": 28
       },
       {
         "x": "3",
         "y": "3",
-        "data_size": 67,
+        "transfer_data": 67,
         "source": 28,
         "target": 29
       }

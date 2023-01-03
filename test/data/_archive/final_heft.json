@@ -51,77 +51,77 @@
         ],
         "links": [
             {
-                "data_size": 18,
+                "transfer_data": 18,
                 "source": 0,
                 "target": 1
             },
             {
-                "data_size": 12,
+                "transfer_data": 12,
                 "source": 0,
                 "target": 2
             },
             {
-                "data_size": 9,
+                "transfer_data": 9,
                 "source": 0,
                 "target": 3
             },
             {
-                "data_size": 11,
+                "transfer_data": 11,
                 "source": 0,
                 "target": 4
             },
             {
-                "data_size": 14,
+                "transfer_data": 14,
                 "source": 0,
                 "target": 5
             },
             {
-                "data_size": 16,
+                "transfer_data": 16,
                 "source": 1,
                 "target": 8
             },
             {
-                "data_size": 19,
+                "transfer_data": 19,
                 "source": 1,
                 "target": 7
             },
             {
-                "data_size": 23,
+                "transfer_data": 23,
                 "source": 2,
                 "target": 6
             },
             {
-                "data_size": 23,
+                "transfer_data": 23,
                 "source": 3,
                 "target": 8
             },
             {
-                "data_size": 27,
+                "transfer_data": 27,
                 "source": 3,
                 "target": 7
             },
             {
-                "data_size": 13,
+                "transfer_data": 13,
                 "source": 4,
                 "target": 8
             },
             {
-                "data_size": 15,
+                "transfer_data": 15,
                 "source": 5,
                 "target": 7
             },
             {
-                "data_size": 17,
+                "transfer_data": 17,
                 "source": 6,
                 "target": 9
             },
             {
-                "data_size": 11,
+                "transfer_data": 11,
                 "source": 7,
                 "target": 9
             },
             {
-                "data_size": 13,
+                "transfer_data": 13,
                 "source": 8,
                 "target": 9
             }

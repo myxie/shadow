@@ -135,167 +135,167 @@
     ],
     "links": [
       {
-        "data_size": 2536,
+        "transfer_data": 2536,
         "source": 0,
         "target": 1
       },
       {
-        "data_size": 2267,
+        "transfer_data": 2267,
         "source": 1,
         "target": 2
       },
       {
-        "data_size": 2297,
+        "transfer_data": 2297,
         "source": 2,
         "target": 21
       },
       {
-        "data_size": 2345,
+        "transfer_data": 2345,
         "source": 2,
         "target": 19
       },
       {
-        "data_size": 2596,
+        "transfer_data": 2596,
         "source": 2,
         "target": 17
       },
       {
-        "data_size": 2391,
+        "transfer_data": 2391,
         "source": 2,
         "target": 15
       },
       {
-        "data_size": 2595,
+        "transfer_data": 2595,
         "source": 2,
         "target": 13
       },
       {
-        "data_size": 2331,
+        "transfer_data": 2331,
         "source": 2,
         "target": 11
       },
       {
-        "data_size": 2308,
+        "transfer_data": 2308,
         "source": 2,
         "target": 9
       },
       {
-        "data_size": 2261,
+        "transfer_data": 2261,
         "source": 2,
         "target": 7
       },
       {
-        "data_size": 2602,
+        "transfer_data": 2602,
         "source": 2,
         "target": 5
       },
       {
-        "data_size": 2679,
+        "transfer_data": 2679,
         "source": 2,
         "target": 3
       },
       {
-        "data_size": 2359,
+        "transfer_data": 2359,
         "source": 3,
         "target": 4
       },
       {
-        "data_size": 2368,
+        "transfer_data": 2368,
         "source": 4,
         "target": 23
       },
       {
-        "data_size": 2256,
+        "transfer_data": 2256,
         "source": 5,
         "target": 6
       },
       {
-        "data_size": 2572,
+        "transfer_data": 2572,
         "source": 6,
         "target": 23
       },
       {
-        "data_size": 2400,
+        "transfer_data": 2400,
         "source": 7,
         "target": 8
       },
       {
-        "data_size": 2318,
+        "transfer_data": 2318,
         "source": 8,
         "target": 23
       },
       {
-        "data_size": 2573,
+        "transfer_data": 2573,
         "source": 9,
         "target": 10
       },
       {
-        "data_size": 2549,
+        "transfer_data": 2549,
         "source": 10,
         "target": 23
       },
       {
-        "data_size": 2473,
+        "transfer_data": 2473,
         "source": 11,
         "target": 12
       },
       {
-        "data_size": 2326,
+        "transfer_data": 2326,
         "source": 12,
         "target": 23
       },
       {
-        "data_size": 2569,
+        "transfer_data": 2569,
         "source": 13,
         "target": 14
       },
       {
-        "data_size": 2527,
+        "transfer_data": 2527,
         "source": 14,
         "target": 23
       },
       {
-        "data_size": 2466,
+        "transfer_data": 2466,
         "source": 15,
         "target": 16
       },
       {
-        "data_size": 2332,
+        "transfer_data": 2332,
         "source": 16,
         "target": 23
       },
       {
-        "data_size": 2714,
+        "transfer_data": 2714,
         "source": 17,
         "target": 18
       },
       {
-        "data_size": 2681,
+        "transfer_data": 2681,
         "source": 18,
         "target": 23
       },
       {
-        "data_size": 2594,
+        "transfer_data": 2594,
         "source": 19,
         "target": 20
       },
       {
-        "data_size": 2748,
+        "transfer_data": 2748,
         "source": 20,
         "target": 23
       },
       {
-        "data_size": 2540,
+        "transfer_data": 2540,
         "source": 21,
         "target": 22
       },
       {
-        "data_size": 2422,
+        "transfer_data": 2422,
         "source": 22,
         "target": 23
       },
       {
-        "data_size": 2308,
+        "transfer_data": 2308,
         "source": 23,
         "target": 24
       }

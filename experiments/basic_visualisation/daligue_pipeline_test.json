@@ -237,433 +237,433 @@
     "links": [
       {
         "_graphml_id": "e68",
-        "data_size": 225,
+        "transfer_data": 225,
         "source": 0,
         "target": 1
       },
       {
         "_graphml_id": "e67",
-        "data_size": 258,
+        "transfer_data": 258,
         "source": 0,
         "target": 2
       },
       {
         "_graphml_id": "e66",
-        "data_size": 280,
+        "transfer_data": 280,
         "source": 0,
         "target": 3
       },
       {
         "_graphml_id": "e65",
-        "data_size": 275,
+        "transfer_data": 275,
         "source": 0,
         "target": 4
       },
       {
         "_graphml_id": "e61",
-        "data_size": 203,
+        "transfer_data": 203,
         "source": 1,
         "target": 9
       },
       {
         "_graphml_id": "e60",
-        "data_size": 298,
+        "transfer_data": 298,
         "source": 2,
         "target": 10
       },
       {
         "_graphml_id": "e59",
-        "data_size": 234,
+        "transfer_data": 234,
         "source": 3,
         "target": 11
       },
       {
         "_graphml_id": "e58",
-        "data_size": 272,
+        "transfer_data": 272,
         "source": 4,
         "target": 12
       },
       {
         "_graphml_id": "e64",
-        "data_size": 235,
+        "transfer_data": 235,
         "source": 5,
         "target": 6
       },
       {
         "_graphml_id": "e63",
-        "data_size": 221,
+        "transfer_data": 221,
         "source": 7,
         "target": 8
       },
       {
         "_graphml_id": "e62",
-        "data_size": 246,
+        "transfer_data": 246,
         "source": 8,
         "target": 0
       },
       {
         "_graphml_id": "e57",
-        "data_size": 274,
+        "transfer_data": 274,
         "source": 9,
         "target": 5
       },
       {
         "_graphml_id": "e56",
-        "data_size": 287,
+        "transfer_data": 287,
         "source": 10,
         "target": 5
       },
       {
         "_graphml_id": "e55",
-        "data_size": 213,
+        "transfer_data": 213,
         "source": 11,
         "target": 5
       },
       {
         "_graphml_id": "e54",
-        "data_size": 275,
+        "transfer_data": 275,
         "source": 12,
         "target": 5
       },
       {
         "_graphml_id": "e53",
-        "data_size": 254,
+        "transfer_data": 254,
         "source": 13,
         "target": 14
       },
       {
         "_graphml_id": "e52",
-        "data_size": 269,
+        "transfer_data": 269,
         "source": 13,
         "target": 15
       },
       {
         "_graphml_id": "e51",
-        "data_size": 267,
+        "transfer_data": 267,
         "source": 13,
         "target": 16
       },
       {
         "_graphml_id": "e50",
-        "data_size": 211,
+        "transfer_data": 211,
         "source": 13,
         "target": 17
       },
       {
         "_graphml_id": "e49",
-        "data_size": 204,
+        "transfer_data": 204,
         "source": 13,
         "target": 18
       },
       {
         "_graphml_id": "e48",
-        "data_size": 222,
+        "transfer_data": 222,
         "source": 13,
         "target": 19
       },
       {
         "_graphml_id": "e47",
-        "data_size": 267,
+        "transfer_data": 267,
         "source": 13,
         "target": 20
       },
       {
         "_graphml_id": "e46",
-        "data_size": 215,
+        "transfer_data": 215,
         "source": 13,
         "target": 21
       },
       {
         "_graphml_id": "e45",
-        "data_size": 285,
+        "transfer_data": 285,
         "source": 13,
         "target": 22
       },
       {
         "_graphml_id": "e44",
-        "data_size": 258,
+        "transfer_data": 258,
         "source": 13,
         "target": 23
       },
       {
         "_graphml_id": "e43",
-        "data_size": 288,
+        "transfer_data": 288,
         "source": 13,
         "target": 24
       },
       {
         "_graphml_id": "e42",
-        "data_size": 294,
+        "transfer_data": 294,
         "source": 13,
         "target": 25
       },
       {
         "_graphml_id": "e38",
-        "data_size": 241,
+        "transfer_data": 241,
         "source": 14,
         "target": 31
       },
       {
         "_graphml_id": "e37",
-        "data_size": 206,
+        "transfer_data": 206,
         "source": 15,
         "target": 32
       },
       {
         "_graphml_id": "e36",
-        "data_size": 223,
+        "transfer_data": 223,
         "source": 16,
         "target": 33
       },
       {
         "_graphml_id": "e35",
-        "data_size": 272,
+        "transfer_data": 272,
         "source": 17,
         "target": 34
       },
       {
         "_graphml_id": "e34",
-        "data_size": 270,
+        "transfer_data": 270,
         "source": 18,
         "target": 35
       },
       {
         "_graphml_id": "e33",
-        "data_size": 258,
+        "transfer_data": 258,
         "source": 19,
         "target": 36
       },
       {
         "_graphml_id": "e32",
-        "data_size": 218,
+        "transfer_data": 218,
         "source": 20,
         "target": 37
       },
       {
         "_graphml_id": "e31",
-        "data_size": 283,
+        "transfer_data": 283,
         "source": 21,
         "target": 38
       },
       {
         "_graphml_id": "e30",
-        "data_size": 278,
+        "transfer_data": 278,
         "source": 22,
         "target": 39
       },
       {
         "_graphml_id": "e29",
-        "data_size": 228,
+        "transfer_data": 228,
         "source": 23,
         "target": 40
       },
       {
         "_graphml_id": "e28",
-        "data_size": 242,
+        "transfer_data": 242,
         "source": 24,
         "target": 41
       },
       {
         "_graphml_id": "e27",
-        "data_size": 205,
+        "transfer_data": 205,
         "source": 25,
         "target": 42
       },
       {
         "_graphml_id": "e71",
-        "data_size": 200,
+        "transfer_data": 200,
         "source": 26,
         "target": 7
       },
       {
         "_graphml_id": "e70",
-        "data_size": 260,
+        "transfer_data": 260,
         "source": 26,
         "target": 27
       },
       {
         "_graphml_id": "e9",
-        "data_size": 272,
+        "transfer_data": 272,
         "source": 27,
         "target": 50
       },
       {
         "_graphml_id": "e41",
-        "data_size": 267,
+        "transfer_data": 267,
         "source": 28,
         "target": 26
       },
       {
         "_graphml_id": "e40",
-        "data_size": 257,
+        "transfer_data": 257,
         "source": 29,
         "target": 30
       },
       {
         "_graphml_id": "e39",
-        "data_size": 229,
+        "transfer_data": 229,
         "source": 30,
         "target": 13
       },
       {
         "_graphml_id": "e26",
-        "data_size": 240,
+        "transfer_data": 240,
         "source": 31,
         "target": 28
       },
       {
         "_graphml_id": "e25",
-        "data_size": 261,
+        "transfer_data": 261,
         "source": 32,
         "target": 28
       },
       {
         "_graphml_id": "e24",
-        "data_size": 293,
+        "transfer_data": 293,
         "source": 33,
         "target": 28
       },
       {
         "_graphml_id": "e23",
-        "data_size": 263,
+        "transfer_data": 263,
         "source": 34,
         "target": 28
       },
       {
         "_graphml_id": "e22",
-        "data_size": 218,
+        "transfer_data": 218,
         "source": 35,
         "target": 28
       },
       {
         "_graphml_id": "e21",
-        "data_size": 219,
+        "transfer_data": 219,
         "source": 36,
         "target": 28
       },
       {
         "_graphml_id": "e20",
-        "data_size": 228,
+        "transfer_data": 228,
         "source": 37,
         "target": 28
       },
       {
         "_graphml_id": "e19",
-        "data_size": 208,
+        "transfer_data": 208,
         "source": 38,
         "target": 28
       },
       {
         "_graphml_id": "e18",
-        "data_size": 209,
+        "transfer_data": 209,
         "source": 39,
         "target": 28
       },
       {
         "_graphml_id": "e17",
-        "data_size": 239,
+        "transfer_data": 239,
         "source": 40,
         "target": 28
       },
       {
         "_graphml_id": "e16",
-        "data_size": 214,
+        "transfer_data": 214,
         "source": 41,
         "target": 28
       },
       {
         "_graphml_id": "e15",
-        "data_size": 286,
+        "transfer_data": 286,
         "source": 42,
         "target": 28
       },
       {
         "_graphml_id": "e14",
-        "data_size": 278,
+        "transfer_data": 278,
         "source": 43,
         "target": 44
       },
       {
         "_graphml_id": "e13",
-        "data_size": 246,
+        "transfer_data": 246,
         "source": 43,
         "target": 45
       },
       {
         "_graphml_id": "e12",
-        "data_size": 234,
+        "transfer_data": 234,
         "source": 43,
         "target": 46
       },
       {
         "_graphml_id": "e11",
-        "data_size": 223,
+        "transfer_data": 223,
         "source": 43,
         "target": 47
       },
       {
         "_graphml_id": "e7",
-        "data_size": 206,
+        "transfer_data": 206,
         "source": 44,
         "target": 51
       },
       {
         "_graphml_id": "e6",
-        "data_size": 213,
+        "transfer_data": 213,
         "source": 45,
         "target": 52
       },
       {
         "_graphml_id": "e5",
-        "data_size": 209,
+        "transfer_data": 209,
         "source": 46,
         "target": 53
       },
       {
         "_graphml_id": "e4",
-        "data_size": 251,
+        "transfer_data": 251,
         "source": 47,
         "target": 54
       },
       {
         "_graphml_id": "e10",
-        "data_size": 260,
+        "transfer_data": 260,
         "source": 48,
         "target": 49
       },
       {
         "_graphml_id": "e8",
-        "data_size": 260,
+        "transfer_data": 260,
         "source": 50,
         "target": 43
       },
       {
         "_graphml_id": "e3",
-        "data_size": 216,
+        "transfer_data": 216,
         "source": 51,
         "target": 48
       },
       {
         "_graphml_id": "e2",
-        "data_size": 275,
+        "transfer_data": 275,
         "source": 52,
         "target": 48
       },
       {
         "_graphml_id": "e1",
-        "data_size": 254,
+        "transfer_data": 254,
         "source": 53,
         "target": 48
       },
       {
         "_graphml_id": "e0",
-        "data_size": 209,
+        "transfer_data": 209,
         "source": 54,
         "target": 48
       },
       {
         "_graphml_id": "e69",
-        "data_size": 219,
+        "transfer_data": 219,
         "source": 55,
         "target": 29
       }

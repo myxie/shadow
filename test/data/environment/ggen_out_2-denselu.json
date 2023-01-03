@@ -36,35 +36,35 @@
       {
         "x": "0",
         "y": "0",
-        "data_size": 81,
+        "transfer_data": 81,
         "source": 0,
         "target": 1
       },
       {
         "x": "0",
         "y": "0",
-        "data_size": 144,
+        "transfer_data": 144,
         "source": 0,
         "target": 2
       },
       {
         "x": "0",
         "y": "1",
-        "data_size": 149,
+        "transfer_data": 149,
         "source": 1,
         "target": 3
       },
       {
         "x": "1",
         "y": "0",
-        "data_size": 138,
+        "transfer_data": 138,
         "source": 2,
         "target": 3
       },
       {
         "x": "1",
         "y": "1",
-        "data_size": 58,
+        "transfer_data": 58,
         "source": 3,
         "target": 4
       }

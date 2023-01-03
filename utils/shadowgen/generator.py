@@ -98,7 +98,7 @@ def generate_system_machines(config_path,
         for x in range(int(m)):
             machine_categ['cat{0}_m{1}'.format(i, y)] = {
                 'flops': math.ceil(rnd - (rnd % multiplier)),
-                'rates': rate
+                "compute_bandwidth": rate
             }
             y += 1
 
@@ -116,8 +116,8 @@ def generate_system_machines(config_path,
         'system':
             {
                 'resources': machine_categ,
-                # 'rates': data_rates
-                'bandwidth': system_bandwidth
+                # "compute_bandwidth": data_rates
+                'system_bandwidth': system_bandwidth
             }
     }
 
@@ -256,7 +256,7 @@ def generate_graph_costs(
     comm_max = (comm_mean + (uniform_range * ccr)) * multiplier
     for edge in dotgraph.edges:
         rnd = int(random.uniform(comm_min, comm_max))
-        dotgraph.edges[edge]['data_size'] = (rnd - (rnd % multiplier))
+        dotgraph.edges[edge]['transfer_data'] = (rnd - (rnd % multiplier))
 
     jgraph = {
         "header": {

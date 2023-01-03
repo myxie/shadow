@@ -35,17 +35,17 @@ Workflow Specification
         ],
         "links": [
             {
-                "data_size": 18,
+                "transfer_data": 18,
                 "source": 0,
                 "target": 1
             },
             {
-                "data_size": 12,
+                "transfer_data": 12,
                 "source": 0,
                 "target": 2
             },
             {
-                "data_size": 9,
+                "transfer_data": 9,
                 "source": 0,
                 "target": 3
             }, 
@@ -73,7 +73,7 @@ change, whereas workflows will be run in different environments all the time).
             "flops": 11.0
           }
         },
-        "rates": {
+        "compute_bandwidth": {
           "cat0": 1.0,
           "cat1": 1.0,
           "cat2": 1.0

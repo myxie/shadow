@@ -293,392 +293,392 @@
     ],
     "links": [
       {
-        "data_size": 2580,
+        "transfer_data": 2580,
         "source": 0,
         "target": 1
       },
       {
-        "data_size": 2344,
+        "transfer_data": 2344,
         "source": 1,
         "target": 2
       },
       {
-        "data_size": 2116,
+        "transfer_data": 2116,
         "source": 2,
         "target": 51
       },
       {
-        "data_size": 2607,
+        "transfer_data": 2607,
         "source": 2,
         "target": 49
       },
       {
-        "data_size": 2519,
+        "transfer_data": 2519,
         "source": 2,
         "target": 47
       },
       {
-        "data_size": 2436,
+        "transfer_data": 2436,
         "source": 2,
         "target": 45
       },
       {
-        "data_size": 2992,
+        "transfer_data": 2992,
         "source": 2,
         "target": 43
       },
       {
-        "data_size": 2839,
+        "transfer_data": 2839,
         "source": 2,
         "target": 41
       },
       {
-        "data_size": 2114,
+        "transfer_data": 2114,
         "source": 2,
         "target": 39
       },
       {
-        "data_size": 2884,
+        "transfer_data": 2884,
         "source": 2,
         "target": 37
       },
       {
-        "data_size": 2001,
+        "transfer_data": 2001,
         "source": 2,
         "target": 35
       },
       {
-        "data_size": 2651,
+        "transfer_data": 2651,
         "source": 2,
         "target": 33
       },
       {
-        "data_size": 2315,
+        "transfer_data": 2315,
         "source": 2,
         "target": 31
       },
       {
-        "data_size": 2729,
+        "transfer_data": 2729,
         "source": 2,
         "target": 29
       },
       {
-        "data_size": 2952,
+        "transfer_data": 2952,
         "source": 2,
         "target": 27
       },
       {
-        "data_size": 2530,
+        "transfer_data": 2530,
         "source": 2,
         "target": 25
       },
       {
-        "data_size": 2762,
+        "transfer_data": 2762,
         "source": 2,
         "target": 23
       },
       {
-        "data_size": 2054,
+        "transfer_data": 2054,
         "source": 2,
         "target": 21
       },
       {
-        "data_size": 2667,
+        "transfer_data": 2667,
         "source": 2,
         "target": 19
       },
       {
-        "data_size": 2117,
+        "transfer_data": 2117,
         "source": 2,
         "target": 17
       },
       {
-        "data_size": 2455,
+        "transfer_data": 2455,
         "source": 2,
         "target": 15
       },
       {
-        "data_size": 2333,
+        "transfer_data": 2333,
         "source": 2,
         "target": 13
       },
       {
-        "data_size": 2073,
+        "transfer_data": 2073,
         "source": 2,
         "target": 11
       },
       {
-        "data_size": 2747,
+        "transfer_data": 2747,
         "source": 2,
         "target": 9
       },
       {
-        "data_size": 2093,
+        "transfer_data": 2093,
         "source": 2,
         "target": 7
       },
       {
-        "data_size": 2257,
+        "transfer_data": 2257,
         "source": 2,
         "target": 5
       },
       {
-        "data_size": 2085,
+        "transfer_data": 2085,
         "source": 2,
         "target": 3
       },
       {
-        "data_size": 2662,
+        "transfer_data": 2662,
         "source": 3,
         "target": 4
       },
       {
-        "data_size": 2301,
+        "transfer_data": 2301,
         "source": 4,
         "target": 53
       },
       {
-        "data_size": 2044,
+        "transfer_data": 2044,
         "source": 5,
         "target": 6
       },
       {
-        "data_size": 2027,
+        "transfer_data": 2027,
         "source": 6,
         "target": 53
       },
       {
-        "data_size": 2219,
+        "transfer_data": 2219,
         "source": 7,
         "target": 8
       },
       {
-        "data_size": 2506,
+        "transfer_data": 2506,
         "source": 8,
         "target": 53
       },
       {
-        "data_size": 2012,
+        "transfer_data": 2012,
         "source": 9,
         "target": 10
       },
       {
-        "data_size": 2023,
+        "transfer_data": 2023,
         "source": 10,
         "target": 53
       },
       {
-        "data_size": 2666,
+        "transfer_data": 2666,
         "source": 11,
         "target": 12
       },
       {
-        "data_size": 2527,
+        "transfer_data": 2527,
         "source": 12,
         "target": 53
       },
       {
-        "data_size": 2135,
+        "transfer_data": 2135,
         "source": 13,
         "target": 14
       },
       {
-        "data_size": 2312,
+        "transfer_data": 2312,
         "source": 14,
         "target": 53
       },
       {
-        "data_size": 2126,
+        "transfer_data": 2126,
         "source": 15,
         "target": 16
       },
       {
-        "data_size": 2275,
+        "transfer_data": 2275,
         "source": 16,
         "target": 53
       },
       {
-        "data_size": 2388,
+        "transfer_data": 2388,
         "source": 17,
         "target": 18
       },
       {
-        "data_size": 2218,
+        "transfer_data": 2218,
         "source": 18,
         "target": 53
       },
       {
-        "data_size": 2197,
+        "transfer_data": 2197,
         "source": 19,
         "target": 20
       },
       {
-        "data_size": 2226,
+        "transfer_data": 2226,
         "source": 20,
         "target": 53
       },
       {
-        "data_size": 2301,
+        "transfer_data": 2301,
         "source": 21,
         "target": 22
       },
       {
-        "data_size": 2555,
+        "transfer_data": 2555,
         "source": 22,
         "target": 53
       },
       {
-        "data_size": 2886,
+        "transfer_data": 2886,
         "source": 23,
         "target": 24
       },
       {
-        "data_size": 2647,
+        "transfer_data": 2647,
         "source": 24,
         "target": 53
       },
       {
-        "data_size": 2448,
+        "transfer_data": 2448,
         "source": 25,
         "target": 26
       },
       {
-        "data_size": 2003,
+        "transfer_data": 2003,
         "source": 26,
         "target": 53
       },
       {
-        "data_size": 2188,
+        "transfer_data": 2188,
         "source": 27,
         "target": 28
       },
       {
-        "data_size": 2634,
+        "transfer_data": 2634,
         "source": 28,
         "target": 53
       },
       {
-        "data_size": 2405,
+        "transfer_data": 2405,
         "source": 29,
         "target": 30
       },
       {
-        "data_size": 2847,
+        "transfer_data": 2847,
         "source": 30,
         "target": 53
       },
       {
-        "data_size": 2908,
+        "transfer_data": 2908,
         "source": 31,
         "target": 32
       },
       {
-        "data_size": 2296,
+        "transfer_data": 2296,
         "source": 32,
         "target": 53
       },
       {
-        "data_size": 2364,
+        "transfer_data": 2364,
         "source": 33,
         "target": 34
       },
       {
-        "data_size": 2298,
+        "transfer_data": 2298,
         "source": 34,
         "target": 53
       },
       {
-        "data_size": 2676,
+        "transfer_data": 2676,
         "source": 35,
         "target": 36
       },
       {
-        "data_size": 2098,
+        "transfer_data": 2098,
         "source": 36,
         "target": 53
       },
       {
-        "data_size": 2276,
+        "transfer_data": 2276,
         "source": 37,
         "target": 38
       },
       {
-        "data_size": 2878,
+        "transfer_data": 2878,
         "source": 38,
         "target": 53
       },
       {
-        "data_size": 2373,
+        "transfer_data": 2373,
         "source": 39,
         "target": 40
       },
       {
-        "data_size": 2969,
+        "transfer_data": 2969,
         "source": 40,
         "target": 53
       },
       {
-        "data_size": 2395,
+        "transfer_data": 2395,
         "source": 41,
         "target": 42
       },
       {
-        "data_size": 2836,
+        "transfer_data": 2836,
         "source": 42,
         "target": 53
       },
       {
-        "data_size": 2462,
+        "transfer_data": 2462,
         "source": 43,
         "target": 44
       },
       {
-        "data_size": 2099,
+        "transfer_data": 2099,
         "source": 44,
         "target": 53
       },
       {
-        "data_size": 2577,
+        "transfer_data": 2577,
         "source": 45,
         "target": 46
       },
       {
-        "data_size": 2211,
+        "transfer_data": 2211,
         "source": 46,
         "target": 53
       },
       {
-        "data_size": 2917,
+        "transfer_data": 2917,
         "source": 47,
         "target": 48
       },
       {
-        "data_size": 2700,
+        "transfer_data": 2700,
         "source": 48,
         "target": 53
       },
       {
-        "data_size": 2529,
+        "transfer_data": 2529,
         "source": 49,
         "target": 50
       },
       {
-        "data_size": 2922,
+        "transfer_data": 2922,
         "source": 50,
         "target": 53
       },
       {
-        "data_size": 2547,
+        "transfer_data": 2547,
         "source": 51,
         "target": 52
       },
       {
-        "data_size": 2966,
+        "transfer_data": 2966,
         "source": 52,
         "target": 53
       },
       {
-        "data_size": 2714,
+        "transfer_data": 2714,
         "source": 53,
         "target": 54
       }

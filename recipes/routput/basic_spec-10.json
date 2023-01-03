@@ -13,43 +13,43 @@
     "resources": {
       "cat0_m0": {
         "flops": 84,
-        "rates": 10
+        "compute_bandwidth": 10
       },
       "cat0_m1": {
         "flops": 84,
-        "rates": 10
+        "compute_bandwidth": 10
       },
       "cat0_m2": {
       "flops": 84,
-        "rates": 10
+        "compute_bandwidth": 10
       },
       "cat0_m3": {
         "flops": 84,
-        "rates": 10
+        "compute_bandwidth": 10
       },
       "cat0_m4": {
         "flops": 84,
-        "rates": 10
+        "compute_bandwidth": 10
       },
       "cat0_m5": {
         "flops": 84,
-        "rates": 10
+        "compute_bandwidth": 10
       },
       "cat0_m6": {
         "flops": 84,
-        "rates": 10
+        "compute_bandwidth": 10
       },
       "cat0_m7": {
         "flops": 84,
-        "rates": 10
+        "compute_bandwidth": 10
       },
       "cat0_m8": {
         "flops": 84,
-        "rates": 10
+        "compute_bandwidth": 10
       },
       "cat0_m9": {
         "flops": 84,
-        "rates": 10
+        "compute_bandwidth": 10
       }
     }
   }
