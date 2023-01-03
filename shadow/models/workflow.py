@@ -145,8 +145,12 @@ class Task(object):
             cm = max(env.machines, key=operator.attrgetter('flops'))
             cw = int(np.round(self.flops_demand / cm.flops))
             if cm.iorate:
-                iow = int(np.round(self.io_demand / cm.iorate))
-                return cm, max(iow, cw)
+                iom = max(env.machines, key=operator.attrgetter('iorate'))
+                iow = int(np.round(self.io_demand / iom.iorate))
+                if iow > cw:
+                    return iom, iow
+                else:
+                    return cm, cw
             else:
                 return cm, cw  # return compute, w
 
@@ -155,9 +159,14 @@ class Task(object):
             return max(self._calculated_runtime.items(),
                        key=operator.itemgetter(1))
         else:
-            compute = min(env.machines, key=operator.attrgetter('flops'))
-            w = int(np.round(self.flops_demand / compute.flops))
-            return compute, w
+            min_compute_machine = min(env.machines, key=operator.attrgetter('flops'))
+            min_data_machine = min(env.machines, key=operator.attrgetter('iorate'))
+            w = int(np.round(self.flops_demand / min_compute_machine.flops))
+            d = int(np.round(self.io_demand / min_data_machine.iorate))
+            if w > d:
+                return min_compute_machine, w
+            else:
+                return min_data_machine, d
 
     def update_task_rank(self, rank):
         self.rank = rank
@@ -193,8 +202,8 @@ class Workflow(object):
             if self._time:
                 precompute = True
             comp = self.graph.nodes[node]['comp']
-            if 'data' in self.graph.nodes[node]:
-                data = self.graph.nodes[node]['data']
+            if 'task_data' in self.graph.nodes[node]:
+                data = self.graph.nodes[node]['task_data']
             else:
                 data = 0
             t = taskobj(node, comp, data, precompute)
