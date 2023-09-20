@@ -52,11 +52,11 @@ def heft(workflow, position=0):
     if workflow.env is None:
         raise RuntimeError("Workflow environment is not initialised")
     LOGGER.debug('Ranking tasks')
-    task_ranks = calculate_upward_ranks(workflow, position)
+    task_ranks = calculate_upward_ranks(workflow, position, True)
     for task in workflow.tasks:
         task.rank = task_ranks[task]
     LOGGER.debug('Allocating tasks using insertion policy')
-    solution = insertion_policy(workflow, position)
+    solution = insertion_policy(workflow, position, True)
     return solution
 
 
@@ -195,6 +195,9 @@ def calculate_upward_ranks(workflow, position=0, progress=True):
             task_ranks[node] = max(
                 node.calc_ave_runtime(workflow.env) + longest_rank, 0)
             unranked.remove(node)
+
+    _ranked_node_count = 1
+
 
     _ranked_node_count = 1
     _total_nodes = len(workflow.graph.nodes())
@@ -370,7 +373,7 @@ def insertion_policy(workflow, position=0, progress=True):
             solution.add_allocation(task=task, machine=m, ast=ast, aft=aft)
         if progress:
             update = len(solution.allocations) - update
-            pbar.update(len(solution.allocations))
+            pbar.update()
     if progress:
         pbar.close()
     solution.makespan = makespan

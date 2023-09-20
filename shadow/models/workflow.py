@@ -87,6 +87,8 @@ class Task(object):
             else:
                 data = 0
             compute = int(np.round(self.flops_demand / machine.flops))
+            if(compute < 1):
+                compute = 1
             return max(compute,
                        data)  # return  # self.calculated_runtime[machine]
 
