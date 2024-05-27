@@ -87,7 +87,7 @@ class Task(object):
             else:
                 data = 0
             compute = int(np.round(self.flops_demand / machine.flops))
-            if(compute < 1):
+            if compute < 1:
                 compute = 1
             return max(compute,
                        data)  # return  # self.calculated_runtime[machine]
@@ -145,10 +145,10 @@ class Task(object):
                        key=operator.itemgetter(1))
         else:
             cm = max(env.machines, key=operator.attrgetter('flops'))
-            cw = int(np.round(self.flops_demand / cm.flops))
+            cw = max(int(np.round(self.flops_demand / cm.flops)), 1)
             if cm.iorate:
                 iom = max(env.machines, key=operator.attrgetter('iorate'))
-                iow = int(np.round(self.io_demand / iom.iorate))
+                iow = max(int(np.round(self.io_demand / iom.iorate)),1)
                 if iow > cw:
                     return iom, iow
                 else:

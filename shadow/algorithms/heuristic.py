@@ -369,7 +369,7 @@ def insertion_policy(workflow, position=0, progress=False):
                 makespan = aft
             solution.add_allocation(task=task, machine=m, ast=ast, aft=aft)
         if progress:
-            update = len(solution.allocations) - update
+            update = 1
             pbar.update(update)
     if progress:
         pbar.close()
