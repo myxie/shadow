@@ -51,12 +51,12 @@ def heft(workflow, position=0):
 
     if workflow.env is None:
         raise RuntimeError("Workflow environment is not initialised")
-    LOGGER.debug('Ranking tasks')
-    task_ranks = calculate_upward_ranks(workflow, position)
+    LOGGER.info('Ranking tasks')
+    task_ranks = calculate_upward_ranks(workflow, position, progress=False)
     for task in workflow.tasks:
         task.rank = task_ranks[task]
-    LOGGER.debug('Allocating tasks using insertion policy')
-    solution = insertion_policy(workflow, position)
+    LOGGER.info('Allocating tasks using insertion policy')
+    solution = insertion_policy(workflow, position, progress=False)
     return solution
 
 
@@ -315,7 +315,7 @@ def calc_est(workflow, task, machine, solution):
     return est
 
 
-def insertion_policy(workflow, position=0, progress=True):
+def insertion_policy(workflow, position=0, progress=False):
     """
     Allocate tasks to machines following the insertion based policy outline
     in Tocuoglu et al.(2002)
@@ -369,8 +369,8 @@ def insertion_policy(workflow, position=0, progress=True):
                 makespan = aft
             solution.add_allocation(task=task, machine=m, ast=ast, aft=aft)
         if progress:
-            update = len(solution.allocations) - update
-            pbar.update(len(solution.allocations))
+            update = 1
+            pbar.update(update)
     if progress:
         pbar.close()
     solution.makespan = makespan
