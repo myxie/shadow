@@ -65,7 +65,7 @@ def critical_path_min(workflow):
                 if tmp_v not in critical_path:
                     critical_path.append(tmp_v)
                 q.put(tmp_v)
-            elif dist[v] is 0:
+            elif dist[v] == 0:
                 tmp_v = 0  # this is the first node in the graph
                 if tmp_v not in critical_path:
                     critical_path.append(tmp_v)
