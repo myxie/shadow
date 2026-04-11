@@ -195,7 +195,7 @@ class Workflow(object):
         """
         with open(config, 'r') as infile:
             wfconfig = json.load(infile)
-        self.graph = nx.readwrite.json_graph.node_link_graph(wfconfig['graph'])
+        self.graph = nx.readwrite.json_graph.node_link_graph(wfconfig['graph'], edges="links")
         self._time = wfconfig['header']['time']
         # Take advantage of how pipelines
         mapping = {}
